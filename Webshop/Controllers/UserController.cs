@@ -24,7 +24,7 @@ namespace Webshop.Controllers
         /// Kitöröl egy adott felhasználót.
         /// </summary>
         /// <param name="id"></param>        
-        [HttpDelete("/del/{id}")]
+        [HttpDelete("/[controller]/del/{id}")]
         public IActionResult Delete(string id)
         {
             var todo = _context.Users.Find(id);
@@ -58,7 +58,7 @@ namespace Webshop.Controllers
         /// <returns>A newly created User</returns>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>            
-        [HttpPost("/new")]
+        [HttpPost("/[controller]/new")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public ActionResult<User> Create(User item)
@@ -88,7 +88,7 @@ namespace Webshop.Controllers
         /// <returns>A newly created User</returns>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>            
-        [HttpPut("{id}")]
+        [HttpPut("/[controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public IActionResult Update(string id, User user)
