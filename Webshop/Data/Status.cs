@@ -7,6 +7,8 @@ namespace Webshop.Data
 {
     public class Status
     {
+        //Tárolt adatok
+        public int StatusId { get; set; }
         public string Name { get; set; }
     }
 }
