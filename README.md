@@ -1,4 +1,4 @@
-# H1 Témalabor WebShop alkalmazás
+# Témalabor WebShop alkalmazás
 
 ASP.NET Core
 
