@@ -11,36 +11,37 @@ namespace Webshop.Controllers
     [Produces("application/json")]
     [Route("/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class OrderController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        
-        public UserController(ApplicationDbContext context)
+
+        public OrderController(ApplicationDbContext context)
         {
             _context = context;
         }
-        // Felhasználó CRUD
+        // Order CRUD
         /// <summary>
-        /// Kitöröl egy adott felhasználót.
+        /// Kitöröl egy adott rendelést.
         /// </summary>
         /// <param name="id"></param>        
         [HttpDelete("/[controller]/del/{id}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(int id)
         {
-            var todo = _context.Users.Find(id);
+            var todo = _context.Orders.Find(id);
 
             if (todo == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(todo);
+            _context.Orders.Remove(todo);
             _context.SaveChanges();
 
             return NoContent();
         }
+      
         /// <summary>
-        /// Felhasználó létrehozása.
+        /// Rendelés létrehozása.
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -48,9 +49,10 @@ namespace Webshop.Controllers
         ///     POST /Todo
         ///     {
         ///        "id": 1,
-        ///        "name": "Melvin",
-        ///        "password": "SDSD535FDF32GAS",
-        ///        "email": "melvinakalandor@gmail.com"
+        ///        "PaymentMetod": "Cash",
+        ///        "ShippingMethod": "Via ship",
+        ///        "orderTime": "2020.10.10 10:10:10",
+        ///        "orderStatus": "delivered"
         ///     }
         ///
         /// </remarks>
@@ -61,15 +63,15 @@ namespace Webshop.Controllers
         [HttpPost("/[controller]/new")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<User> Create(User item)
+        public ActionResult<Order> Create(Order item)
         {
-            _context.Users.Add(item);
+            _context.Orders.Add(item);
             _context.SaveChanges();
 
-            return CreatedAtRoute("GetNewUser", new { id = item.Id }, item);
+            return CreatedAtRoute("GetNewUser", new { id = item.OrderId }, item);
         }
         /// <summary>
-        /// Felhasználó frissítése.
+        /// Rendelések frissítése.
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -77,31 +79,32 @@ namespace Webshop.Controllers
         ///     POST /Todo
         ///     {
         ///        "id": 1,
-        ///        "name": "Melvin",
-        ///        "password": "SDSD535FDF32GAS",
-        ///        "email": "melvinakalandor@gmail.com"
+        ///        "PaymentMetod": "CreditCard",
+        ///        "ShippingMethod": "Via train",
+        ///        "orderTime": "2020.10.10 10:10:10",
+        ///        "orderStatus": "destroyed"
         ///     }
         ///
         /// </remarks>
         /// <param name="id"></param>
-        /// <param name="user"></param>
+        /// <param name="order"></param>
         /// <returns>A newly created User</returns>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>            
         [HttpPut("/[controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Update(string id, User user)
+        public IActionResult Update(int id, Order order)
         {
-            var item = _context.Users.Find(id);
+            var item = _context.Orders.Find(id);
 
             if (item == null)
             {
                 return NotFound();
             }
-            
 
-            _context.Entry(item).CurrentValues.SetValues(user);
+
+            _context.Entry(item).CurrentValues.SetValues(order);
             _context.SaveChanges();
 
             return NoContent();

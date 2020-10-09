@@ -11,36 +11,36 @@ namespace Webshop.Controllers
     [Produces("application/json")]
     [Route("/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class ReviewController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        
-        public UserController(ApplicationDbContext context)
+
+        public ReviewController(ApplicationDbContext context)
         {
             _context = context;
         }
-        // Felhasználó CRUD
+        // Értékelés CRUD
         /// <summary>
-        /// Kitöröl egy adott felhasználót.
+        /// Kitöröl egy adott értékelést.
         /// </summary>
         /// <param name="id"></param>        
         [HttpDelete("/[controller]/del/{id}")]
-        public IActionResult Delete(string id)
+        public IActionResult Delete(int id)
         {
-            var todo = _context.Users.Find(id);
+            var todo = _context.Reviews.Find(id);
 
             if (todo == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(todo);
+            _context.Reviews.Remove(todo);
             _context.SaveChanges();
 
             return NoContent();
         }
         /// <summary>
-        /// Felhasználó létrehozása.
+        /// Értékelést létrehozása.
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -48,28 +48,27 @@ namespace Webshop.Controllers
         ///     POST /Todo
         ///     {
         ///        "id": 1,
-        ///        "name": "Melvin",
-        ///        "password": "SDSD535FDF32GAS",
-        ///        "email": "melvinakalandor@gmail.com"
+        ///        "description": "hat ez elegge gagyi",
+        ///        "star": 2
         ///     }
         ///
         /// </remarks>
         /// <param name="item"></param>
-        /// <returns>A newly created User</returns>
+        /// <returns>A newly created Category</returns>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>            
         [HttpPost("/[controller]/new")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<User> Create(User item)
+        public ActionResult<Review> Create(Review item)
         {
-            _context.Users.Add(item);
+            _context.Reviews.Add(item);
             _context.SaveChanges();
 
-            return CreatedAtRoute("GetNewUser", new { id = item.Id }, item);
+            return CreatedAtRoute("GetNewCategory", new { id = item.ReviewId }, item);
         }
         /// <summary>
-        /// Felhasználó frissítése.
+        /// Értékelés frissítése.
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -77,31 +76,29 @@ namespace Webshop.Controllers
         ///     POST /Todo
         ///     {
         ///        "id": 1,
-        ///        "name": "Melvin",
-        ///        "password": "SDSD535FDF32GAS",
-        ///        "email": "melvinakalandor@gmail.com"
+        ///        "name": "zsebora"
         ///     }
         ///
         /// </remarks>
         /// <param name="id"></param>
-        /// <param name="user"></param>
-        /// <returns>A newly created User</returns>
+        /// <param name="review"></param>
+        /// <returns>A newly created Category</returns>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>            
         [HttpPut("/[controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Update(string id, User user)
+        public IActionResult Update(int id, Review review)
         {
-            var item = _context.Users.Find(id);
+            var item = _context.Reviews.Find(id);
 
             if (item == null)
             {
                 return NotFound();
             }
-            
 
-            _context.Entry(item).CurrentValues.SetValues(user);
+
+            _context.Entry(item).CurrentValues.SetValues(review);
             _context.SaveChanges();
 
             return NoContent();
