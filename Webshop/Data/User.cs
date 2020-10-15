@@ -11,7 +11,7 @@ namespace Webshop.Data
          public virtual ICollection<UserLogin> Logins { get; set; }
          public virtual ICollection<UserToken> Tokens { get; set; }*/
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+       [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public string UserId { get; set; }
 
         //Egy User-nek lehet több review-ja is termékekről.        
