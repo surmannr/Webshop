@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,17 +26,17 @@ namespace Webshop.Controllers
         /// </summary>
         /// <param name="id"></param>        
         [HttpDelete("/[controller]/del/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var todo = _context.Suppliers.Find(id);
+            var item = await _context.Suppliers.Where(c => c.SupplierId == id).FirstOrDefaultAsync();
 
-            if (todo == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            _context.Suppliers.Remove(todo);
-            _context.SaveChanges();
+            _context.Suppliers.Remove(item);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -54,19 +55,23 @@ namespace Webshop.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <param name="item"></param>
+        /// <param name="supplier"></param>
         /// <returns>A newly created Supplier</returns>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>            
         [HttpPost("/[controller]/new")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Supplier> Create(Supplier item)
+        public async Task<ActionResult> Create(SupplierDto supplier)
         {
-            _context.Suppliers.Add(item);
-            _context.SaveChanges();
-
-            return CreatedAtRoute("GetNewSupplier", new { id = item.SupplierId }, item);
+            if(supplier != null)
+            {
+                Supplier destination = MyMapper.myMapper<Supplier, SupplierDto>(ref supplier);
+                _context.Suppliers.Add(destination);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction("/[controller]");
+            //return CreatedAtRoute("GetNewSupplier", new { id = item.SupplierId }, item);
         }
         /// <summary>
         /// Beszállító frissítése.
@@ -84,25 +89,26 @@ namespace Webshop.Controllers
         ///
         /// </remarks>
         /// <param name="id"></param>
-        /// <param name="product"></param>
+        /// <param name="supplier"></param>
         /// <returns>A newly created Supplier</returns>
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>            
         [HttpPut("/[controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Update(int id, Supplier supplier)
+        public async Task<IActionResult> Update(int id, SupplierDto supplier)
         {
-            var item = _context.Suppliers.Find(id);
+            var item = await _context.Suppliers.Where(c => c.SupplierId == id).FirstOrDefaultAsync();
 
             if (item == null)
             {
                 return NotFound();
             }
 
+            Supplier destination = MyMapper.myMapper<Supplier, SupplierDto>(ref supplier);
 
-            _context.Entry(item).CurrentValues.SetValues(supplier);
-            _context.SaveChanges();
+            _context.Entry(item).CurrentValues.SetValues(destination);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

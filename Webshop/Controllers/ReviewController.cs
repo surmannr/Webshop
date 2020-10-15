@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,17 +26,17 @@ namespace Webshop.Controllers
         /// </summary>
         /// <param name="id"></param>        
         [HttpDelete("/[controller]/del/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var todo = _context.Reviews.Find(id);
+            var item = await _context.Reviews.Where(c => c.ReviewId == id).FirstOrDefaultAsync();
 
-            if (todo == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            _context.Reviews.Remove(todo);
-            _context.SaveChanges();
+            _context.Reviews.Remove(item);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -60,12 +61,14 @@ namespace Webshop.Controllers
         [HttpPost("/[controller]/new")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Review> Create(Review item)
+        public async Task<ActionResult> Create(ReviewDto item)
         {
-            _context.Reviews.Add(item);
-            _context.SaveChanges();
+            Review destination = MyMapper.myMapper<Review, ReviewDto>(ref item);
 
-            return CreatedAtRoute("GetNewCategory", new { id = item.ReviewId }, item);
+            _context.Reviews.Add(destination);
+             await _context.SaveChangesAsync();
+
+            return RedirectToAction("/[controller]");
         }
         /// <summary>
         /// Értékelés frissítése.
@@ -88,18 +91,18 @@ namespace Webshop.Controllers
         [HttpPut("/[controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Update(int id, Review review)
+        public async Task<IActionResult> Update(int id, ReviewDto review)
         {
-            var item = _context.Reviews.Find(id);
+            var item = await _context.Reviews.Where(c => c.ReviewId == id).FirstOrDefaultAsync();
 
             if (item == null)
             {
                 return NotFound();
             }
+            Review destination = MyMapper.myMapper<Review, ReviewDto>(ref review);
 
-
-            _context.Entry(item).CurrentValues.SetValues(review);
-            _context.SaveChanges();
+            _context.Entry(item).CurrentValues.SetValues(destination);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,17 +26,17 @@ namespace Webshop.Controllers
         /// </summary>
         /// <param name="id"></param>        
         [HttpDelete("/[controller]/del/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var todo = _context.Orders.Find(id);
+            var item = await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
 
-            if (todo == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            _context.Orders.Remove(todo);
-            _context.SaveChanges();
+            _context.Orders.Remove(item);
+           await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -63,12 +64,14 @@ namespace Webshop.Controllers
         [HttpPost("/[controller]/new")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Order> Create(Order item)
+        public async Task<ActionResult> Create(OrderDto item)
         {
-            _context.Orders.Add(item);
-            _context.SaveChanges();
+            Order destination = MyMapper.myMapper<Order, OrderDto>(ref item);
 
-            return CreatedAtRoute("GetNewUser", new { id = item.OrderId }, item);
+            _context.Orders.Add(destination);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("/[controller]");
         }
         /// <summary>
         /// Rendelések frissítése.
@@ -94,18 +97,18 @@ namespace Webshop.Controllers
         [HttpPut("/[controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Update(int id, Order order)
+        public async Task<IActionResult> Update(int id, OrderDto order)
         {
-            var item = _context.Orders.Find(id);
+            var item = await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
 
             if (item == null)
             {
                 return NotFound();
             }
+            Order destination = MyMapper.myMapper<Order, OrderDto>(ref order);
 
-
-            _context.Entry(item).CurrentValues.SetValues(order);
-            _context.SaveChanges();
+            _context.Entry(item).CurrentValues.SetValues(destination);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

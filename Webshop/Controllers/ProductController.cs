@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,17 +26,17 @@ namespace Webshop.Controllers
         /// </summary>
         /// <param name="id"></param>        
         [HttpDelete("/[controller]/del/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var todo = _context.Products.Find(id);
+            var item = await _context.Products.Where(c => c.ProductID == id).FirstOrDefaultAsync();
 
-            if (todo == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            _context.Products.Remove(todo);
-            _context.SaveChanges();
+            _context.Products.Remove(item);
+            await _context.SaveChangesAsync();
             
             return NoContent();
         }
@@ -63,12 +64,15 @@ namespace Webshop.Controllers
         [HttpPost("/[controller]/new")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Product> Create(Product item)
+        public async Task<ActionResult> Create(ProductDto item)
         {
-            _context.Products.Add(item);
-            _context.SaveChanges();
-            
-            return CreatedAtRoute("GetNewProduct", new { id = item.ProductID }, item);
+
+            Product destination = MyMapper.myMapper<Product, ProductDto>(ref item);
+
+            _context.Products.Add(destination);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("/[controller]");
         }
         /// <summary>
         /// Termék frissítése.
@@ -95,18 +99,18 @@ namespace Webshop.Controllers
         [HttpPut("/[controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Update(int id, Product product)
+        public async Task<IActionResult> Update(int id, ProductDto product)
         {
-            var item = _context.Products.Find(id);
+            var item = await _context.Products.Where(c => c.ProductID == id).FirstOrDefaultAsync();
 
             if (item == null)
             {
                 return NotFound();
             }
+            Product destination = MyMapper.myMapper<Product, ProductDto>(ref product);
 
-
-            _context.Entry(item).CurrentValues.SetValues(product);
-            _context.SaveChanges();
+            _context.Entry(item).CurrentValues.SetValues(destination);
+            await  _context.SaveChangesAsync();
 
             return NoContent();
         }

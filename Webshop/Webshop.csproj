@@ -6,9 +6,18 @@
 
   <ItemGroup>
     <None Remove="Controllers\NewFile.txt" />
+    <None Remove="Data\DTO\CartDto" />
+    <None Remove="Data\DTO\NewFile.txt" />
+    <None Remove="Data\DTO\NewFile1.txt" />
+    <None Remove="Data\DTO\NewFile2.txt" />
+    <None Remove="Data\DTO\NewFile3.txt" />
+    <None Remove="Data\DTO\NewFile4.txt" />
+    <None Remove="Data\DTO\OrderItemDto" />
+    <None Remove="Data\DTO\ReviewDto" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="3.1.8" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.8" />

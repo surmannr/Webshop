@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,23 +20,43 @@ namespace Webshop.Controllers
         {
             _context = context;
         }
+
+
+        [HttpGet("/[controller]/{userid}")]
+        public async Task<User> GetUser(string userid)
+        {
+            var item = await _context.Users.Where(c => c.Id == userid).FirstOrDefaultAsync();           
+            return item;
+        }
+        
+        [HttpGet("/[controller]")]
+        public async Task<List<User>> GetCarts()
+        {
+
+            //var item = await _context.carts.select(d);
+            //var test = await _context.carts.where(i => i.cartid != null).tolist();
+            return await _context.Users.ToListAsync();
+        }
+
+
         // Felhasználó CRUD
         /// <summary>
         /// Kitöröl egy adott felhasználót.
         /// </summary>
         /// <param name="id"></param>        
         [HttpDelete("/[controller]/del/{id}")]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
-            var todo = _context.Users.Find(id);
+            //var item = await _context.Users.FindAsync(id);
+            var item = await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
 
-            if (todo == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            _context.Users.Remove(todo);
-            _context.SaveChanges();
+            _context.Users.Remove(item);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -61,12 +82,15 @@ namespace Webshop.Controllers
         [HttpPost("/[controller]/new")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<User> Create(User item)
+        public async Task<ActionResult> Create(User item)
         {
-            _context.Users.Add(item);
-            _context.SaveChanges();
+            if(item != null)
+            {
+                _context.Users.Add(item);
+                await _context.SaveChangesAsync();
+            }
 
-            return CreatedAtRoute("GetNewUser", new { id = item.Id }, item);
+            return RedirectToAction("/[controller]");
         }
         /// <summary>
         /// Felhasználó frissítése.
@@ -91,18 +115,19 @@ namespace Webshop.Controllers
         [HttpPut("/[controller]/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Update(string id, User user)
+        public async Task<IActionResult> Update(string id, UserDto user)
         {
-            var item = _context.Users.Find(id);
+            var item = await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
 
             if (item == null)
             {
                 return NotFound();
             }
+            //User destination = MyMapper.myMapper<User, UserDto>(ref user);
+            var destination = new User(cart: user.Cart, _Username: user.Username, _Email: user.Email, _Id: user.Id);
             
-
-            _context.Entry(item).CurrentValues.SetValues(user);
-            _context.SaveChanges();
+            _context.Entry(item).CurrentValues.SetValues(destination);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }

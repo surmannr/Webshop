@@ -19,5 +19,12 @@ namespace Webshop.Data
 
         //Egy User-nek van egy kosara        
         public Cart Cart { get; set; }
+
+        public User(string _Username,string _Email,Cart cart,string _Id) : base() {
+            this.Cart = cart;
+            base.UserName = _Username;
+            base.Id = _Id;
+            base.Email = _Email;
+        }
     }
 }
