@@ -1,8 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Webshop.Data;
 
@@ -19,23 +22,39 @@ namespace Webshop.Controllers
         {
             _context = context;
         }
+        
+        [HttpGet("/[controller]/{userid}")]
+        public async Task<Cart> GetCart(int id)
+        {
+            var item = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
+            return item;
+        }
+
+        [HttpGet("/[controller]/")]
+        public async Task<List<Cart>> GetCarts() {
+            
+            //var item = await _context.carts.select(d);
+            //var test = await _context.carts.where(i => i.cartid != null).tolist();
+            return await _context.Carts.ToListAsync();
+        }
+
         // Kosár CRUD
         /// <summary>
         /// Kitöröl egy adott kosarat.
         /// </summary>
         /// <param name="id"></param>        
         [HttpDelete("/[controller]/{userid}/del/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var todo = _context.Carts.Find(id);
+            var item = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
 
-            if (todo == null)
+            if (item == null)
             {
                 return NotFound();
             }
-
-            _context.Carts.Remove(todo);
-            _context.SaveChanges();
+            
+            _context.Carts.Remove(item);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -59,13 +78,19 @@ namespace Webshop.Controllers
         [HttpPost("/[controller]/{userid}/new")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public ActionResult<Cart> Create(Cart item)
+        public async Task<ActionResult> Create(CartDto item)
         {
-            _context.Carts.Add(item);
-            _context.SaveChanges();
+            if  (item != null) {
 
-            return CreatedAtRoute("GetNewCart", new { id = item.CartId }, item);
+               Cart destination = MyMapper.myMapper<Cart, CartDto>(ref item);
+
+                _context.Carts.Add(destination);
+                await  _context.SaveChangesAsync();
+            }
+            return RedirectToAction("/[controller]");
+            //return CreatedAtRoute("GetNewCart",  new { id = item.CartId }, item);
         }
+
         /// <summary>
         /// Kosár frissítése.
         /// </summary>
@@ -87,21 +112,38 @@ namespace Webshop.Controllers
         [HttpPut("/[controller]/{userid}/{id}")]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public IActionResult Update(int id, Cart cart)
+        public async Task<IActionResult> Update(int id, CartDto cart)
         {
-            var item = _context.Suppliers.Find(id);
+
+            var item = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
 
             if (item == null)
             {
                 return NotFound();
             }
+            
+            Cart destination = MyMapper.myMapper<Cart, CartDto>(ref cart);
+            
+                
+                //Cart destination = CartMapper(cart);
 
-
-            _context.Entry(item).CurrentValues.SetValues(cart);
-            _context.SaveChanges();
+            _context.Entry(item).CurrentValues.SetValues(destination);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
+        
+        /*private static Cart CartMapper(CartDto cart)
+        {
+            var config = new MapperConfiguration(cfg =>
+            {
+                cfg.CreateMap<Cart, CartDto>();
+            });
+            IMapper iMapper = config.CreateMapper();
+            var destination = iMapper.Map<CartDto, Cart>(cart);
+            return destination;
+        }*/
+       
     }
 }
 

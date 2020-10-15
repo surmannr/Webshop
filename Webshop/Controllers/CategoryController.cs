@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,17 +26,17 @@ namespace Webshop.Controllers
         /// </summary>
         /// <param name="id"></param>        
         [HttpDelete("/[controller]/del/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var todo = _context.Categories.Find(id);
+            var item = await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
 
-            if (todo == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            _context.Categories.Remove(todo);
-            _context.SaveChanges();
+            _context.Categories.Remove(item);
+            await _context.SaveChangesAsync();
 
             return NoContent();
         }
@@ -59,12 +60,17 @@ namespace Webshop.Controllers
            [HttpPost("/[controller]/new")]
            [ProducesResponseType(StatusCodes.Status201Created)]
            [ProducesResponseType(StatusCodes.Status400BadRequest)]
-           public ActionResult<Category> Create(Category item)
+           public async Task<ActionResult> Create(CategoryDto item)
            {
-               _context.Categories.Add(item);
-               _context.SaveChanges();
+            if  (item != null) {
 
-               return CreatedAtRoute("GetNewCategory", new { id = item.CategoryId }, item);
+                Category destination = MyMapper.myMapper<Category, CategoryDto>(ref item);
+
+                _context.Categories.Add(destination);
+               await _context.SaveChangesAsync();
+            }
+
+             return RedirectToAction("/[controller]"); 
            }
            /// <summary>
            /// Kategória frissítése.
@@ -87,18 +93,18 @@ namespace Webshop.Controllers
            [HttpPut("/[controller]/{id}")]
            [ProducesResponseType(StatusCodes.Status201Created)]
            [ProducesResponseType(StatusCodes.Status400BadRequest)]
-           public IActionResult Update(int id, Category category)
+           public async Task<IActionResult> Update(int id, CategoryDto category)
            {
-               var item = _context.Categories.Find(id);
+                 var item = await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
 
-               if (item == null)
+            if (item == null)
                {
                    return NotFound();
                }
+            Category destination = MyMapper.myMapper<Category, CategoryDto>(ref category);
 
-
-               _context.Entry(item).CurrentValues.SetValues(category);
-               _context.SaveChanges();
+            _context.Entry(item).CurrentValues.SetValues(destination);
+               await  _context.SaveChangesAsync();
 
                return NoContent();
            }

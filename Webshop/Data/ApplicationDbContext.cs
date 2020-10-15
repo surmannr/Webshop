@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Webshop.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<User,UserRole,string>
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public DbSet<Cart> Carts { get; set; }
         public DbSet<Category> Categories { get; set; }
@@ -17,14 +17,14 @@ namespace Webshop.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Status> Status { get; set; }
-
+        
         //  public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<User>().HasKey(e => e.UserId);
+            //modelBuilder.Entity<User>().HasKey(e => e.UserId);
 
             modelBuilder.Entity<User>()
                 .HasOne(b => b.Cart)
