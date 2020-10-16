@@ -1,135 +1,100 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
+using ApplicationDbContext = Webshop.Data.ApplicationDbContext;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Webshop.Controllers
 {
-    [Produces("application/json")]
-    [Route("/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        
+        //private readonly UserManager<User> _userManager;
+
         public UserController(ApplicationDbContext context)
         {
             _context = context;
         }
-
-
-        [HttpGet("/[controller]/{userid}")]
-        public async Task<User> GetUser(string userid)
+        // GET: api/<UserController>
+        [HttpGet]
+        public async Task<IEnumerable<User>> Get()
         {
-            var item = await _context.Users.Where(c => c.Id == userid).FirstOrDefaultAsync();           
-            return item;
-        }
-        
-        [HttpGet("/[controller]")]
-        public async Task<List<User>> GetCarts()
-        {
-
-            //var item = await _context.carts.select(d);
-            //var test = await _context.carts.where(i => i.cartid != null).tolist();
             return await _context.Users.ToListAsync();
         }
 
-
-        // Felhasználó CRUD
-        /// <summary>
-        /// Kitöröl egy adott felhasználót.
-        /// </summary>
-        /// <param name="id"></param>        
-        [HttpDelete("/[controller]/del/{id}")]
-        public async Task<IActionResult> Delete(string id)
+        // GET api/<UserController>/5
+        [HttpGet("{id}")]
+        public async Task<User> Get(string id)
         {
-            //var item = await _context.Users.FindAsync(id);
-            var item = await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
-
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            _context.Users.Remove(item);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
         }
-        /// <summary>
-        /// Felhasználó létrehozása.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "name": "Melvin",
-        ///        "password": "SDSD535FDF32GAS",
-        ///        "email": "melvinakalandor@gmail.com"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="item"></param>
-        /// <returns>A newly created User</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPost("/[controller]/new")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create(User item)
-        {
-            if(item != null)
-            {
-                _context.Users.Add(item);
-                await _context.SaveChangesAsync();
-            }
 
-            return RedirectToAction("/[controller]");
-        }
-        /// <summary>
-        /// Felhasználó frissítése.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "name": "Melvin",
-        ///        "password": "SDSD535FDF32GAS",
-        ///        "email": "melvinakalandor@gmail.com"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="user"></param>
-        /// <returns>A newly created User</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPut("/[controller]/{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(string id, UserDto user)
+        // POST api/<UserController>
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] UserDto model)
         {
-            var item = await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
-
-            if (item == null)
-            {
-                return NotFound();
-            }
-            //User destination = MyMapper.myMapper<User, UserDto>(ref user);
-            var destination = new User(cart: user.Cart, _Username: user.Username, _Email: user.Email, _Id: user.Id);
+            //var user = new UserDto { Username = model.Username, Email = model.Email, Cart = new Cart()};
+            //var newUser = await _userManager.CreateAsync(user, model.Password);
             
-            _context.Entry(item).CurrentValues.SetValues(destination);
+            var dbCart = _context.Carts.FirstOrDefault(v => v.CartId == model.Cart.CartId);
+            if (dbCart == null)
+                dbCart = new Cart();
+            var dbUser = new User()
+            {
+                UserName = model.Username,
+                Email = model.Email,
+                Cart = dbCart
+            };
+
+            _context.Users.Add(dbUser);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        // PUT api/<UserController>/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(string id, [FromBody] UserDto newUser)
+        {
+            if (id != newUser.Id)
+                return BadRequest();
+
+            var dbUser = _context.Users.SingleOrDefault(p => p.Id == id);
+
+            if (dbUser == null)
+                return NotFound();
+
+            // modositasok elvegzese
+            dbUser.UserName = newUser.Username;
+            dbUser.Email = newUser.Email;
+
+
+            // mentes az adatbazisban
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return NoContent(); // 204 NoContent valasz
+        }
+
+        // DELETE api/<UserController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(string id)
+        {
+            var dbUser = _context.Users.SingleOrDefault(p => p.Id == id);
+            
+            if (dbUser == null)
+                return NotFound();
+
+            _context.Users.Remove(dbUser);
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // a sikeres torlest 204 No
         }
     }
 }

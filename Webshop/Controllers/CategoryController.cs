@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
 
 namespace Webshop.Controllers
 {
-    [Produces("application/json")]
-    [Route("/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -20,93 +18,72 @@ namespace Webshop.Controllers
         {
             _context = context;
         }
-        // Kategória CRUD
-        /// <summary>
-        /// Kitöröl egy adott kategóriát.
-        /// </summary>
-        /// <param name="id"></param>        
-        [HttpDelete("/[controller]/del/{id}")]
-        public async Task<IActionResult> Delete(int id)
+
+        // GET: api/<CategoryController>
+        [HttpGet]
+        public async Task<IEnumerable<Category>> Get()
         {
-            var item = await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
+            return await _context.Categories.ToListAsync();
+        }
 
-            if (item == null)
+        // GET api/<CategoryController>/5
+        [HttpGet("{id}")]
+        public async Task<Category> Get(int id)
+        {
+            return await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
+
+        }
+        
+        // POST api/<CategoryController>
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] CategoryDto newCategory)
+        {
+            var dbCategory = new Category()
             {
-                return NotFound();
-            }
+                Category_Name = newCategory.Category_Name,
+            };
 
-            _context.Categories.Remove(item);
+            _context.Categories.Add(dbCategory);
             await _context.SaveChangesAsync();
-
             return NoContent();
         }
-           /// <summary>
-           /// Felhasználó létrehozása.
-           /// </summary>
-           /// <remarks>
-           /// Sample request:
-           ///
-           ///     POST /Todo
-           ///     {
-           ///        "id": 1,
-           ///        "name": "karora"
-           ///     }
-           ///
-           /// </remarks>
-           /// <param name="item"></param>
-           /// <returns>A newly created Category</returns>
-           /// <response code="201">Returns the newly created item</response>
-           /// <response code="400">If the item is null</response>            
-           [HttpPost("/[controller]/new")]
-           [ProducesResponseType(StatusCodes.Status201Created)]
-           [ProducesResponseType(StatusCodes.Status400BadRequest)]
-           public async Task<ActionResult> Create(CategoryDto item)
-           {
-            if  (item != null) {
 
-                Category destination = MyMapper.myMapper<Category, CategoryDto>(ref item);
+        // PUT api/<CategoryController>/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(int id, [FromBody] CategoryDto newCategory)
+        {
+            if (id != newCategory.CategoryId)
+                return BadRequest();
 
-                _context.Categories.Add(destination);
-               await _context.SaveChangesAsync();
-            }
+            var dbCategory = _context.Categories.SingleOrDefault(p => p.CategoryId == id);
 
-             return RedirectToAction("/[controller]"); 
-           }
-           /// <summary>
-           /// Kategória frissítése.
-           /// </summary>
-           /// <remarks>
-           /// Sample request:
-           ///
-           ///     POST /Todo
-           ///     {
-           ///        "id": 1,
-           ///        "name": "zsebora"
-           ///     }
-           ///
-           /// </remarks>
-           /// <param name="id"></param>
-           /// <param name="category"></param>
-           /// <returns>A newly created Category</returns>
-           /// <response code="201">Returns the newly created item</response>
-           /// <response code="400">If the item is null</response>            
-           [HttpPut("/[controller]/{id}")]
-           [ProducesResponseType(StatusCodes.Status201Created)]
-           [ProducesResponseType(StatusCodes.Status400BadRequest)]
-           public async Task<IActionResult> Update(int id, CategoryDto category)
-           {
-                 var item = await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
+            if (dbCategory == null)
+                return NotFound();
 
-            if (item == null)
-               {
-                   return NotFound();
-               }
-            Category destination = MyMapper.myMapper<Category, CategoryDto>(ref category);
+            // modositasok elvegzese
+            dbCategory.Category_Name = newCategory.Category_Name;
+            dbCategory.Products = newCategory.Products;
 
-            _context.Entry(item).CurrentValues.SetValues(destination);
-               await  _context.SaveChangesAsync();
 
-               return NoContent();
-           }
+            // mentes az adatbazisban
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // 204 NoContent valasz
+        }
+
+        // DELETE api/<CategoryController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var dbCategory = _context.Categories.SingleOrDefault(p => p.CategoryId == id);
+
+            if (dbCategory == null)
+                return NotFound();
+
+            _context.Categories.Remove(dbCategory);
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // a sikeres torlest 204 No
+        }
     }
 }

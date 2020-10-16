@@ -1,116 +1,66 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Webshop.Controllers
 {
-    [Produces("application/json")]
-    [Route("/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class OrderController : ControllerBase
     {
+
         private readonly ApplicationDbContext _context;
 
         public OrderController(ApplicationDbContext context)
         {
             _context = context;
         }
-        // Order CRUD
-        /// <summary>
-        /// Kitöröl egy adott rendelést.
-        /// </summary>
-        /// <param name="id"></param>        
-        [HttpDelete("/[controller]/del/{id}")]
-        public async Task<IActionResult> Delete(int id)
+
+
+        // GET: api/<OrderController>
+        [HttpGet]
+        public async Task<IEnumerable<Order>> Get()
         {
-            var item = await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
-
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            _context.Orders.Remove(item);
-           await _context.SaveChangesAsync();
-
-            return NoContent();
+            return await _context.Orders.ToListAsync();
         }
-      
-        /// <summary>
-        /// Rendelés létrehozása.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "PaymentMetod": "Cash",
-        ///        "ShippingMethod": "Via ship",
-        ///        "orderTime": "2020.10.10 10:10:10",
-        ///        "orderStatus": "delivered"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="item"></param>
-        /// <returns>A newly created User</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPost("/[controller]/new")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create(OrderDto item)
-        {
-            Order destination = MyMapper.myMapper<Order, OrderDto>(ref item);
 
-            _context.Orders.Add(destination);
+        // GET api/<OrderController>/5
+        [HttpGet("{id}")]
+        public async Task<Order> Get(int id)
+        {
+            return await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
+        }
+
+        // POST api/<OrderController>
+        [HttpPost]
+        public void Post([FromBody] string value)
+        {
+        }
+
+        // PUT api/<OrderController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/<OrderController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var dbOrder = _context.Orders.SingleOrDefault(p => p.OrderId == id);
+
+            if (dbOrder == null)
+                return NotFound();
+
+            _context.Orders.Remove(dbOrder);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("/[controller]");
-        }
-        /// <summary>
-        /// Rendelések frissítése.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "PaymentMetod": "CreditCard",
-        ///        "ShippingMethod": "Via train",
-        ///        "orderTime": "2020.10.10 10:10:10",
-        ///        "orderStatus": "destroyed"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="order"></param>
-        /// <returns>A newly created User</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPut("/[controller]/{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(int id, OrderDto order)
-        {
-            var item = await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
-
-            if (item == null)
-            {
-                return NotFound();
-            }
-            Order destination = MyMapper.myMapper<Order, OrderDto>(ref order);
-
-            _context.Entry(item).CurrentValues.SetValues(destination);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NoContent(); // a sikeres torlest 204 No
         }
     }
 }

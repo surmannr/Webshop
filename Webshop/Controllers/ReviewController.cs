@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Webshop.Controllers
 {
-    [Produces("application/json")]
-    [Route("/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class ReviewController : ControllerBase
     {
@@ -20,91 +20,48 @@ namespace Webshop.Controllers
         {
             _context = context;
         }
-        // Értékelés CRUD
-        /// <summary>
-        /// Kitöröl egy adott értékelést.
-        /// </summary>
-        /// <param name="id"></param>        
-        [HttpDelete("/[controller]/del/{id}")]
-        public async Task<IActionResult> Delete(int id)
+
+
+
+        // GET: api/<ReviewController>
+        [HttpGet]
+        public async Task<IEnumerable<Review>> Get()
         {
-            var item = await _context.Reviews.Where(c => c.ReviewId == id).FirstOrDefaultAsync();
+            return await _context.Reviews.ToListAsync();
+        }
 
-            if (item == null)
-            {
+        // GET api/<ReviewController>/5
+        [HttpGet("{id}")]
+        public async Task<Review> Get(int id)
+        {
+            return await _context.Reviews.Where(c => c.ReviewId == id).FirstOrDefaultAsync();
+        }
+
+        // POST api/<ReviewController>
+        [HttpPost]
+        public void Post([FromBody] string value)
+        {
+        }
+
+        // PUT api/<ReviewController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/<ReviewController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var dbReview = _context.Reviews.SingleOrDefault(p => p.ReviewId == id);
+
+            if (dbReview == null)
                 return NotFound();
-            }
 
-            _context.Reviews.Remove(item);
+            _context.Reviews.Remove(dbReview);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-        /// <summary>
-        /// Értékelést létrehozása.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "description": "hat ez elegge gagyi",
-        ///        "star": 2
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="item"></param>
-        /// <returns>A newly created Category</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPost("/[controller]/new")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create(ReviewDto item)
-        {
-            Review destination = MyMapper.myMapper<Review, ReviewDto>(ref item);
-
-            _context.Reviews.Add(destination);
-             await _context.SaveChangesAsync();
-
-            return RedirectToAction("/[controller]");
-        }
-        /// <summary>
-        /// Értékelés frissítése.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "name": "zsebora"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="review"></param>
-        /// <returns>A newly created Category</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPut("/[controller]/{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(int id, ReviewDto review)
-        {
-            var item = await _context.Reviews.Where(c => c.ReviewId == id).FirstOrDefaultAsync();
-
-            if (item == null)
-            {
-                return NotFound();
-            }
-            Review destination = MyMapper.myMapper<Review, ReviewDto>(ref review);
-
-            _context.Entry(item).CurrentValues.SetValues(destination);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NoContent(); // a sikeres torlest 204 No
         }
     }
 }
