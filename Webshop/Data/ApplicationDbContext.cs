@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Webshop.Data
@@ -30,6 +26,17 @@ namespace Webshop.Data
                 .HasOne(b => b.Cart)
                 .WithOne(i => i.User)
                 .HasForeignKey<Cart>(b => b.UserForeignKey);
+
+            modelBuilder.Entity<ProductCart>()
+                        .HasKey(bc => new { bc.CartId, bc.ProductId });
+            modelBuilder.Entity<ProductCart>()
+                        .HasOne(bc => bc.Cart)
+                        .WithMany(b => b.ProductCart)
+                        .HasForeignKey(bc => bc.CartId);
+            modelBuilder.Entity<ProductCart>()
+                        .HasOne(bc => bc.Product)
+                        .WithMany(c => c.ProductCart)
+                        .HasForeignKey(bc => bc.ProductId);
         }
          public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
                : base(options)

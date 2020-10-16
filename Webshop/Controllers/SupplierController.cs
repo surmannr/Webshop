@@ -1,16 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Webshop.Controllers
 {
-    [Produces("application/json")]
-    [Route("/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class SupplierController : ControllerBase
     {
@@ -20,97 +19,48 @@ namespace Webshop.Controllers
         {
             _context = context;
         }
-        // Beszállító CRUD
-        /// <summary>
-        /// Kitöröl egy adott beszállítót.
-        /// </summary>
-        /// <param name="id"></param>        
-        [HttpDelete("/[controller]/del/{id}")]
-        public async Task<IActionResult> Delete(int id)
+
+
+
+        // GET: api/<SupplierController>
+        [HttpGet]
+        public async Task<IEnumerable<Supplier>> Get()
         {
-            var item = await _context.Suppliers.Where(c => c.SupplierId == id).FirstOrDefaultAsync();
+            return await _context.Suppliers.ToListAsync();
+        }
 
-            if (item == null)
-            {
+        // GET api/<SupplierController>/5
+        [HttpGet("{id}")]
+        public async Task<Supplier> Get(int id)
+        {
+            return await _context.Suppliers.Where(c => c.SupplierId == id).FirstOrDefaultAsync();
+        }
+
+        // POST api/<SupplierController>
+        [HttpPost]
+        public void Post([FromBody] string value)
+        {
+        }
+
+        // PUT api/<SupplierController>/5
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+
+        // DELETE api/<SupplierController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var dbSupplier = _context.Suppliers.SingleOrDefault(p => p.SupplierId == id);
+
+            if (dbSupplier == null)
                 return NotFound();
-            }
 
-            _context.Suppliers.Remove(item);
+            _context.Suppliers.Remove(dbSupplier);
             await _context.SaveChangesAsync();
 
-            return NoContent();
-        }
-        /// <summary>
-        /// Beszállító létrehozása.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "name": "Grandiozus Kft",
-        ///        "address": "Mexikó",
-        ///        "multiplier": "1.5"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="supplier"></param>
-        /// <returns>A newly created Supplier</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPost("/[controller]/new")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create(SupplierDto supplier)
-        {
-            if(supplier != null)
-            {
-                Supplier destination = MyMapper.myMapper<Supplier, SupplierDto>(ref supplier);
-                _context.Suppliers.Add(destination);
-                await _context.SaveChangesAsync();
-            }
-            return RedirectToAction("/[controller]");
-            //return CreatedAtRoute("GetNewSupplier", new { id = item.SupplierId }, item);
-        }
-        /// <summary>
-        /// Beszállító frissítése.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "name": "Grandiozus Kft",
-        ///        "address": "Mexikó",
-        ///        "multiplier": "1.5"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="supplier"></param>
-        /// <returns>A newly created Supplier</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPut("/[controller]/{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(int id, SupplierDto supplier)
-        {
-            var item = await _context.Suppliers.Where(c => c.SupplierId == id).FirstOrDefaultAsync();
-
-            if (item == null)
-            {
-                return NotFound();
-            }
-
-            Supplier destination = MyMapper.myMapper<Supplier, SupplierDto>(ref supplier);
-
-            _context.Entry(item).CurrentValues.SetValues(destination);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return NoContent(); // a sikeres torlest 204 No
         }
     }
 }

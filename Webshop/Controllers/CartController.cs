@@ -1,18 +1,16 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
+
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace Webshop.Controllers
 {
-    [Produces("application/json")]
-    [Route("/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CartController : ControllerBase
     {
@@ -22,128 +20,75 @@ namespace Webshop.Controllers
         {
             _context = context;
         }
-        
-        [HttpGet("/[controller]/{userid}")]
-        public async Task<Cart> GetCart(int id)
-        {
-            var item = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
-            return item;
-        }
 
-        [HttpGet("/[controller]/")]
-        public async Task<List<Cart>> GetCarts() {
-            
-            //var item = await _context.carts.select(d);
-            //var test = await _context.carts.where(i => i.cartid != null).tolist();
+        // GET: api/<CartController>
+        [HttpGet]
+        public async Task<IEnumerable<Cart>> Get()
+        {
             return await _context.Carts.ToListAsync();
         }
 
-        // Kosár CRUD
-        /// <summary>
-        /// Kitöröl egy adott kosarat.
-        /// </summary>
-        /// <param name="id"></param>        
-        [HttpDelete("/[controller]/{userid}/del/{id}")]
-        public async Task<IActionResult> Delete(int id)
+        // GET api/<CartController>/5
+        [HttpGet("{id}")]
+        public async Task<Cart> Get(int id)
         {
-            var item = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
+            return await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
 
-            if (item == null)
+        }
+
+        // POST api/<CartController>
+        [HttpPost]
+        public async Task<ActionResult> Post([FromBody] CartDto newCart)
+        {
+            var dbCart = new Cart()
             {
-                return NotFound();
-            }
-            
-            _context.Carts.Remove(item);
-            await _context.SaveChangesAsync();
+                User = newCart.User,
+                UserForeignKey = newCart.UserForeignKey,
+                ProductCart = newCart.ProductCart
+             };
 
+            _context.Carts.Add(dbCart);
+            await _context.SaveChangesAsync();
             return NoContent();
         }
-        /// <summary>
-        /// Kosár létrehozása.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "username": "superboi2001"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="item"></param>
-        /// <returns>A newly created Cart</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPost("/[controller]/{userid}/new")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult> Create(CartDto item)
+
+        // PUT api/<CartController>/5
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Put(int id, [FromBody] CartDto newCart)
         {
-            if  (item != null) {
+            if (id != newCart.CartId)
+                return BadRequest();
 
-               Cart destination = MyMapper.myMapper<Cart, CartDto>(ref item);
+            var dbCart = _context.Carts.SingleOrDefault(p => p.CartId == id);
 
-                _context.Carts.Add(destination);
-                await  _context.SaveChangesAsync();
-            }
-            return RedirectToAction("/[controller]");
-            //return CreatedAtRoute("GetNewCart",  new { id = item.CartId }, item);
-        }
-
-        /// <summary>
-        /// Kosár frissítése.
-        /// </summary>
-        /// <remarks>
-        /// Sample request:
-        ///
-        ///     POST /Todo
-        ///     {
-        ///        "id": 1,
-        ///        "username": "superboi2001"
-        ///     }
-        ///
-        /// </remarks>
-        /// <param name="id"></param>
-        /// <param name="cart"></param>
-        /// <returns>A newly created Cart</returns>
-        /// <response code="201">Returns the newly created item</response>
-        /// <response code="400">If the item is null</response>            
-        [HttpPut("/[controller]/{userid}/{id}")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> Update(int id, CartDto cart)
-        {
-
-            var item = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
-
-            if (item == null)
-            {
+            if (dbCart == null)
                 return NotFound();
-            }
-            
-            Cart destination = MyMapper.myMapper<Cart, CartDto>(ref cart);
-            
-                
-                //Cart destination = CartMapper(cart);
 
-            _context.Entry(item).CurrentValues.SetValues(destination);
+            // modositasok elvegzese
+            dbCart.ProductCart = newCart.ProductCart;
+            dbCart.User = newCart.User;
+            dbCart.UserForeignKey = newCart.UserForeignKey;
+
+
+            // mentes az adatbazisban
             await _context.SaveChangesAsync();
 
-            return NoContent();
+            return NoContent(); // 204 NoContent valasz
         }
-        
-        /*private static Cart CartMapper(CartDto cart)
+
+        // DELETE api/<CartController>/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            var config = new MapperConfiguration(cfg =>
-            {
-                cfg.CreateMap<Cart, CartDto>();
-            });
-            IMapper iMapper = config.CreateMapper();
-            var destination = iMapper.Map<CartDto, Cart>(cart);
-            return destination;
-        }*/
-       
+            var dbCart = _context.Carts.SingleOrDefault(p => p.CartId == id);
+
+            if (dbCart == null)
+                return NotFound();
+
+            _context.Carts.Remove(dbCart);
+            await _context.SaveChangesAsync();
+
+            return NoContent(); // a sikeres torlest 204 No
+        }
     }
 }
-
