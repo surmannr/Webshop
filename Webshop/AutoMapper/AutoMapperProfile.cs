@@ -15,7 +15,9 @@ namespace Webshop.AutoMapper
             CreateMap<Cart, CartDto>().ReverseMap();
             CreateMap<User, UserDto>().ReverseMap();
             CreateMap<Order, OrderDto>().ReverseMap();
-
+            CreateMap<Review, ReviewDto>().ReverseMap();
+            CreateMap<Supplier, SupplierDto>().ReverseMap();
+            CreateMap<Product, ProductDto>().ReverseMap();
         }
     }
 }

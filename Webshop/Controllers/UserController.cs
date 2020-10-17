@@ -50,7 +50,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] UserDto newUser)
         {
             var user = _mapper.Map<User>(newUser);
-            var result = await _userManager.CreateAsync(user);
+            var result = await _userManager.CreateAsync(user, newUser.Password);
 
             if (result.Succeeded)
             {

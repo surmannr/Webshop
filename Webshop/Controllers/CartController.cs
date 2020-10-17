@@ -53,9 +53,7 @@ namespace Webshop.Controllers
             var user = await _userManager.FindByIdAsync(res.UserId);
 
             var mapppelt = _mapper.Map<CartDto>(res);
-
-         
-           
+  
             return mapppelt;
         }
 
@@ -87,7 +85,7 @@ namespace Webshop.Controllers
 
             if (user != null)
             {
-                var cartWaitingForUpdate = _context.Carts.SingleOrDefault(p => p.CartId == id);
+                var cartWaitingForUpdate = await _context.Carts.SingleOrDefaultAsync(p => p.CartId == id);
                 cartWaitingForUpdate.User = user;
             }
             

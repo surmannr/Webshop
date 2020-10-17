@@ -11,6 +11,5 @@ namespace Webshop.Data
         public int Multiplier { get; set; }
 
         // Egy beszállítóhoz több termék is tartozhat
-        public List<Product> Products { get; set; }
     }
 }
