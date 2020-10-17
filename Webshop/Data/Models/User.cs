@@ -7,12 +7,7 @@ namespace Webshop.Data
     public class User : IdentityUser
     {
 
-        /* public virtual ICollection<UserClaim> Claims { get; set; }
-         public virtual ICollection<UserLogin> Logins { get; set; }
-         public virtual ICollection<UserToken> Tokens { get; set; }*/
-
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //public string UserId { get; set; }
+       
 
         //Egy User-nek lehet több review-ja is termékekről.        
         public List<Review> Reviews { get; set; }
@@ -20,11 +15,6 @@ namespace Webshop.Data
         //Egy User-nek van egy kosara        
         public Cart Cart { get; set; }
 
-        /*public User(string _Username,string _Email,Cart cart,string _Id) : base() {
-            this.Cart = cart;
-            base.UserName = _Username;
-            base.Id = _Id;
-            base.Email = _Email;
-        }*/
+       
     }
 }

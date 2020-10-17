@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
@@ -17,44 +17,45 @@ namespace Webshop.Controllers
     public class UserController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
         //private readonly UserManager<User> _userManager;
 
-        public UserController(ApplicationDbContext context)
+        public UserController(ApplicationDbContext context, IMapper mapper, Microsoft.AspNetCore.Identity.UserManager<User> userManager)
         {
             _context = context;
+            _mapper = mapper;
+            _userManager = userManager;
         }
         // GET: api/<UserController>
         [HttpGet]
-        public async Task<IEnumerable<User>> Get()
+        public async Task<IEnumerable<UserDto>> Get()
         {
-            return await _context.Users.ToListAsync();
+            var res = await _context.Users.ToListAsync();
+            var mappelt = _mapper.Map<List<UserDto>>(res);
+            return mappelt;
         }
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public async Task<User> Get(string id)
+        public async Task<UserDto> Get(string id)
         {
-            return await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
+            var res = await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
+            var mappelt = _mapper.Map<UserDto>(res);
+            return mappelt;
         }
 
         // POST api/<UserController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] UserDto model)
+        public async Task<ActionResult> Post([FromBody] UserDto newUser)
         {
-            //var user = new UserDto { Username = model.Username, Email = model.Email, Cart = new Cart()};
-            //var newUser = await _userManager.CreateAsync(user, model.Password);
-            
-            var dbCart = _context.Carts.FirstOrDefault(v => v.CartId == model.Cart.CartId);
-            if (dbCart == null)
-                dbCart = new Cart();
-            var dbUser = new User()
-            {
-                UserName = model.Username,
-                Email = model.Email,
-                Cart = dbCart
-            };
+            var user = _mapper.Map<User>(newUser);
+            var result = await _userManager.CreateAsync(user);
 
-            _context.Users.Add(dbUser);
+            if (result.Succeeded)
+            {
+                result = await _userManager.AddToRoleAsync(user, "User");           
+            }           
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -63,17 +64,17 @@ namespace Webshop.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(string id, [FromBody] UserDto newUser)
         {
-            if (id != newUser.Id)
-                return BadRequest();
 
-            var dbUser = _context.Users.SingleOrDefault(p => p.Id == id);
+            var user = _mapper.Map<User>(newUser);
+            var userWaitingForUpdate = _context.Users.SingleOrDefault(p => p.Id == id);
 
-            if (dbUser == null)
+            if (userWaitingForUpdate == null)
                 return NotFound();
 
-            // modositasok elvegzese
-            dbUser.UserName = newUser.Username;
-            dbUser.Email = newUser.Email;
+            // modositasok elvegzese           
+            userWaitingForUpdate.UserName = user.UserName;
+            userWaitingForUpdate.Email = user.Email;
+
 
 
             // mentes az adatbazisban

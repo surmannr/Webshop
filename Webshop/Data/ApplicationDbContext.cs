@@ -25,7 +25,7 @@ namespace Webshop.Data
             modelBuilder.Entity<User>()
                 .HasOne(b => b.Cart)
                 .WithOne(i => i.User)
-                .HasForeignKey<Cart>(b => b.UserForeignKey);
+                .HasForeignKey<Cart>(b => b.UserId);
 
             modelBuilder.Entity<ProductCart>()
                         .HasKey(bc => new { bc.CartId, bc.ProductId });
@@ -50,7 +50,7 @@ namespace Webshop.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                @"Server=(localdb)\mssqllocaldb;Database=WebShop;Integrated Security=True");
+                @"Data Source=DESKTOP-CJGL63H\SQLEXPRESS;Initial Catalog=PH1ARV;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
     }
 }

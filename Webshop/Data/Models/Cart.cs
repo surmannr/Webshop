@@ -15,7 +15,7 @@ namespace Webshop.Data
         //Egy kosárba több termék is tartozik
         public List<ProductCart> ProductCart { get; set; }
 
-        public string UserForeignKey { get; set; }
+        public string UserId { get; set; }
         public User User { get; set; }
     }
 }

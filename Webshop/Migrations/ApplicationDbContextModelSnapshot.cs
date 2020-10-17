@@ -15,7 +15,7 @@ namespace Webshop.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.8")
+                .HasAnnotation("ProductVersion", "3.1.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -161,14 +161,14 @@ namespace Webshop.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("UserForeignKey")
+                    b.Property<string>("UserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("CartId");
 
-                    b.HasIndex("UserForeignKey")
+                    b.HasIndex("UserId")
                         .IsUnique()
-                        .HasFilter("[UserForeignKey] IS NOT NULL");
+                        .HasFilter("[UserId] IS NOT NULL");
 
                     b.ToTable("Carts");
                 });
@@ -482,7 +482,7 @@ namespace Webshop.Migrations
                 {
                     b.HasOne("Webshop.Data.User", "User")
                         .WithOne("Cart")
-                        .HasForeignKey("Webshop.Data.Cart", "UserForeignKey");
+                        .HasForeignKey("Webshop.Data.Cart", "UserId");
                 });
 
             modelBuilder.Entity("Webshop.Data.Order", b =>

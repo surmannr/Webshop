@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
@@ -13,57 +14,56 @@ namespace Webshop.Controllers
     public class CategoryController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-
-        public CategoryController(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public CategoryController(ApplicationDbContext context,IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         // GET: api/<CategoryController>
         [HttpGet]
-        public async Task<IEnumerable<Category>> Get()
+        public async Task<List<CategoryDto>> Get()
         {
-            return await _context.Categories.ToListAsync();
+            var res = await _context.Categories.ToListAsync();
+            var mappelt =_mapper.Map<List<CategoryDto>>(res);
+            return mappelt;
         }
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public async Task<Category> Get(int id)
+        public async Task<CategoryDto> Get(int id)
         {
-            return await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
+            var res =  await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
+            var mappelt = _mapper.Map<CategoryDto>(res);
+            return mappelt;
 
         }
         
         // POST api/<CategoryController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] CategoryDto newCategory)
+        public async Task<ActionResult> Post([FromBody] CategoryDto newCategoryDto)
         {
-            var dbCategory = new Category()
-            {
-                Category_Name = newCategory.Category_Name,
-            };
-
-            _context.Categories.Add(dbCategory);
+            var newCategory = _mapper.Map<Category>(newCategoryDto);            
+            _context.Categories.Add(newCategory);
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] CategoryDto newCategory)
+        public async Task<ActionResult> Put(int id, [FromBody] CategoryDto newCategoryDto)
         {
-            if (id != newCategory.CategoryId)
-                return BadRequest();
+            var newCategory = _mapper.Map<Category>(newCategoryDto);
+       
 
-            var dbCategory = _context.Categories.SingleOrDefault(p => p.CategoryId == id);
+            var categoryWaitingForUpdate = _context.Categories.SingleOrDefault(p => p.CategoryId == id);
 
-            if (dbCategory == null)
+            if (categoryWaitingForUpdate == null)
                 return NotFound();
 
             // modositasok elvegzese
-            dbCategory.Category_Name = newCategory.Category_Name;
-            dbCategory.Products = newCategory.Products;
-
+            categoryWaitingForUpdate.Category_Name = newCategory.Category_Name;
 
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
