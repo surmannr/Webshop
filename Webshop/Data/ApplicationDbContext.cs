@@ -14,7 +14,7 @@ namespace Webshop.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Status> Status { get; set; }
         
-        //  public DbSet<User> Users { get; set; }
+      
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,10 +43,7 @@ namespace Webshop.Data
            {
            }
 
-        /*public ApplicationDbContext() : base()
-        {
-        }*/
-
+   
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(

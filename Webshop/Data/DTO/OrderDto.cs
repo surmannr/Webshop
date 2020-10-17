@@ -16,12 +16,12 @@ namespace Webshop.Data
 
         public DateTime orderTime { get; set; }
 
-        public Status orderStatus { get; set; }
-
+     //   public int StatusId { get; set; }
+        public string StatusName { get; set; }
+        public string kiVette { get; set; }
         public int OrderId { get; set; }
 
-        //Egy rendelés több termékből áll.
-        public List<OrderItem> orderItems { get; set; }
+       // public List<OrderItem> orderItems { get; set; }
 
 
     }

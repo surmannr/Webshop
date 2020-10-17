@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Webshop.Migrations
 {
-    public partial class init : Migration
+    public partial class kezdo : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -222,17 +222,17 @@ namespace Webshop.Migrations
                     PaymentMetod = table.Column<string>(nullable: true),
                     ShippingMethod = table.Column<string>(nullable: true),
                     orderTime = table.Column<DateTime>(nullable: false),
-                    orderStatusStatusId = table.Column<int>(nullable: true)
+                    StatusId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Orders", x => x.OrderId);
                     table.ForeignKey(
-                        name: "FK_Orders_Status_orderStatusStatusId",
-                        column: x => x.orderStatusStatusId,
+                        name: "FK_Orders_Status_StatusId",
+                        column: x => x.StatusId,
                         principalTable: "Status",
                         principalColumn: "StatusId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -393,9 +393,9 @@ namespace Webshop.Migrations
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Orders_orderStatusStatusId",
+                name: "IX_Orders_StatusId",
                 table: "Orders",
-                column: "orderStatusStatusId");
+                column: "StatusId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductCart_ProductId",

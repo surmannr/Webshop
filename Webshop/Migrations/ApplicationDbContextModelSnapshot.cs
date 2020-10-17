@@ -201,18 +201,18 @@ namespace Webshop.Migrations
                     b.Property<string>("ShippingMethod")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("StatusId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserId")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("orderStatusStatusId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("orderTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("OrderId");
 
-                    b.HasIndex("orderStatusStatusId");
+                    b.HasIndex("StatusId");
 
                     b.ToTable("Orders");
                 });
@@ -487,9 +487,11 @@ namespace Webshop.Migrations
 
             modelBuilder.Entity("Webshop.Data.Order", b =>
                 {
-                    b.HasOne("Webshop.Data.Status", "orderStatus")
+                    b.HasOne("Webshop.Data.Status", "Status")
                         .WithMany()
-                        .HasForeignKey("orderStatusStatusId");
+                        .HasForeignKey("StatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Webshop.Data.OrderItem", b =>
