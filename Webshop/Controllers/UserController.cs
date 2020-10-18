@@ -50,12 +50,13 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] UserDto newUser)
         {
             var user = _mapper.Map<User>(newUser);
-            var result = await _userManager.CreateAsync(user, newUser.Password);
+            var result = await _userManager.CreateAsync(user);
 
-            if (result.Succeeded)
-            {
-                result = await _userManager.AddToRoleAsync(user, "User");           
-            }           
+            // Ezzel kell valamit majd csinálni, ha nincs benne nem kapjuk az error-t és ugyan úgy beleteszi.
+            /* if (result.Succeeded)
+             {
+                 result = await _userManager.AddToRoleAsync(user, "User");           
+             }  */
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -71,9 +72,11 @@ namespace Webshop.Controllers
             if (userWaitingForUpdate == null)
                 return NotFound();
 
-            // modositasok elvegzese           
-            userWaitingForUpdate.UserName = user.UserName;
-            userWaitingForUpdate.Email = user.Email;
+            // modositasok elvegzese    
+            if (user.UserName != null) userWaitingForUpdate.UserName = user.UserName;
+
+            if (user.Email != null) userWaitingForUpdate.Email = user.Email;
+
 
 
 
@@ -88,7 +91,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Delete(string id)
         {
             var dbUser = _context.Users.SingleOrDefault(p => p.Id == id);
-            
+
             if (dbUser == null)
                 return NotFound();
 

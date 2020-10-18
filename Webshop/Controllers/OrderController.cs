@@ -30,8 +30,9 @@ namespace Webshop.Controllers
         public async Task<List<OrderDto>> Get()
         {
             var res = await _context.Orders.ToListAsync();
-            List<OrderDto> retDto = new List<OrderDto>(); 
-            foreach (Order o in res) {              
+            List<OrderDto> retDto = new List<OrderDto>();
+            foreach (Order o in res)
+            {
                 o.Status = await _context.Status.Where(s => s.StatusId == o.StatusId).FirstOrDefaultAsync();
                 var seged = _mapper.Map<OrderDto>(o);
                 var kiVette = await _context.Users.Where(c => c.Id == o.UserId).FirstOrDefaultAsync();
@@ -46,7 +47,10 @@ namespace Webshop.Controllers
         [HttpGet("{id}")]
         public async Task<OrderDto> Get(int id)
         {
-            var res =  await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
+            var res = await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
+
+            if (res == null) return null;
+
             res.Status = await _context.Status.Where(s => s.StatusId == res.StatusId).FirstOrDefaultAsync();
 
             var retDto = _mapper.Map<OrderDto>(res);
@@ -65,7 +69,7 @@ namespace Webshop.Controllers
 
             var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();
             System.Diagnostics.Debug.WriteLine(status.Name);
-             newOrder.Status = status;
+            newOrder.Status = status;
 
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
@@ -76,26 +80,25 @@ namespace Webshop.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] OrderDto newOrderDto)
         {
-            var newOrder =  _mapper.Map<Order>(newOrderDto);
+            var newOrder = _mapper.Map<Order>(newOrderDto);
             var orderWaitingForUpdate = _context.Orders.SingleOrDefault(p => p.OrderId == id);
 
-            if (orderWaitingForUpdate != null) {
-              
+            if (orderWaitingForUpdate != null)
+            {
+
                 var status = await _context.Status.Where(s => s.Name == newOrderDto.StatusName).FirstOrDefaultAsync();
-               
-                orderWaitingForUpdate.PaymentMetod = newOrder.PaymentMetod;
-                orderWaitingForUpdate.ShippingMethod = newOrder.ShippingMethod;
-                orderWaitingForUpdate.orderTime = newOrder.orderTime;
-                orderWaitingForUpdate.Status = status;
-                orderWaitingForUpdate.StatusId = status.StatusId;
+
+                if (newOrder.PaymentMetod != null) orderWaitingForUpdate.PaymentMetod = newOrder.PaymentMetod;
+
+                if (newOrder.ShippingMethod != null) orderWaitingForUpdate.ShippingMethod = newOrder.ShippingMethod;
+
+                if (newOrder.orderTime != null) orderWaitingForUpdate.orderTime = newOrder.orderTime;
+
+                if (newOrder.Status != null) orderWaitingForUpdate.Status = status;
+
+                if (newOrder.StatusId != 0) orderWaitingForUpdate.StatusId = status.StatusId;
 
             }
-
-
-
-
-
-
 
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
