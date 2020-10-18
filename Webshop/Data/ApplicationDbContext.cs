@@ -13,8 +13,8 @@ namespace Webshop.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Status> Status { get; set; }
+        public DbSet<ProductCart> ProductCarts { get; set; }
         
-      
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

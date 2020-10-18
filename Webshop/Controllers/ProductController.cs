@@ -34,10 +34,17 @@ namespace Webshop.Controllers
 
             List<ProductDto> productList = new List<ProductDto>();
 
+            var reviews = await _context.Reviews.ToListAsync();
+
             foreach (Product r in res)
             {
                 var mapppelt = _mapper.Map<ProductDto>(r);
+                foreach (Review rev in reviews)
+                {
+                    if (r.ProductID == rev.ProductId) mapppelt.ReviewsID.Add(rev.ReviewId);
+                }
                 productList.Add(mapppelt);
+                System.Diagnostics.Debug.WriteLine(r.Reviews.Last().Description);
             }
 
             return productList;
@@ -47,8 +54,15 @@ namespace Webshop.Controllers
         [HttpGet("{id}")]
         public async Task<ProductDto> Get(int id)
         {
-            var res = await _context.Products.Where(c => c.ProductID == id).FirstOrDefaultAsync();
+            var res = await _context.Products.FirstOrDefaultAsync(p => p.ProductID == id);
+
+            var reviews = await _context.Reviews.ToListAsync();
+
             var mapppelt = _mapper.Map<ProductDto>(res);
+            foreach (Review rev in reviews)
+            {
+                    if (res.ProductID == rev.ProductId) mapppelt.ReviewsID.Add(rev.ReviewId);
+            }
             return mapppelt;
         }
 
@@ -75,7 +89,6 @@ namespace Webshop.Controllers
             if (newProduct.CategoryId != 0) productWaitingForUpdate.CategoryId = newProduct.CategoryId;
             if (newProduct.Shipping_Price != 0) productWaitingForUpdate.Shipping_Price = newProduct.Shipping_Price;
             if (newProduct.SupplierId != 0) productWaitingForUpdate.SupplierId = newProduct.SupplierId;
-
 
             await _context.SaveChangesAsync();
             return NoContent();

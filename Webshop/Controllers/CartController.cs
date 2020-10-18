@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using AutoMapper;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -32,13 +33,17 @@ namespace Webshop.Controllers
         public async Task<IEnumerable<CartDto>> Get()
         {
             var res = await _context.Carts.ToListAsync();
-
+            var products = await _context.ProductCarts.ToListAsync();
             List<CartDto> cartList = new List<CartDto>();
-
+            //public SortedSet<int> ProductsID { get; set; }
             foreach (Cart c in res)
             {
                 var user = await _userManager.FindByIdAsync(c.UserId);
                 var mapppelt = _mapper.Map<CartDto>(c);
+                foreach (ProductCart rev in products)
+                {
+                    if (c.CartId == rev.CartId) mapppelt.ProductsID.Add(rev.ProductId);
+                }
                 cartList.Add(mapppelt);
             }
 
@@ -54,8 +59,14 @@ namespace Webshop.Controllers
 
             if (res == null) return null;
 
+            var products = await _context.ProductCarts.ToListAsync();
             var user = await _userManager.FindByIdAsync(res.UserId);
             var mapppelt = _mapper.Map<CartDto>(res);
+
+            foreach (ProductCart rev in products)
+            {
+                if (res.CartId == rev.CartId) mapppelt.ProductsID.Add(rev.ProductId);
+            }
             return mapppelt;
         }
 
@@ -70,12 +81,11 @@ namespace Webshop.Controllers
 
             cart.User = user;
 
-
             _context.Carts.Add(cart);
             await _context.SaveChangesAsync();
             return NoContent();
         }
-
+        
         // PUT api/<CartController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] CartDto newCartDto)
@@ -89,7 +99,20 @@ namespace Webshop.Controllers
             {
                 var cartWaitingForUpdate = _context.Carts.SingleOrDefault(p => p.CartId == id);
                 cartWaitingForUpdate.UserId = user.Id;
+                if (newCartDto.ProductsID != null)
+                {
+                    foreach (int pId in newCartDto.ProductsID)
+                    {
+                        ProductCart pc = new ProductCart()
+                        {
+                            CartId = cartWaitingForUpdate.CartId,
+                            ProductId = pId
+                        };
+                        cartWaitingForUpdate.ProductCart.Add(pc);
+                    }
+                }
             }
+           
 
             // mentes az adatbazisban
             await _context.SaveChangesAsync();

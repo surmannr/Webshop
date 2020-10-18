@@ -295,7 +295,7 @@ namespace Webshop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCart");
+                    b.ToTable("ProductCarts");
                 });
 
             modelBuilder.Entity("Webshop.Data.Review", b =>

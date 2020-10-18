@@ -289,7 +289,7 @@ namespace Webshop.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductCart",
+                name: "ProductCarts",
                 columns: table => new
                 {
                     ProductId = table.Column<int>(nullable: false),
@@ -298,15 +298,15 @@ namespace Webshop.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCart", x => new { x.CartId, x.ProductId });
+                    table.PrimaryKey("PK_ProductCarts", x => new { x.CartId, x.ProductId });
                     table.ForeignKey(
-                        name: "FK_ProductCart_Carts_CartId",
+                        name: "FK_ProductCarts_Carts_CartId",
                         column: x => x.CartId,
                         principalTable: "Carts",
                         principalColumn: "CartId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ProductCart_Products_ProductId",
+                        name: "FK_ProductCarts_Products_ProductId",
                         column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "ProductID",
@@ -398,8 +398,8 @@ namespace Webshop.Migrations
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductCart_ProductId",
-                table: "ProductCart",
+                name: "IX_ProductCarts_ProductId",
+                table: "ProductCarts",
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
@@ -444,7 +444,7 @@ namespace Webshop.Migrations
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
-                name: "ProductCart");
+                name: "ProductCarts");
 
             migrationBuilder.DropTable(
                 name: "Reviews");

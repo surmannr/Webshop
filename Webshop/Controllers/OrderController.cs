@@ -30,11 +30,16 @@ namespace Webshop.Controllers
         public async Task<List<OrderDto>> Get()
         {
             var res = await _context.Orders.ToListAsync();
+            var orderitems = await _context.OrderItems.ToListAsync();
             List<OrderDto> retDto = new List<OrderDto>();
             foreach (Order o in res)
             {
                 o.Status = await _context.Status.Where(s => s.StatusId == o.StatusId).FirstOrDefaultAsync();
                 var seged = _mapper.Map<OrderDto>(o);
+                foreach (OrderItem rev in orderitems)
+                {
+                    if (o.OrderId == rev.OrderId) seged.orderItemsID.Add(rev.OrderItemId);
+                }
                 var kiVette = await _context.Users.Where(c => c.Id == o.UserId).FirstOrDefaultAsync();
                 seged.kiVette = kiVette.UserName;
                 retDto.Add(seged);
@@ -48,12 +53,17 @@ namespace Webshop.Controllers
         public async Task<OrderDto> Get(int id)
         {
             var res = await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
+            var orderitems = await _context.OrderItems.ToListAsync();
 
             if (res == null) return null;
 
             res.Status = await _context.Status.Where(s => s.StatusId == res.StatusId).FirstOrDefaultAsync();
 
             var retDto = _mapper.Map<OrderDto>(res);
+            foreach (OrderItem rev in orderitems)
+            {
+                if (res.OrderId == rev.OrderId) retDto.orderItemsID.Add(rev.OrderItemId);
+            }
             var kiVette = await _context.Users.Where(c => c.Id == res.UserId).FirstOrDefaultAsync();
             retDto.kiVette = kiVette.UserName;
 

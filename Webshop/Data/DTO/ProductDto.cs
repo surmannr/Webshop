@@ -15,13 +15,10 @@ namespace Webshop.Data
         //Egy termék egy kategóriához tartozik
         public int CategoryId { get; set; }
 
-        // Egy termék tartozhat egy kosárhoz
-        public List<int> CartsID { get; set; }
-
         //Egy terméket egy beszállító hozhat
         public int SupplierId { get; set; }
 
         //Egy terméknek több review-ja is lehet
-        public List<int> ReviewsID { get; set; }
+        public List<int> ReviewsID { get; set; } = new List<int>();
     }
 }

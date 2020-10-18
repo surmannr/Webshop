@@ -12,6 +12,6 @@ namespace Webshop.Data
 
         public string User { get; set; }
 
-       
+        public List<int> ProductsID { get; set; } = new List<int>();
     }
 }

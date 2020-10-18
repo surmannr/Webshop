@@ -24,6 +24,6 @@ namespace Webshop.Data
         public Supplier Supplier { get; set; }
 
         //Egy terméknek több review-ja is lehet
-        public List<Review> Reviews { get; set; }
+        public List<Review> Reviews { get; set; } = new List<Review>();
     }
 }

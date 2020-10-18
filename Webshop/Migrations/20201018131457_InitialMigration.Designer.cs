@@ -10,7 +10,7 @@ using Webshop.Data;
 namespace Webshop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201017174518_InitialMigration")]
+    [Migration("20201018131457_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -297,7 +297,7 @@ namespace Webshop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCart");
+                    b.ToTable("ProductCarts");
                 });
 
             modelBuilder.Entity("Webshop.Data.Review", b =>

@@ -60,10 +60,14 @@ namespace Webshop.Controllers
             var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductID == newReview.ProductId);
             
             Review review = _mapper.Map<Review>(newReview);
-            
+
             //review.User = user;
             //review.Product = product;
-            if(product != null)review.ProductId = product.ProductID;
+            if (product != null) { 
+                review.ProductId = product.ProductID;
+                product.Reviews.Add(review);
+                System.Diagnostics.Debug.WriteLine(product.Reviews.Last().Description);
+            }
             
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
