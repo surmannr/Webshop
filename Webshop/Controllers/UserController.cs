@@ -53,10 +53,10 @@ namespace Webshop.Controllers
             var result = await _userManager.CreateAsync(user);
 
             // Ezzel kell valamit majd csinálni, ha nincs benne nem kapjuk az error-t és ugyan úgy beleteszi.
-           /* if (result.Succeeded)
-            {
-                result = await _userManager.AddToRoleAsync(user, "User");           
-            }  */         
+            /* if (result.Succeeded)
+             {
+                 result = await _userManager.AddToRoleAsync(user, "User");           
+             }  */
             await _context.SaveChangesAsync();
             return NoContent();
         }
@@ -73,9 +73,9 @@ namespace Webshop.Controllers
                 return NotFound();
 
             // modositasok elvegzese    
-            if(user.UserName != null) userWaitingForUpdate.UserName = user.UserName;
+            if (user.UserName != null) userWaitingForUpdate.UserName = user.UserName;
 
-            if(user.Email != null) userWaitingForUpdate.Email = user.Email;
+            if (user.Email != null) userWaitingForUpdate.Email = user.Email;
 
 
 
@@ -91,7 +91,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Delete(string id)
         {
             var dbUser = _context.Users.SingleOrDefault(p => p.Id == id);
-            
+
             if (dbUser == null)
                 return NotFound();
 

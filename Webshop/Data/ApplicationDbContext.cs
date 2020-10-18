@@ -43,11 +43,11 @@ namespace Webshop.Data
            {
            }
 
-   
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
-                @"Data Source=DESKTOP-CJGL63H\SQLEXPRESS;Initial Catalog=PH1ARV;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                @"Server=(localdb)\mssqllocaldb;Database=WebShop;Integrated Security=True");
         }
     }
 }

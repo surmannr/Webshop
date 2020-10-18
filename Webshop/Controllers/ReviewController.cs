@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
@@ -15,40 +16,84 @@ namespace Webshop.Controllers
     public class ReviewController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
 
-        public ReviewController(ApplicationDbContext context)
+        public ReviewController(ApplicationDbContext context, IMapper mapper, Microsoft.AspNetCore.Identity.UserManager<User> userManager)
         {
             _context = context;
+            _mapper = mapper;
+            _userManager = userManager;
         }
-
-
 
         // GET: api/<ReviewController>
         [HttpGet]
-        public async Task<IEnumerable<Review>> Get()
+        public async Task<IEnumerable<ReviewDto>> Get()
         {
-            return await _context.Reviews.ToListAsync();
+            var res = await _context.Reviews.ToListAsync();
+
+            List<ReviewDto> reviewList = new List<ReviewDto>();
+
+            foreach (Review r in res)
+            { 
+                var mapppelt = _mapper.Map<ReviewDto>(r);
+                reviewList.Add(mapppelt);
+            }
+            
+            return reviewList;
         }
 
         // GET api/<ReviewController>/5
         [HttpGet("{id}")]
-        public async Task<Review> Get(int id)
+        public async Task<ReviewDto> Get(int id)
         {
-            return await _context.Reviews.Where(c => c.ReviewId == id).FirstOrDefaultAsync();
+            var res = await _context.Reviews.Where(c => c.ReviewId == id).FirstOrDefaultAsync();
+            var mapppelt = _mapper.Map<ReviewDto>(res);
+            return mapppelt;
         }
 
         // POST api/<ReviewController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<ActionResult> Post([FromBody] ReviewDto newReview)
         {
+            var user = await _userManager.FindByIdAsync(newReview.UserId);
+            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductID == newReview.ProductId);
+            
+            Review review = _mapper.Map<Review>(newReview);
+            
+            //review.User = user;
+            //review.Product = product;
+            if(product != null)review.ProductId = product.ProductID;
+            
+            _context.Reviews.Add(review);
+            await _context.SaveChangesAsync();
+            return NoContent();
         }
 
         // PUT api/<ReviewController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public async Task<ActionResult> Put(int id, [FromBody] ReviewDto newReview)
         {
-        }
+            var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == newReview.ReviewId);
+            if (reviewWaitingForUpdate == null) return BadRequest();
 
+            var user = await _userManager.FindByIdAsync(newReview.UserId);
+            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductID == newReview.ProductId);
+
+            if (user != null)
+            {
+                reviewWaitingForUpdate.UserId = user.Id;
+            }
+            if (product != null)
+            {
+                reviewWaitingForUpdate.ProductId = product.ProductID;
+            }
+            if (newReview.Stars!=0) reviewWaitingForUpdate.Stars = newReview.Stars;
+            if (newReview.Description != null) reviewWaitingForUpdate.Description = newReview.Description;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
         // DELETE api/<ReviewController>/5
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)

@@ -31,18 +31,19 @@ namespace Webshop.Controllers
         [HttpGet]
         public async Task<IEnumerable<CartDto>> Get()
         {
-            var res =  await _context.Carts.ToListAsync();
+            var res = await _context.Carts.ToListAsync();
 
-             List<CartDto> cartList = new List<CartDto>();
+            List<CartDto> cartList = new List<CartDto>();
 
-             foreach (Cart c in res) {
-                 var user = await _userManager.FindByIdAsync(c.UserId);
-                 var mapppelt = _mapper.Map<CartDto>(c);               
-                 cartList.Add(mapppelt);
-             }
+            foreach (Cart c in res)
+            {
+                var user = await _userManager.FindByIdAsync(c.UserId);
+                var mapppelt = _mapper.Map<CartDto>(c);
+                cartList.Add(mapppelt);
+            }
 
-             return cartList;
-         
+            return cartList;
+
         }
 
         // GET api/<CartController>/5
@@ -51,7 +52,7 @@ namespace Webshop.Controllers
         {
             var res = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
 
-            if (res == null) return null; 
+            if (res == null) return null;
 
             var user = await _userManager.FindByIdAsync(res.UserId);
             var mapppelt = _mapper.Map<CartDto>(res);
@@ -63,12 +64,12 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] CartDto newCartDto)
         {
 
-            var user = await _userManager.FindByIdAsync(newCartDto.UserId);   
+            var user = await _userManager.FindByIdAsync(newCartDto.UserId);
 
             Cart cart = new Cart();
 
-            cart.User = user;            
-            
+            cart.User = user;
+
 
             _context.Carts.Add(cart);
             await _context.SaveChangesAsync();
