@@ -47,6 +47,9 @@ namespace Webshop.Controllers
         public async Task<OrderDto> Get(int id)
         {
             var res =  await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
+
+            if (res == null) return null;
+
             res.Status = await _context.Status.Where(s => s.StatusId == res.StatusId).FirstOrDefaultAsync();
 
             var retDto = _mapper.Map<OrderDto>(res);
@@ -83,19 +86,17 @@ namespace Webshop.Controllers
               
                 var status = await _context.Status.Where(s => s.Name == newOrderDto.StatusName).FirstOrDefaultAsync();
                
-                orderWaitingForUpdate.PaymentMetod = newOrder.PaymentMetod;
-                orderWaitingForUpdate.ShippingMethod = newOrder.ShippingMethod;
-                orderWaitingForUpdate.orderTime = newOrder.orderTime;
-                orderWaitingForUpdate.Status = status;
-                orderWaitingForUpdate.StatusId = status.StatusId;
+                if(newOrder.PaymentMetod != null) orderWaitingForUpdate.PaymentMetod = newOrder.PaymentMetod;
+
+                if(newOrder.ShippingMethod != null) orderWaitingForUpdate.ShippingMethod = newOrder.ShippingMethod;
+
+                if(newOrder.orderTime != null) orderWaitingForUpdate.orderTime = newOrder.orderTime;
+
+                if(newOrder.Status!= null) orderWaitingForUpdate.Status = status;
+
+                if(newOrder.StatusId != 0) orderWaitingForUpdate.StatusId = status.StatusId;
 
             }
-
-
-
-
-
-
 
             // mentes az adatbazisban
             await _context.SaveChangesAsync();

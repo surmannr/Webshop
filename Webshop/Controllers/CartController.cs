@@ -33,15 +33,16 @@ namespace Webshop.Controllers
         {
             var res =  await _context.Carts.ToListAsync();
 
-            List<CartDto> cartList = new List<CartDto>();
+             List<CartDto> cartList = new List<CartDto>();
 
-            foreach (Cart c in res) {
-                var user = await _userManager.FindByIdAsync(c.UserId);
-                var mapppelt = _mapper.Map<CartDto>(c);               
-                cartList.Add(mapppelt);
-            }
-            
-            return cartList;
+             foreach (Cart c in res) {
+                 var user = await _userManager.FindByIdAsync(c.UserId);
+                 var mapppelt = _mapper.Map<CartDto>(c);               
+                 cartList.Add(mapppelt);
+             }
+
+             return cartList;
+         
         }
 
         // GET api/<CartController>/5
@@ -50,12 +51,10 @@ namespace Webshop.Controllers
         {
             var res = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
 
+            if (res == null) return null; 
+
             var user = await _userManager.FindByIdAsync(res.UserId);
-
             var mapppelt = _mapper.Map<CartDto>(res);
-
-         
-           
             return mapppelt;
         }
 
@@ -88,10 +87,8 @@ namespace Webshop.Controllers
             if (user != null)
             {
                 var cartWaitingForUpdate = _context.Carts.SingleOrDefault(p => p.CartId == id);
-                cartWaitingForUpdate.User = user;
+                cartWaitingForUpdate.UserId = user.Id;
             }
-            
-           
 
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
