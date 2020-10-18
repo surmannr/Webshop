@@ -50,7 +50,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] UserDto newUser)
         {
             var user = _mapper.Map<User>(newUser);
-            var result = await _userManager.CreateAsync(user);
+            var result = await _userManager.CreateAsync(user,newUser.Password);
 
             // Ezzel kell valamit majd csinálni, ha nincs benne nem kapjuk az error-t és ugyan úgy beleteszi.
             /* if (result.Succeeded)
@@ -71,15 +71,17 @@ namespace Webshop.Controllers
 
             if (userWaitingForUpdate == null)
                 return NotFound();
-
+            
             // modositasok elvegzese    
             if (user.UserName != null) userWaitingForUpdate.UserName = user.UserName;
 
             if (user.Email != null) userWaitingForUpdate.Email = user.Email;
 
-
-
-
+            if (newUser.Password != null) {
+                await _userManager.RemovePasswordAsync(userWaitingForUpdate);
+                await _userManager.AddPasswordAsync(userWaitingForUpdate, newUser.Password); 
+            }
+            
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
 
