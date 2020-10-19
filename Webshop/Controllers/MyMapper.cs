@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-
+//Ezt nem használjuk, de nem akarom megölni.
 public class MyMapper {
     public static A myMapper<A,B>(ref B dto)
     {
