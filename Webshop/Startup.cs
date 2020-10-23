@@ -16,6 +16,8 @@ using System.Reflection;
 using System.IO;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
+using Microsoft.Extensions.FileProviders;
+using Microsoft.AspNetCore.Http;
 
 namespace Webshop
 {
@@ -31,8 +33,17 @@ namespace Webshop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyCorsPolicy", builder => builder
+                    .WithOrigins("https://localhost:44308/api", "http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));
+            });
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
+            services.AddMvc();
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
@@ -82,6 +93,11 @@ namespace Webshop
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            app.UseCors(builder => builder
+               .WithOrigins("http://localhost:4200/", "http://localhost:4200")
+               .AllowAnyMethod()
+               .AllowCredentials()
+               .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger(c =>
             {
@@ -104,7 +120,20 @@ namespace Webshop
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            app.UseStaticFiles();
+           // app.UseMvcWithDefaultRoute();
+            app.UseDefaultFiles();
+            app.Use(async (context, next) =>
+            {
+                await next();
+                if (context.Response.StatusCode == 404 &&
+                !Path.HasExtension(context.Request.Path.Value) &&
+                !context.Request.Path.Value.StartsWith("/api/"))
+                {
+                    context.Request.Path = "/index.html";
+                    await next();
+                }
+            });
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
