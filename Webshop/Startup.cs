@@ -16,11 +16,14 @@ using System.Reflection;
 using System.IO;
 using Microsoft.OpenApi.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Http;
 
 namespace Webshop
 {
     public class Startup
     {
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -31,6 +34,21 @@ namespace Webshop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("MyCorsPolicy", builder => builder
+                    .WithOrigins("https://localhost:44308/api", "http://localhost:4200")
+                    .AllowAnyMethod()
+                    .AllowCredentials()
+                    .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));
+            });
+
+
+
+
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddDbContext<ApplicationDbContext>(options =>
@@ -39,6 +57,7 @@ namespace Webshop
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddRazorPages();
+
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
@@ -67,6 +86,9 @@ namespace Webshop
             });
         }
 
+
+
+
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -82,6 +104,14 @@ namespace Webshop
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseCors(builder => builder
+        .WithOrigins("http://localhost:4200", "https://localhost:44308/api")
+        .AllowAnyMethod()
+        .AllowCredentials()
+        .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));
+
+
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger(c =>
             {
@@ -101,6 +131,8 @@ namespace Webshop
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseCors("MyCorsPolicy");
 
             app.UseAuthentication();
             app.UseAuthorization();
