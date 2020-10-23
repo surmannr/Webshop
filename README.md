@@ -2,6 +2,6 @@
 
 ASP.NET Core
 
-EntityFramework Core, IdentityUser
+EntityFramework Core, IdentityUser, Auto-Mapper
 
 WebAPI + Swashbuckle
