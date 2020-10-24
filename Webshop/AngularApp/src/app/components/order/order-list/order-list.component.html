@@ -1,0 +1,69 @@
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary float-right m-2"
+        data-toggle="modal" data-target="#exampleModal"
+        (click)="addClick()"
+        data-backdrop="static" data-keyboard="false">
+  Add a new Order
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{ModalTitle}}</h5>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeClick()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-add-modify-order [order]="order" *ngIf="ActivateAddEditOrderComp">
+        </app-add-modify-order>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="tableStyle">
+  <thead>
+    <tr>
+      <th scope="col">OrderID</th>
+      <th scope="col">UserID</th>
+      <th scope="col">paymentMetod</th>
+      <th scope="col">shippingMethod</th>
+      <th scope="col">orderTime</th>
+      <th scope="col">statusName</th>
+      <th scope="col">kiVette</th>
+      <th scope="col">orderItemsID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let dataItem of OrderList">
+      <td>{{dataItem.orderId}}</td>
+      <td>{{dataItem.userId}}</td>
+      <td>{{dataItem.paymentMetod}}</td>
+      <td>{{dataItem.shippingMethod}}</td>
+      <td>{{dataItem.orderTime}}</td>
+      <td>{{dataItem.statusName}}</td>
+      <td>{{dataItem.kiVette}}</td>
+      <td>{{dataItem.orderItemsID}}</td>
+      <td>
+        <button type="button" class="btn btn-primary"
+                data-toggle="modal" data-target="#exampleModal"
+                (click)="editClick(dataItem)"
+                data-backdrop="static" data-keyboard="false">
+          Edit
+        </button>
+        <button type="button" class="btn btn-primary"
+                (click)="deleteClick(dataItem)">
+          Delete
+        </button>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+
+

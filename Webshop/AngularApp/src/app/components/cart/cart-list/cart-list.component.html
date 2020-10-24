@@ -1,0 +1,54 @@
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary float-right m-2"
+        data-toggle="modal" data-target="#exampleModal"
+        (click)="addClick()"
+        data-backdrop="static" data-keyboard="false">
+  Add a new cart
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">{{ModalTitle}}</h5>
+        <button type="button" class="close"
+                data-dismiss="modal" aria-label="Close"
+                (click)="closeClick()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-add-modify-cart [cart]="cart" *ngIf="ActivateAddEditCartComp">
+        </app-add-modify-cart>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table class="tableStyle">
+  <thead>
+    <tr>
+      <th scope="col">CartID</th>
+      <th scope="col">UserID</th>
+      <th scope="col">User</th>
+      <th scope="col">ProductsID</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let dataItem of CartList">
+      <td>{{dataItem.cartId}}</td>
+      <td>{{dataItem.userId}}</td>
+      <td>{{dataItem.user}}</td>
+      <td>{{dataItem.productsID}}</td>
+      <td>
+        <button type="button" class="btn btn-primary"
+                (click)="deleteClick(dataItem)">
+          Delete
+        </button>
+      </td>
+    </tr>
+
+  </tbody>
+</table>
+

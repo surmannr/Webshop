@@ -1,0 +1,22 @@
+<div class="form">
+
+  <label class="col-sm-4 col-form-label">
+    productId
+  </label>
+  <div class="col-sm-10">
+    <input type="number" class="form-control" [(ngModel)]="productId"
+           placeholder="enter productId" />
+  </div>
+  <label class="col-sm-4 col-form-label">
+    cartId
+  </label>
+  <div class="col-sm-10">
+    <input type="number" class="form-control" [(ngModel)]="cartId"
+           placeholder="Enter cartId" />
+  </div>
+
+  <button (click)="addProductCart()" class=" btn btn-primary">Add</button>
+  <button (click)="updateProductCart()" class=" btn btn-primary">Update</button>
+
+</div>
+

@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ReviewService {
+export class CartService {
 
-  readonly baseUrl = 'https://localhost:44308/api/Review';
-
-  constructor(private http: HttpClient) { }
+  readonly baseUrl = 'https://localhost:44308/api/Cart';
+  constructor(private http: HttpClient) {
+  }
 
   getAll(): Observable<any> {
     return this.http.get(this.baseUrl);

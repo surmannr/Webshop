@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Webshop.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initmigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -1,0 +1,38 @@
+<div class="form">
+  <label class="col-sm-2 col-form-label">
+    UserID
+  </label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" [(ngModel)]="userId"
+           placeholder="Enter UserID" />
+  </div>
+
+  <label class="col-sm-2 col-form-label">
+    PaymentMethod
+  </label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" [(ngModel)]="paymentMetod"
+           placeholder="Enter the paymentmetod" />
+  </div>
+
+  <label class="col-sm-2 col-form-label">
+    ShippingMethod
+  </label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" [(ngModel)]="shippingMethod"
+           placeholder="Enter the shippingMethod" />
+  </div>
+
+  <label class="col-sm-2 col-form-label">
+    OrderTime
+  </label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" [(ngModel)]="orderTime"
+           placeholder="Enter the orderTime" />
+  </div>
+
+  <button (click)="addOrder()" *ngIf="order.orderId == 0" class=" btn btn-primary">Add</button>
+  <button (click)="updateOrder()" *ngIf="order.orderId != 0" class=" btn btn-primary">Update</button>
+
+</div>
+

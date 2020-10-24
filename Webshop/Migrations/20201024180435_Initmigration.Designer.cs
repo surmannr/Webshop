@@ -10,8 +10,8 @@ using Webshop.Data;
 namespace Webshop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201018131457_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20201024180435_Initmigration")]
+    partial class Initmigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

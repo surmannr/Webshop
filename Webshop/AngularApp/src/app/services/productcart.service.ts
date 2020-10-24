@@ -5,9 +5,9 @@ import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ReviewService {
+export class ProductcartService {
 
-  readonly baseUrl = 'https://localhost:44308/api/Review';
+  readonly baseUrl = 'https://localhost:44308/api/ProductCart';
 
   constructor(private http: HttpClient) { }
 

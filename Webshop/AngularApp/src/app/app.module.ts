@@ -26,6 +26,22 @@ import { ProductService } from 'src/app/services/product.service';
 import { ProductComponent } from './components/product/product/product.component';
 import { ProductListComponent } from './components/product/product-list/product-list.component';
 import { AddModifyProductComponent } from './components/product/add-modify-product/add-modify-product.component';
+import { CartComponent } from './components/cart/cart/cart.component';
+import { CartListComponent } from './components/cart/cart-list/cart-list.component';
+import { AddModifyCartComponent } from './components/cart/add-modify-cart/add-modify-cart.component';
+import { CartService } from './services/cart.service';
+import { AddModifyOrderComponent } from './components/order/add-modify-order/add-modify-order.component';
+import { OrderComponent } from './components/order/order/order.component';
+import { OrderListComponent } from './components/order/order-list/order-list.component';
+import { OrderService } from './services/order.service';
+import { OrderitemListComponent } from './components/orderitem/orderitem-list/orderitem-list.component';
+import { OrderitemComponent } from './components/orderitem/orderitem/orderitem.component';
+import { AddModifyOrderitemComponent } from './components/orderitem/add-modify-orderitem/add-modify-orderitem.component';
+import { OrderitemService } from './services/orderitem.service';
+import { ProductcartComponent } from './components/productcart/productcart/productcart.component';
+import { ProductcartListComponent } from './components/productcart/productcart-list/productcart-list.component';
+import { AddModifyProductcartComponent } from './components/productcart/add-modify-productcart/add-modify-productcart.component';
+import { ProductcartService } from './services/productcart.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -43,7 +59,19 @@ import { AddModifyProductComponent } from './components/product/add-modify-produ
     UserListComponent,
     ProductComponent,
     ProductListComponent,
-    AddModifyProductComponent
+    AddModifyProductComponent,
+    CartComponent,
+    CartListComponent,
+    AddModifyCartComponent,
+    AddModifyOrderComponent,
+    OrderComponent,
+    OrderListComponent,
+    OrderitemListComponent,
+    OrderitemComponent,
+    AddModifyOrderitemComponent,
+    ProductcartComponent,
+    ProductcartListComponent,
+    AddModifyProductcartComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +80,17 @@ import { AddModifyProductComponent } from './components/product/add-modify-produ
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [CategoryService, ReviewService, SupplierService, UserService, ProductService],
+  providers: [
+    CategoryService,
+    ReviewService,
+    SupplierService,
+    UserService,
+    ProductService,
+    CartService,
+    OrderService,
+    OrderitemService,
+    ProductcartService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
