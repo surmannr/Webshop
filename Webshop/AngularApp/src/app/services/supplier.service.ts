@@ -2,15 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-
-
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService {
-  readonly baseUrl = 'https://localhost:44308/api/Category';
-  constructor(private http: HttpClient) {
-  }
+export class SupplierService {
+
+  readonly baseUrl = 'https://localhost:44308/api/Supplier';
+
+  constructor(private http: HttpClient) { }
 
   getAll(): Observable<any> {
     return this.http.get(this.baseUrl);
@@ -19,7 +18,7 @@ export class CategoryService {
   get(id): Observable<any> {
     return this.http.get(this.baseUrl + '/' + id);
   }
-  
+
   create(data): Observable<any> {
     return this.http.post(this.baseUrl, data);
   }

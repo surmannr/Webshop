@@ -44,7 +44,7 @@ namespace Webshop.Controllers
                     if (r.ProductID == rev.ProductId) mapppelt.ReviewsID.Add(rev.ReviewId);
                 }
                 productList.Add(mapppelt);
-                System.Diagnostics.Debug.WriteLine(r.Reviews.Last().Description);
+             //   System.Diagnostics.Debug.WriteLine(r.Reviews.Last().Description);
             }
 
             return productList;
