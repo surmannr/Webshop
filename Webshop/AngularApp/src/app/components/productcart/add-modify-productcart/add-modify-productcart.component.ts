@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ProductCart } from '../../../classes/ProductCart';
 import { ProductcartService } from '../../../services/productcart.service';
 
 @Component({
@@ -10,7 +11,7 @@ export class AddModifyProductcartComponent implements OnInit {
 
   constructor(private service: ProductcartService) { }
 
-  @Input() pcart: any;
+  @Input() pcart: ProductCart;
   productCartId: number;
   productId: number;
   cartId: number;
@@ -21,12 +22,14 @@ export class AddModifyProductcartComponent implements OnInit {
     this.cartId = this.pcart.cartId;
   }
   addProductCart() {
-    var val = { productCartId: this.productCartId, productId: this.productId, cartId: this.cartId };
+    let val: ProductCart;
+    val = { productCartId: this.productCartId, productId: this.productId, cartId: this.cartId };
     this.service.create(val).subscribe(res => { alert("Added the productcart"); });
   }
 
   updateProductCart() {
-    var val = { productCartId: this.productCartId, productId: this.productId, cartId: this.cartId };
+    let val: ProductCart;
+    val = { productCartId: this.productCartId, productId: this.productId, cartId: this.cartId };
     this.service.update(this.productCartId, val).subscribe(res => { alert("Updated the productcart"); });
   }
 }

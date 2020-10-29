@@ -1,33 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { OrderItem } from '../classes/OrderItem';
+import { BASEURL } from './baseUrl';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderitemService {
 
-  readonly baseUrl = 'https://localhost:44308/api/OrderItem';
+ 
   constructor(private http: HttpClient) {
   }
 
-  getAll(): Observable<any> {
-    return this.http.get(this.baseUrl);
+  getAll(): Observable<OrderItem[]> {
+    return this.http.get<OrderItem[]>(BASEURL.baseUrl + 'OrderItem');
   }
 
-  get(id): Observable<any> {
-    return this.http.get(this.baseUrl + '/' + id);
+  get(id): Observable<OrderItem> {
+    return this.http.get<OrderItem>(BASEURL.baseUrl + 'OrderItem/' + id);
   }
 
-  create(data): Observable<any> {
-    return this.http.post(this.baseUrl, data);
+  create(data): Observable<OrderItem> {
+    return this.http.post<OrderItem>(BASEURL.baseUrl + 'OrderItem', data);
   }
 
-  update(id, data): Observable<any> {
-    return this.http.put(this.baseUrl + '/' + id, data);
+  update(id, data): Observable<OrderItem> {
+    return this.http.put<OrderItem>(BASEURL.baseUrl + 'OrderItem/' + id, data);
   }
 
-  delete(id): Observable<any> {
-    return this.http.delete(this.baseUrl + '/' + id);
+  delete(id): Observable<OrderItem> {
+    return this.http.delete<OrderItem>(BASEURL.baseUrl+ 'OrderItem/' + id);
   }
 }

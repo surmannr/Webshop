@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SupplierService } from 'src/app/services/supplier.service';
+import { Supplier } from '../../../classes/Supplier';
 @Component({
   selector: 'app-supplier-list',
   templateUrl: './supplier-list.component.html',
@@ -7,10 +8,10 @@ import { SupplierService } from 'src/app/services/supplier.service';
 })
 export class SupplierListComponent implements OnInit {
 
-  SupplierList: any = [];
+  SupplierList: Supplier[] = [];
   ModalTitle: string;
   ActivateAddEditSupComp: boolean = false;
-  sup: any;
+  sup: Supplier;
 
   constructor(private service: SupplierService) { }
 

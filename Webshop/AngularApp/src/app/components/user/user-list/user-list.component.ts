@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from '../../../classes/User';
 import { UserService } from '../../../services/user.service';
 
 @Component({
@@ -9,12 +10,12 @@ import { UserService } from '../../../services/user.service';
 export class UserListComponent implements OnInit {
 
 
-  UserList: any = [];
+  UserList: User[] = [];
   ModalTitle: string;
   ActivateAddEditUserComp: boolean = false;;
-  user: any;
+  user: User;
 
-  constructor(private service: UserService) { }
+  constructor(readonly service: UserService) { }
 
   ngOnInit(): void {
     this.refreshUserList();

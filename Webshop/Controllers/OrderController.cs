@@ -78,7 +78,7 @@ namespace Webshop.Controllers
             newOrder.StatusId = 1;
 
             var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();
-            System.Diagnostics.Debug.WriteLine(status.Name);
+           // System.Diagnostics.Debug.WriteLine(status.Name);
             newOrder.Status = status;
 
             _context.Orders.Add(newOrder);

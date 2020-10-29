@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { OrderItem } from '../../../classes/OrderItem';
 import { OrderitemService } from '../../../services/orderitem.service';
 
 @Component({
@@ -10,10 +11,10 @@ export class OrderitemListComponent implements OnInit {
 
   constructor(private service: OrderitemService) { }
 
-  OrderItemList: any = []
+  OrderItemList: OrderItem[] = []
   ModalTitle: string;
   ActivateAddEditOrderitemComp: boolean = false;
-  orderitem: any;
+  orderitem: OrderItem;
 
   ngOnInit(): void {
     this.refreshOrderItemList();

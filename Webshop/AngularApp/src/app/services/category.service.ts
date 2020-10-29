@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Category } from '../classes/Category';
+import { BASEURL } from './baseUrl';
 
 
 
@@ -12,23 +14,23 @@ export class CategoryService {
   constructor(private http: HttpClient) {
   }
 
-  getAll(): Observable<any> {
-    return this.http.get(this.baseUrl);
+  getAll(): Observable<Category[]> {
+    return this.http.get<Category[]>(BASEURL.baseUrl + 'Category');
   }
 
-  get(id): Observable<any> {
-    return this.http.get(this.baseUrl + '/' + id);
-  }
-  
-  create(data): Observable<any> {
-    return this.http.post(this.baseUrl, data);
+  get(id): Observable<Category> {
+    return this.http.get<Category>(BASEURL.baseUrl + 'Category/' + id);
   }
 
-  update(id, data): Observable<any> {
-    return this.http.put(this.baseUrl + '/' + id, data);
+  create(data): Observable<Category> {
+    return this.http.post<Category>(BASEURL.baseUrl + 'Category', data);
   }
 
-  delete(id): Observable<any> {
-    return this.http.delete(this.baseUrl + '/' + id);
+  update(id, data): Observable<Category> {
+    return this.http.put<Category>(BASEURL.baseUrl + 'Category/' + id, data);
+  }
+
+  delete(id): Observable<Category> {
+    return this.http.delete<Category>(BASEURL.baseUrl + 'Category/' + id);
   }
 }

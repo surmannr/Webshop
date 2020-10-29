@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ProductCart } from '../../../classes/ProductCart';
 import { ProductcartService } from '../../../services/productcart.service';
 
 @Component({
@@ -8,10 +9,10 @@ import { ProductcartService } from '../../../services/productcart.service';
 })
 export class ProductcartListComponent implements OnInit {
 
-  ProductcartList: any = [];
+  ProductcartList: ProductCart[] = [];
   ModalTitle: string;
   ActivateAddEditpcartComp: boolean = false;;
-  pcart: any;
+  pcart: ProductCart;
 
   constructor(private service: ProductcartService) { }
 

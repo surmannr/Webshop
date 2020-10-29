@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Cart } from '../../../classes/Cart';
 import { CartService } from '../../../services/cart.service';
 
 @Component({
@@ -10,10 +11,10 @@ export class CartListComponent implements OnInit {
 
   constructor(private service: CartService) { }
 
-  CartList: any = [];
+  CartList: Cart[] = [];
   ModalTitle: string;
   ActivateAddEditCartComp: boolean = false;
-  cart: any;
+  cart: Cart;
 
   ngOnInit(): void {
     this.refreshCartList();
@@ -23,7 +24,7 @@ export class CartListComponent implements OnInit {
       this.CartList = data;
     });
   }
-  addClick() {
+  addClick() { 
     this.cart = {
       cartId: 0,
       userId: "",
@@ -31,12 +32,6 @@ export class CartListComponent implements OnInit {
       productsID: [0]
     }
     this.ModalTitle = "Add Cart";
-    this.ActivateAddEditCartComp = true;
-  }
-
-  editClick(item) {
-    this.cart = item;
-    this.ModalTitle = "Edit Cart";
     this.ActivateAddEditCartComp = true;
   }
 

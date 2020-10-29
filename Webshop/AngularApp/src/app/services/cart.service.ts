@@ -1,33 +1,40 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Cart } from '../classes/Cart';
+import { BASEURL } from './baseUrl';
+
+
+
+
+
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class CartService {
 
-  readonly baseUrl = 'https://localhost:44308/api/Cart';
-  constructor(private http: HttpClient) {
+
+  constructor(private http: HttpClient) { }
+
+  getAll(): Observable<Cart[]> {
+    return this.http.get<Cart[]>(BASEURL.baseUrl + 'Cart');
   }
 
-  getAll(): Observable<any> {
-    return this.http.get(this.baseUrl);
+  get(id): Observable<Cart> {
+    return this.http.get<Cart>(BASEURL.baseUrl + 'Cart/' + id);
   }
 
-  get(id): Observable<any> {
-    return this.http.get(this.baseUrl + '/' + id);
+  create(data): Observable<Cart> {
+    return this.http.post<Cart>(BASEURL.baseUrl + 'Cart', data);
   }
 
-  create(data): Observable<any> {
-    return this.http.post(this.baseUrl, data);
+  update(id, data): Observable<Cart> {
+    return this.http.put<Cart>(BASEURL.baseUrl + 'Cart/' + id, data);
   }
 
-  update(id, data): Observable<any> {
-    return this.http.put(this.baseUrl + '/' + id, data);
-  }
-
-  delete(id): Observable<any> {
-    return this.http.delete(this.baseUrl + '/' + id);
+  delete(id): Observable<Cart> {
+    return this.http.delete<Cart>(BASEURL.baseUrl + 'Cart/' + id);
   }
 }
