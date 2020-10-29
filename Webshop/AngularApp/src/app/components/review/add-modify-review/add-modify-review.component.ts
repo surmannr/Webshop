@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Review } from '../../../classes/Review';
 import { ReviewService } from '../../../services/review.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class AddModifyReviewComponent implements OnInit {
  
   constructor(private service: ReviewService) { }
 
-  @Input() rev: any;
+  @Input() rev: Review;
   description: string;
   stars: number;
   reviewId: number;
@@ -28,12 +29,14 @@ export class AddModifyReviewComponent implements OnInit {
   }
 
   addReview() {
-    var val = { description: this.description, stars: this.stars, productId: this.productId, userId: this.userId };
+    let val: Review;
+    val = { description: this.description, stars: this.stars, productId: this.productId, userId: this.userId, reviewId: this.reviewId };
     this.service.create(val).subscribe(res => { alert("Added the review"); });
   }
 
   updateReview() {
-    var val = { description: this.description, stars: this.stars, productId: this.productId, userId: this.userId };
+    let val: Review;
+    val = { description: this.description, stars: this.stars, productId: this.productId, userId: this.userId, reviewId: this.reviewId };
     this.service.update(this.reviewId,val).subscribe(res => { alert("Updated the review"); });
   }
 }

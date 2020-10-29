@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Order } from '../../../classes/Order';
 import { OrderService } from '../../../services/order.service';
 
 @Component({
@@ -10,10 +11,10 @@ export class OrderListComponent implements OnInit {
 
   constructor(private service: OrderService) { }
 
-  OrderList: any = [];
+  OrderList: Order[] = [];
   ModalTitle: string;
   ActivateAddEditOrderComp: boolean = false;
-  order: any;
+  order: Order;
 
   ngOnInit(): void {
     this.refreshOrderList();

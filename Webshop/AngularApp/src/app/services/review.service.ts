@@ -1,33 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Review } from '../classes/Review';
+import { BASEURL } from './baseUrl';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
 
-  readonly baseUrl = 'https://localhost:44308/api/Review';
+ 
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<any> {
-    return this.http.get(this.baseUrl);
+  getAll(): Observable<Review[]> {
+    return this.http.get<Review[]>(BASEURL.baseUrl + 'Review');
   }
 
-  get(id): Observable<any> {
-    return this.http.get(this.baseUrl + '/' + id);
+  get(id): Observable<Review> {
+    return this.http.get<Review>(BASEURL.baseUrl+ 'Review/' + id);
   }
 
-  create(data): Observable<any> {
-    return this.http.post(this.baseUrl, data);
+  create(data): Observable<Review> {
+    return this.http.post<Review>(BASEURL.baseUrl + 'Review', data);
   }
 
-  update(id, data): Observable<any> {
-    return this.http.put(this.baseUrl + '/' + id, data);
+  update(id, data): Observable<Review> {
+    return this.http.put<Review>(BASEURL.baseUrl+ 'Review/' + id, data);
   }
 
-  delete(id): Observable<any> {
-    return this.http.delete(this.baseUrl + '/' + id);
+  delete(id): Observable<Review> {
+    return this.http.delete<Review>(BASEURL.baseUrl+ 'Review/' + id);
   }
 }

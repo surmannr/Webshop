@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { OrderItem } from '../../../classes/OrderItem';
 import { OrderitemService } from '../../../services/orderitem.service';
 
 @Component({
@@ -10,7 +11,7 @@ export class AddModifyOrderitemComponent implements OnInit {
 
   constructor(private service: OrderitemService) { }
 
-  @Input() orderitem: any;
+  @Input() orderitem: OrderItem;
   amount: number;
   price: number;
   productID: number;
@@ -28,7 +29,8 @@ export class AddModifyOrderitemComponent implements OnInit {
   }
 
   addOrderItem() {
-    var val = {
+    let val: OrderItem;
+    val = {
       amount: this.amount, price: this.price, productID: this.productID, orderId: this.orderId, statusId: this.statusId,
       orderItemId: this.orderItemId
     };
@@ -36,7 +38,8 @@ export class AddModifyOrderitemComponent implements OnInit {
   }
 
   updateOrderItem() {
-    var val = {
+    let val: OrderItem;
+    val = {
       amount: this.amount, price: this.price, productID: this.productID, orderId: this.orderId, statusId: this.statusId,
       orderItemId: this.orderItemId
     };

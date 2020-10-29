@@ -1,33 +1,35 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { Supplier } from '../classes/Supplier';
+import { BASEURL } from './baseUrl';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SupplierService {
 
-  readonly baseUrl = 'https://localhost:44308/api/Supplier';
+ 
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<any> {
-    return this.http.get(this.baseUrl);
+  getAll(): Observable<Supplier[]> {
+    return this.http.get<Supplier[]>(BASEURL.baseUrl + 'Supplier');
   }
 
-  get(id): Observable<any> {
-    return this.http.get(this.baseUrl + '/' + id);
+  get(id): Observable<Supplier> {
+    return this.http.get<Supplier>(BASEURL.baseUrl + 'Supplier/' + id);
   }
 
-  create(data): Observable<any> {
-    return this.http.post(this.baseUrl, data);
+  create(data): Observable<Supplier> {
+    return this.http.post<Supplier>(BASEURL.baseUrl + 'Supplier', data);
   }
 
-  update(id, data): Observable<any> {
-    return this.http.put(this.baseUrl + '/' + id, data);
+  update(id, data): Observable<Supplier> {
+    return this.http.put<Supplier>(BASEURL.baseUrl+ 'Supplier/' + id, data);
   }
 
-  delete(id): Observable<any> {
-    return this.http.delete(this.baseUrl + '/' + id);
+  delete(id): Observable<Supplier> {
+    return this.http.delete<Supplier>(BASEURL.baseUrl+ 'Supplier/' + id);
   }
 }

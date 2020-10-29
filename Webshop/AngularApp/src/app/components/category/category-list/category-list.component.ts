@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from 'src/app/services/category.service';
+import { Category } from '../../../classes/Category';
 
 @Component({
   selector: 'app-category-list',
@@ -8,10 +9,10 @@ import { CategoryService } from 'src/app/services/category.service';
 })
 export class CategoryListComponent implements OnInit {
 
-  CategoryList: any = [];
+  CategoryList: Category[] = [];
   ModalTitle: string;
   ActivateAddEditCatComp: boolean = false;;
-  cat: any;
+  cat: Category;
 
   constructor(private service: CategoryService) { }
 

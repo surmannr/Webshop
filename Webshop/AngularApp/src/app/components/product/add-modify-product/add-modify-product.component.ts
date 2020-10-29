@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Product } from '../../../classes/Product';
 import { ProductService } from '../../../services/product.service';
 
 @Component({
@@ -10,7 +11,7 @@ export class AddModifyProductComponent implements OnInit {
 
   constructor(private service: ProductService) { }
 
-  @Input() prod: any;
+  @Input() prod: Product;
   product_Name: string;
   price: number;
   productID: number;
@@ -32,7 +33,8 @@ export class AddModifyProductComponent implements OnInit {
   }
 
   addProduct() {
-    var val = {
+    let val: Product;
+    val = {
       product_Name: this.product_Name, price: this.price,
       productID: this.productID, product_Description: this.product_Description,
       shipping_Price: this.shipping_Price, categoryId: this.categoryId,
@@ -42,7 +44,8 @@ export class AddModifyProductComponent implements OnInit {
   }
 
   updateProduct() {
-    var data = {
+    let data: Product;
+    data = {
       product_Name: this.product_Name, price: this.price,
       productID: this.productID, product_Description: this.product_Description,
       shipping_Price: this.shipping_Price, categoryId: this.categoryId,

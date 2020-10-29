@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Review } from '../../../classes/Review';
 import { ReviewService } from '../../../services/review.service';
 
 @Component({
@@ -8,10 +9,10 @@ import { ReviewService } from '../../../services/review.service';
 })
 export class ReviewListComponent implements OnInit {
 
-  ReviewList: any = [];
+  ReviewList: Review[] = [];
   ModalTitle: string;
   ActivateAddEditRevComp: boolean = false;;
-  rev: any;
+  rev: Review;
 
 
   constructor(private service: ReviewService) { }

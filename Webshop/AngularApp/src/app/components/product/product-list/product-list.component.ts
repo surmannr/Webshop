@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Product } from '../../../classes/Product';
 import { ProductService } from '../../../services/product.service';
 
 @Component({
@@ -8,10 +9,10 @@ import { ProductService } from '../../../services/product.service';
 })
 export class ProductListComponent implements OnInit {
 
-  ProductList: any = [];
+  ProductList: Product[] = [];
   ModalTitle: string;
   ActivateAddEditProdComp: boolean = false;;
-  prod: any;
+  prod: Product;
 
   constructor(private service: ProductService) { }
 
