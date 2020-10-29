@@ -32,10 +32,15 @@ namespace Webshop.Controllers
 
         // GET api/<CategoryController>/5
         [HttpGet("{id}")]
-        public async Task<CategoryDto> Get(int id)
+        public async Task<ActionResult<CategoryDto>> Get(int id)
         {
             var res =  await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
+
+            // Hibakezelés
+            if (res == null) return NotFound();
+
             var mappelt = _mapper.Map<CategoryDto>(res);
+
             return mappelt;
 
         }
@@ -44,10 +49,11 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] CategoryDto newCategoryDto)
         {
+            if (newCategoryDto.Category_Name == null) return NoContent();
             var newCategory = _mapper.Map<Category>(newCategoryDto);            
             _context.Categories.Add(newCategory);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         // PUT api/<CategoryController>/5
@@ -55,7 +61,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Put(int id, [FromBody] CategoryDto newCategoryDto)
         {
             var newCategory = _mapper.Map<Category>(newCategoryDto);
-       
+            if (newCategory == null) return NoContent();
 
             var categoryWaitingForUpdate = _context.Categories.SingleOrDefault(p => p.CategoryId == id);
 
@@ -68,7 +74,7 @@ namespace Webshop.Controllers
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
 
-            return NoContent(); // 204 NoContent valasz
+            return Ok();
         }
 
         // DELETE api/<CategoryController>/5
@@ -83,7 +89,7 @@ namespace Webshop.Controllers
             _context.Categories.Remove(dbCategory);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // a sikeres torlest 204 No
+            return Ok(); // a sikeres torlest 204 No
         }
     }
 }

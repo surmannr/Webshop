@@ -30,7 +30,7 @@ namespace Webshop.Controllers
         public async Task<List<OrderDto>> Get()
         {
             var res = await _context.Orders.ToListAsync();
-            var orderitems = await _context.OrderItems.ToListAsync();
+            var orderitems = await _context.OrderItems.Where(o => o.OrderId != 0).ToListAsync();
             List<OrderDto> retDto = new List<OrderDto>();
             foreach (Order o in res)
             {
@@ -50,12 +50,12 @@ namespace Webshop.Controllers
 
         // GET api/<OrderController>/5
         [HttpGet("{id}")]
-        public async Task<OrderDto> Get(int id)
+        public async Task<ActionResult<OrderDto>> Get(int id)
         {
             var res = await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
-            var orderitems = await _context.OrderItems.ToListAsync();
+            var orderitems = await _context.OrderItems.Where(o => o.OrderId != 0).ToListAsync();
 
-            if (res == null) return null;
+            if (res == null) return NotFound();
 
             res.Status = await _context.Status.Where(s => s.StatusId == res.StatusId).FirstOrDefaultAsync();
 
@@ -75,15 +75,16 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] OrderDto newOrderDto)
         {
             var newOrder = _mapper.Map<Order>(newOrderDto);
+            if (newOrder.UserId == null) return NoContent();
             newOrder.StatusId = 1;
 
             var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();
-            System.Diagnostics.Debug.WriteLine(status.Name);
+            //System.Diagnostics.Debug.WriteLine(status.Name);
             newOrder.Status = status;
 
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         // PUT api/<OrderController>/5
@@ -102,18 +103,17 @@ namespace Webshop.Controllers
 
                 if (newOrder.ShippingMethod != null) orderWaitingForUpdate.ShippingMethod = newOrder.ShippingMethod;
 
-                if (newOrder.orderTime != null) orderWaitingForUpdate.orderTime = newOrder.orderTime;
-
                 if (newOrder.Status != null) orderWaitingForUpdate.Status = status;
 
                 if (newOrder.StatusId != 0) orderWaitingForUpdate.StatusId = status.StatusId;
 
             }
+            else return NoContent();
 
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
 
-            return NoContent(); // 204 NoContent valasz
+            return Ok(); // 204 NoContent valasz
         }
 
         // DELETE api/<OrderController>/5
@@ -128,7 +128,7 @@ namespace Webshop.Controllers
             _context.Orders.Remove(dbOrder);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // a sikeres torlest 204 No
+            return Ok(); // a sikeres torlest 204 No
         }
     }
 }

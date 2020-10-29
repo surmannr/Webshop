@@ -45,9 +45,10 @@ namespace Webshop.Controllers
 
         // GET api/<ReviewController>/5
         [HttpGet("{id}")]
-        public async Task<ReviewDto> Get(int id)
+        public async Task<ActionResult<ReviewDto>> Get(int id)
         {
             var res = await _context.Reviews.Where(c => c.ReviewId == id).FirstOrDefaultAsync();
+            if (res == null) return NotFound();
             var mapppelt = _mapper.Map<ReviewDto>(res);
             return mapppelt;
         }
@@ -63,15 +64,17 @@ namespace Webshop.Controllers
 
             //review.User = user;
             //review.Product = product;
-            if (product != null) { 
+            if (product != null)
+            {
                 review.ProductId = product.ProductID;
                 product.Reviews.Add(review);
-                System.Diagnostics.Debug.WriteLine(product.Reviews.Last().Description);
+                //System.Diagnostics.Debug.WriteLine(product.Reviews.Last().Description);
             }
+            else return NoContent();
             
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         // PUT api/<ReviewController>/5
@@ -79,24 +82,13 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Put(int id, [FromBody] ReviewDto newReview)
         {
             var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == newReview.ReviewId);
-            if (reviewWaitingForUpdate == null) return BadRequest();
+            if (reviewWaitingForUpdate == null) return NotFound();
 
-            var user = await _userManager.FindByIdAsync(newReview.UserId);
-            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductID == newReview.ProductId);
-
-            if (user != null)
-            {
-                reviewWaitingForUpdate.UserId = user.Id;
-            }
-            if (product != null)
-            {
-                reviewWaitingForUpdate.ProductId = product.ProductID;
-            }
             if (newReview.Stars!=0) reviewWaitingForUpdate.Stars = newReview.Stars;
             if (newReview.Description != null) reviewWaitingForUpdate.Description = newReview.Description;
 
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
         // DELETE api/<ReviewController>/5
         [HttpDelete("{id}")]
@@ -110,7 +102,7 @@ namespace Webshop.Controllers
             _context.Reviews.Remove(dbReview);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // a sikeres torlest 204 No
+            return Ok();
         }
     }
 }

@@ -44,9 +44,10 @@ namespace Webshop.Controllers
 
         // GET api/<SupplierController>/5
         [HttpGet("{id}")]
-        public async Task<SupplierDto> Get(int id)
+        public async Task<ActionResult<SupplierDto>> Get(int id)
         {
             var res = await _context.Suppliers.Where(c => c.SupplierId == id).FirstOrDefaultAsync();
+            if (res == null) return NotFound();
             var mapppelt = _mapper.Map<SupplierDto>(res);
             return mapppelt;
         }
@@ -56,9 +57,10 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] SupplierDto newSupplier)
         {
             Supplier supplier = _mapper.Map<Supplier>(newSupplier);
+            if (supplier.Name == null || supplier.Address == null) return NoContent();
             _context.Suppliers.Add(supplier);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         // PUT api/<SupplierController>/5
@@ -66,14 +68,14 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Put(int id, [FromBody] SupplierDto newSupplier)
         {
             var supplierWaitingForUpdate = await _context.Suppliers.FirstOrDefaultAsync(r => r.SupplierId == newSupplier.SupplierId);
-            if (supplierWaitingForUpdate == null) return BadRequest();
+            if (supplierWaitingForUpdate == null) return NotFound();
 
             if (newSupplier.Name != null) supplierWaitingForUpdate.Name = newSupplier.Name;
             if (newSupplier.Multiplier != 0) supplierWaitingForUpdate.Multiplier = newSupplier.Multiplier;
             if (newSupplier.Address != null) supplierWaitingForUpdate.Address = newSupplier.Address;
 
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         // DELETE api/<SupplierController>/5
@@ -88,7 +90,7 @@ namespace Webshop.Controllers
             _context.Suppliers.Remove(dbSupplier);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // a sikeres torlest 204 No
+            return Ok(); 
         }
     }
 }

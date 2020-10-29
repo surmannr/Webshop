@@ -33,7 +33,7 @@ namespace Webshop.Controllers
         public async Task<IEnumerable<CartDto>> Get()
         {
             var res = await _context.Carts.ToListAsync();
-            var products = await _context.ProductCarts.ToListAsync();
+            var products = await _context.ProductCarts.Where(c => c.CartId!=0).ToListAsync();
             List<CartDto> cartList = new List<CartDto>();
             //public SortedSet<int> ProductsID { get; set; }
             foreach (Cart c in res)
@@ -53,13 +53,14 @@ namespace Webshop.Controllers
 
         // GET api/<CartController>/5
         [HttpGet("{id}")]
-        public async Task<CartDto> Get(int id)
+        public async Task<ActionResult<CartDto>> Get(int id)
         {
             var res = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
 
-            if (res == null) return null;
+            // Hibakezelés
+            if (res == null) return NotFound();
 
-            var products = await _context.ProductCarts.ToListAsync();
+            var products = await _context.ProductCarts.Where(p=>p.CartId == id).ToListAsync();
             var user = await _userManager.FindByIdAsync(res.UserId);
             var mapppelt = _mapper.Map<CartDto>(res);
 
@@ -69,70 +70,6 @@ namespace Webshop.Controllers
             }
             return mapppelt;
         }
-
-        // POST api/<CartController>
-        [HttpPost]
-        public async Task<ActionResult> Post([FromBody] CartDto newCartDto)
-        {
-
-            var user = await _userManager.FindByIdAsync(newCartDto.UserId);
-
-            Cart cart = new Cart();
-
-            cart.User = user;
-
-            _context.Carts.Add(cart);
-            await _context.SaveChangesAsync();
-            return NoContent();
-        }
         
-        // PUT api/<CartController>/5
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] CartDto newCartDto)
-        {
-
-
-            var user = await _userManager.FindByIdAsync(newCartDto.UserId);
-
-
-            if (user != null)
-            {
-                var cartWaitingForUpdate = _context.Carts.SingleOrDefault(p => p.CartId == id);
-                cartWaitingForUpdate.UserId = user.Id;
-                if (newCartDto.ProductsID != null)
-                {
-                    foreach (int pId in newCartDto.ProductsID)
-                    {
-                        ProductCart pc = new ProductCart()
-                        {
-                            CartId = cartWaitingForUpdate.CartId,
-                            ProductId = pId
-                        };
-                        cartWaitingForUpdate.ProductCart.Add(pc);
-                    }
-                }
-            }
-           
-
-            // mentes az adatbazisban
-            await _context.SaveChangesAsync();
-
-            return NoContent(); // 204 NoContent valasz
-        }
-
-        // DELETE api/<CartController>/5
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
-        {
-            var dbCart = _context.Carts.SingleOrDefault(p => p.CartId == id);
-
-            if (dbCart == null)
-                return NotFound();
-
-            _context.Carts.Remove(dbCart);
-            await _context.SaveChangesAsync();
-
-            return NoContent(); // a sikeres torlest 204 No
-        }
     }
 }

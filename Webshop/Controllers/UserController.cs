@@ -38,9 +38,10 @@ namespace Webshop.Controllers
 
         // GET api/<UserController>/5
         [HttpGet("{id}")]
-        public async Task<UserDto> Get(string id)
+        public async Task<ActionResult<UserDto>> Get(string id)
         {
             var res = await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
+            if (res == null) return NotFound();
             var mappelt = _mapper.Map<UserDto>(res);
             return mappelt;
         }
@@ -49,16 +50,26 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] UserDto newUser)
         {
-            var user = _mapper.Map<User>(newUser);
-            var result = await _userManager.CreateAsync(user,newUser.Password);
-
+            User user = _mapper.Map<User>(newUser);
+            
+            Cart newCart = new Cart()
+            {
+                UserId = user.Id,
+                User = user
+            };
+            //System.Diagnostics.Debug.WriteLine("newcart: " + newCart);
+            _context.Carts.Add(newCart);
+            
+            user.Cart = newCart;
+            //System.Diagnostics.Debug.WriteLine("user.Cart: " + user.Cart);
+            var result = await _userManager.CreateAsync(user, newUser.Password);
             // Ezzel kell valamit majd csinálni, ha nincs benne nem kapjuk az error-t és ugyan úgy beleteszi.
             /* if (result.Succeeded)
              {
                  result = await _userManager.AddToRoleAsync(user, "User");           
              }  */
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         // PUT api/<UserController>/5
@@ -85,7 +96,7 @@ namespace Webshop.Controllers
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
 
-            return NoContent(); // 204 NoContent valasz
+            return Ok();
         }
 
         // DELETE api/<UserController>/5
@@ -96,11 +107,14 @@ namespace Webshop.Controllers
 
             if (dbUser == null)
                 return NotFound();
-
+            
+            var cart = _context.Carts.Where(c => c.UserId == dbUser.Id).FirstOrDefault();
+            _context.Carts.Remove(cart);
+            
             _context.Users.Remove(dbUser);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // a sikeres torlest 204 No
+            return Ok();
         }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity.UI.V3.Pages.Internal.Account.Manage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
@@ -35,9 +36,10 @@ namespace Webshop.Controllers
 
         // GET api/<ProductCartController>/5
         [HttpGet("{id}")]
-        public async Task<OrderItemDto> Get(int id)
+        public async Task<ActionResult<OrderItemDto>> Get(int id)
         {
             var res = await _context.OrderItems.Where(c => c.OrderItemId == id).FirstOrDefaultAsync();
+            if (res == null) return NotFound();
             var mappelt = _mapper.Map<OrderItemDto>(res);
             return mappelt;
         }
@@ -53,18 +55,18 @@ namespace Webshop.Controllers
 
             if (orderIdCheck == null)
             {
-                return BadRequest();
+                return NotFound();
             }
             if (productIdCheck == null)
             {
-                return BadRequest();
+                return NotFound();
             }
             // Mivel új dolog, ezért instant 1 lesz.
             oi.StatusId = 1;
 
             _context.OrderItems.Add(oi);
             await _context.SaveChangesAsync();
-            return NoContent(); // a sikeres torlest 204 No
+            return Ok();
         }
 
         // PUT api/<ProductCartController>/5
@@ -89,7 +91,7 @@ namespace Webshop.Controllers
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
 
-            return NoContent(); // 204 NoContent valasz
+            return Ok();
         }
 
         // DELETE api/<ProductCartController>/5
@@ -103,8 +105,8 @@ namespace Webshop.Controllers
 
             _context.OrderItems.Remove(dbOrderItem);
             await _context.SaveChangesAsync();
-
-            return NoContent(); // a sikeres torlest 204 No
+            
+            return Ok();
         }
     }
 }

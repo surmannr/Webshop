@@ -35,9 +35,10 @@ namespace Webshop.Controllers
         
         // GET api/<ProductCartController>/5
         [HttpGet("{id}")]
-        public async Task<ProductCartDto> Get(int id)
+        public async Task<ActionResult<ProductCartDto>> Get(int id)
         {
             var res = await _context.ProductCarts.Where(c => c.ProductCartId == id).FirstOrDefaultAsync();
+            if (res == null) return NotFound();
             var mappelt = _mapper.Map<ProductCartDto>(res);
             return mappelt;
         }
@@ -52,43 +53,16 @@ namespace Webshop.Controllers
             var productIdCheck = _context.Products.Where(p => p.ProductID == pcnew.ProductId);
             if (cartIdCheck == null)
             {
-                return BadRequest();
+                return NoContent();
             }
             if (productIdCheck == null)
             {
-                return BadRequest();
+                return NoContent();
             }
             
             _context.ProductCarts.Add(pc);
             await _context.SaveChangesAsync();
-            return NoContent(); // a sikeres torlest 204 No
-        }
-
-        // PUT api/<ProductCartController>/5
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, [FromBody] ProductCartDto pcnew)
-        {
-
-            var pcWaitingForUpdate = _context.ProductCarts.SingleOrDefault(p => p.ProductCartId == id);
-
-            if (pcWaitingForUpdate == null)
-                return NotFound();
-
-            // modositasok elvegzese
-            if(pcnew.CartId != 0)
-            {
-                pcWaitingForUpdate.CartId = pcnew.CartId;
-                pcWaitingForUpdate.Cart = await _context.Carts.FirstOrDefaultAsync(p => p.CartId == pcnew.CartId);
-            }
-            if (pcnew.ProductId != 0)
-            {
-                pcWaitingForUpdate.ProductId = pcnew.ProductId;
-                pcWaitingForUpdate.Product = await _context.Products.FirstOrDefaultAsync(p => p.ProductID == pcnew.ProductId);
-            }
-            // mentes az adatbazisban
-            await _context.SaveChangesAsync();
-
-            return NoContent(); // 204 NoContent valasz
+            return Ok();
         }
 
         // DELETE api/<ProductCartController>/5
@@ -103,7 +77,7 @@ namespace Webshop.Controllers
             _context.ProductCarts.Remove(dbProductCart);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // a sikeres torlest 204 No
+            return Ok();
         }
     }
 }

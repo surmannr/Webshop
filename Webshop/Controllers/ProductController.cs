@@ -52,11 +52,12 @@ namespace Webshop.Controllers
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
-        public async Task<ProductDto> Get(int id)
+        public async Task<ActionResult<ProductDto>> Get(int id)
         {
             var res = await _context.Products.FirstOrDefaultAsync(p => p.ProductID == id);
+            if (res == null) return NotFound();
 
-            var reviews = await _context.Reviews.ToListAsync();
+            var reviews = await _context.Reviews.Where(r => r.ProductId == res.ProductID).ToListAsync();
 
             var mapppelt = _mapper.Map<ProductDto>(res);
             foreach (Review rev in reviews)
@@ -71,9 +72,10 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] ProductDto newProduct)
         {
             Product product = _mapper.Map<Product>(newProduct);
+            if (product.Product_Name == null || product.Price == 0 || product.Shipping_Price == 0) return NoContent();
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         // PUT api/<ProductController>/5
@@ -81,7 +83,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Put(int id, [FromBody] ProductDto newProduct)
         {
             var productWaitingForUpdate = await _context.Products.FirstOrDefaultAsync(r => r.ProductID == newProduct.ProductID);
-            if (productWaitingForUpdate == null) return BadRequest();
+            if (productWaitingForUpdate == null) return NotFound();
 
             if (newProduct.Price != 0) productWaitingForUpdate.Price = newProduct.Price;
             if (newProduct.Product_Description != null) productWaitingForUpdate.Product_Description = newProduct.Product_Description;
@@ -91,7 +93,7 @@ namespace Webshop.Controllers
             if (newProduct.SupplierId != 0) productWaitingForUpdate.SupplierId = newProduct.SupplierId;
 
             await _context.SaveChangesAsync();
-            return NoContent();
+            return Ok();
         }
 
         // DELETE api/<ProductController>/5
@@ -106,7 +108,7 @@ namespace Webshop.Controllers
             _context.Products.Remove(dbProduct);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // a sikeres torlest 204 No
+            return Ok();
         }
     }
 }
