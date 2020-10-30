@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { User } from '../classes/User';
 import { BASEURL } from './baseUrl';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { element } from 'protractor';
 
 @Injectable({
   providedIn: 'root'
@@ -37,11 +38,26 @@ export class UserService {
     }
   }
 
+  login(formData) {
+    return this.http.post(BASEURL.baseUrl + "User/Login", formData);
+  }
 
+  getUserProfile() {    
+    return this.http.get(BASEURL.baseUrl + "UserProfile");
+  }
 
-
-
-
+  roleMatch(allowedRoles): boolean {
+    var isMatch = false;
+    var payload = JSON.parse(window.atob(localStorage.getItem('token').split('.')[1]));
+    var userRole = payload.role;
+    allowedRoles.forEach(element => {
+      if (userRole == element) {
+        isMatch = true;
+        return false;
+      }
+    });
+    return isMatch;
+  }
 
 
 
@@ -66,5 +82,9 @@ export class UserService {
 
   delete(id): Observable<User> {
     return this.http.delete<User>(BASEURL.baseUrl+ 'User/' + id);
+  }
+
+  createAdmin(data): Observable<User> {
+    return this.http.post<User>(BASEURL.baseUrl + 'User/registerAdmin', data);
   }
 }

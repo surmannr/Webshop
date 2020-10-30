@@ -18,6 +18,10 @@ using Microsoft.OpenApi.Models;
 using AutoMapper;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Webshop.Data.Models;
 
 namespace Webshop
 {
@@ -33,14 +37,19 @@ namespace Webshop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            // inject appsettings
+            services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
+
             // policy
             services.AddCors(options =>
             {
                 options.AddPolicy("MyCorsPolicy", builder => builder
-                    .WithOrigins("https://localhost:44308/api", "http://localhost:4200")
+                    .WithOrigins(Configuration["ApplicationSettings:Server_Url"].ToString(), Configuration["ApplicationSettings:Client_Url"].ToString(),
+                    Configuration["ApplicationSettings:Home_Url"].ToString())
                     .AllowAnyMethod()
                     .AllowCredentials()
-                    .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));
+                    .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header", "Authorization"));
             });
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
@@ -48,8 +57,15 @@ namespace Webshop
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+
+
+
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+
             services.AddRazorPages();
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -77,6 +93,26 @@ namespace Webshop
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
+
+
+            var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
+            //JWT Authentication
+            services.AddAuthentication(x => {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(x => {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = false;
+                x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -95,7 +131,8 @@ namespace Webshop
                 app.UseHsts();
             }
             app.UseCors(builder => builder
-               .WithOrigins("http://localhost:4200/", "http://localhost:4200")
+               .WithOrigins(Configuration["ApplicationSettings:Client_Url"].ToString(), Configuration["ApplicationSettings:Client_Url_Https"].ToString(),
+               Configuration["ApplicationSettings:Home_Url"],Configuration["ApplicationSettings:Home_Url_Https"])
                .AllowAnyMethod()
                .AllowCredentials()
                .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));

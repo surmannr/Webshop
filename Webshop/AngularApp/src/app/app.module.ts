@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CategoryListComponent } from './components/category/category-list/category-list.component';
 import { AddModifyCategoryComponent } from './components/category/add-modify-category/add-modify-category.component';
 import { CategoryComponent } from './components/category/category/category.component';
@@ -42,6 +42,14 @@ import { ProductcartComponent } from './components/productcart/productcart/produ
 import { ProductcartListComponent } from './components/productcart/productcart-list/productcart-list.component';
 import { AddModifyProductcartComponent } from './components/productcart/add-modify-productcart/add-modify-productcart.component';
 import { ProductcartService } from './services/productcart.service';
+import { UserLoginComponent } from './components/user/user-login/user-login.component';
+import { HomeComponent } from './components/home/home.component';
+import { AuthInterceptor } from './components/auth/auth.interceptor';
+import { AdminComponent } from './components/admin/admin.component';
+import { ForbiddenComponent } from './components/forbidden/forbidden.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterCustomerComponent } from './components/register-customer/register-customer.component';
+import { RegisterAdminComponent } from './components/register-admin/register-admin.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -71,7 +79,14 @@ import { ProductcartService } from './services/productcart.service';
     AddModifyOrderitemComponent,
     ProductcartComponent,
     ProductcartListComponent,
-    AddModifyProductcartComponent
+    AddModifyProductcartComponent,
+    UserLoginComponent,
+    HomeComponent,
+    AdminComponent,
+    ForbiddenComponent,
+    LoginComponent,
+    RegisterCustomerComponent,
+    RegisterAdminComponent
   ],
   imports: [
     BrowserModule,
@@ -89,7 +104,12 @@ import { ProductcartService } from './services/productcart.service';
     CartService,
     OrderService,
     OrderitemService,
-    ProductcartService
+    ProductcartService,    
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

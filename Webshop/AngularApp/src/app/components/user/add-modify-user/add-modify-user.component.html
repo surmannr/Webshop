@@ -28,7 +28,7 @@
       </div>
       <div class="form-group">
         <label>ConfirmPassword</label>
-        <input type="password" class="form-control" formControlName="ConfirmPassword" />
+        <input type="password" class="form-control" formControlName="ConfirmPassword" placeholder="Confirm the password" />
         <label class="text-danger" *ngIf="service.formModel.get('Passwords.ConfirmPassword').touched && service.formModel.get('Passwords.ConfirmPassword').errors?.required">
           This item is mandatory.
         </label>

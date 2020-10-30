@@ -15,6 +15,6 @@ namespace Webshop.Data
         //Egy User-nek van egy kosara        
         public Cart Cart { get; set; }
 
-       
+       public string Role { get; set; }
     }
 }
