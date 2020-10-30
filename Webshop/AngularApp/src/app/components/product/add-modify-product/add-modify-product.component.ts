@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { log } from 'util';
 import { Product } from '../../../classes/Product';
 import { ProductService } from '../../../services/product.service';
 
@@ -9,7 +11,10 @@ import { ProductService } from '../../../services/product.service';
 })
 export class AddModifyProductComponent implements OnInit {
 
-  constructor(private service: ProductService) { }
+  constructor(private service: ProductService, private router: Router) { } 
+
+  item: Product;
+
 
   @Input() prod: Product;
   product_Name: string;
@@ -22,14 +27,18 @@ export class AddModifyProductComponent implements OnInit {
   reviewsID: number[];
 
   ngOnInit(): void {
-    this.product_Name = this.prod.product_Name;
-    this.price = this.prod.price;
-    this.productID = this.prod.productID;
-    this.product_Description = this.prod.product_Description;
-    this.shipping_Price = this.prod.shipping_Price;
-    this.categoryId = this.prod.categoryId;
-    this.supplierId = this.prod.supplierId;
-    this.reviewsID = this.prod.reviewsID;
+
+    try {
+      var _item_json = localStorage.getItem('item');
+      this.item = JSON.parse(_item_json);
+     // console.log(this.item.product_Name);
+      localStorage.removeItem('item');
+    } catch (err) {
+      this.item = null;
+    }
+    
+   
+
   }
 
   addProduct() {
@@ -40,7 +49,7 @@ export class AddModifyProductComponent implements OnInit {
       shipping_Price: this.shipping_Price, categoryId: this.categoryId,
       supplierId: this.supplierId, reviewsID: this.reviewsID
     };
-    this.service.create(val).subscribe(res => { alert("Added the product"); });
+    this.service.create(val).subscribe(res => { this.router.navigate(['/product']); });
   }
 
   updateProduct() {
@@ -52,6 +61,7 @@ export class AddModifyProductComponent implements OnInit {
       supplierId: this.supplierId, reviewsID: this.reviewsID
     };
     this.service.update(this.productID, data).subscribe(res => { alert("Updated the product"); });
+   
   }
 
 }

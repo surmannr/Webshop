@@ -18,7 +18,8 @@ import { AdminComponent } from './components/admin/admin.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterCustomerComponent } from './components/register-customer/register-customer.component';
 import { RegisterAdminComponent } from './components/register-admin/register-admin.component';
-
+import { EditUserCredentials } from './components/home/editCredentials/editUserCredentials';
+import { AddModifyProductComponent } from './components/product/add-modify-product/add-modify-product.component';
 const routes: Routes = [
   { path: 'category', component: CategoryComponent },
   { path: 'review', component: ReviewComponent },
@@ -35,7 +36,9 @@ const routes: Routes = [
   { path: 'admin', component: AdminComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
   { path: 'adminRegister', component: RegisterAdminComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] }  },
   { path: 'login', component: LoginComponent },
-  { path: 'register', component: RegisterCustomerComponent }
+  { path: 'register', component: RegisterCustomerComponent },
+  { path: 'user/edit', component: EditUserCredentials, canActivate: [AuthGuard] },
+  { path: 'product/add', component: AddModifyProductComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } }
 ];
 
 @NgModule({

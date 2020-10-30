@@ -1,20 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Product } from '../../../classes/Product';
 import { ProductService } from '../../../services/product.service';
 
 @Component({
   selector: 'app-product-list',
-  templateUrl: './product-list.component.html',
-  styleUrls: ['./product-list.component.css']
+  templateUrl: './product-list.component.html'
+ 
 })
 export class ProductListComponent implements OnInit {
 
   ProductList: Product[] = [];
-  ModalTitle: string;
-  ActivateAddEditProdComp: boolean = false;;
-  prod: Product;
 
-  constructor(private service: ProductService) { }
+  constructor(private service: ProductService, private router: Router) { }
 
   ngOnInit(): void {
     this.refreshProdList();
@@ -25,32 +23,9 @@ export class ProductListComponent implements OnInit {
     });
     }
 
-  addClick() {
-    this.prod = {
-      product_Name: "",
-      price: 0,
-      productID: 0,
-      product_Description: "",
-      shipping_Price: 0,
-      categoryId: 0,
-      supplierId: 0,
-      reviewsID: [
-        0
-      ]
-    }
-    this.ModalTitle = "Add Product";
-    this.ActivateAddEditProdComp = true;
-  }
-
-  editClick(item) {
-    this.prod = item;
-    this.ModalTitle = "Edit Product";
-    this.ActivateAddEditProdComp = true;
-  }
-
-  closeClick() {
-    this.ActivateAddEditProdComp = false;
-    this.refreshProdList();
+  editClick(item: Product) {
+    localStorage.setItem('item', JSON.stringify(item));    
+    this.router.navigate(['/product/add']);
   }
 
   deleteClick(item) {
@@ -61,4 +36,11 @@ export class ProductListComponent implements OnInit {
     }
   }
 
+  onLogout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+  addProduct() {
+    this.router.navigate(['/product/add']);
+  }
 }

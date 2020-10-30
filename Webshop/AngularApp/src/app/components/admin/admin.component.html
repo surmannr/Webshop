@@ -1,8 +1,20 @@
-<div class="wrapper">
-  <div class="wrapped-div">
-    <div class="tab-header">     
-      <h2 routerLink="/adminRegister" routerLinkActive='active'>Register an admin</h2>
-    </div>
-    <div class="col-md-10 offset-md-1"><router-outlet></router-outlet></div>
-  </div>
-</div>
+<body>
+  <nav>
+    <input type="checkbox" id="check">
+    <label for="check" class="checkbtn">
+      <i class="fas fa-bars"></i>
+    </label>
+    <label class="logo">Techonomy</label>
+    <ul>
+      <li><a routerLink="/admin" class="active">Home</a></li>
+      <li><a routerLink="/product">Products</a></li>
+      <li><a routerLink="/supplier">Suppliers</a></li>
+      <li><a routerLink="/category">Categories</a></li>
+      <li><a routerLink="/user">Users</a></li>
+      <li><a routerLink="/order">Orders</a></li>
+      <li><a ><i class="fas fa-user" (click)="onLogout()"></i></a></li>
+    </ul>
+  </nav>
+  <h3 class="table-heading">Welcome administrator!</h3>
+</body>
+

@@ -50,6 +50,7 @@ import { ForbiddenComponent } from './components/forbidden/forbidden.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterCustomerComponent } from './components/register-customer/register-customer.component';
 import { RegisterAdminComponent } from './components/register-admin/register-admin.component';
+import { EditUserCredentials } from './components/home/editCredentials/editUserCredentials';
 @NgModule({
   declarations: [
     AppComponent,
@@ -86,7 +87,8 @@ import { RegisterAdminComponent } from './components/register-admin/register-adm
     ForbiddenComponent,
     LoginComponent,
     RegisterCustomerComponent,
-    RegisterAdminComponent
+    RegisterAdminComponent,
+    EditUserCredentials
   ],
   imports: [
     BrowserModule,

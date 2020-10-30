@@ -77,10 +77,13 @@ namespace Webshop.Controllers
                 User = user
             };
             //System.Diagnostics.Debug.WriteLine("newcart: " + newCart);
-            _context.Carts.Add(newCart);
-            
+            _context.Carts.Add(newCart);          
+
             user.Cart = newCart;
-            //System.Diagnostics.Debug.WriteLine("user.Cart: " + user.Cart);
+
+
+
+            //System.Diagnostics.Debug.WriteLine("user.Cart: " + user.Cart.CartId);
 
             try
             {
@@ -141,11 +144,18 @@ namespace Webshop.Controllers
 
             if (userWaitingForUpdate == null)
                 return NotFound();
-            
-            // modositasok elvegzese    
-            if (user.UserName != null) userWaitingForUpdate.UserName = user.UserName;
 
-            if (user.Email != null) userWaitingForUpdate.Email = user.Email;
+            // modositasok elvegzese    
+            if (user.UserName != null) {
+                userWaitingForUpdate.UserName = user.UserName;
+                userWaitingForUpdate.NormalizedUserName = user.UserName.ToUpper();
+            }
+
+            if (user.Email != null) {
+                userWaitingForUpdate.Email = user.Email;
+                userWaitingForUpdate.NormalizedEmail = user.Email.ToUpper();
+            }
+            
 
             if (newUser.Password != null) {
                 await _userManager.RemovePasswordAsync(userWaitingForUpdate);

@@ -38,6 +38,7 @@ namespace Webshop.Controllers
             //public SortedSet<int> ProductsID { get; set; }
             foreach (Cart c in res)
             {
+
                 var user = await _userManager.FindByIdAsync(c.UserId);
                 var mapppelt = _mapper.Map<CartDto>(c);
                 foreach (ProductCart rev in products)
