@@ -6,4 +6,6 @@ export class OrderItem {
   orderId: number;
   statusId: number;
   orderItemId: number;
+  productName: string;
+  statusName: string;
 }

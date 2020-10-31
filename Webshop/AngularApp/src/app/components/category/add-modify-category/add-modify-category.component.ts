@@ -37,8 +37,10 @@ export class AddModifyCategoryComponent implements OnInit {
 
   updateCategory() {
     let data: Category;
-    data = { category_Name: this.category_Name, categoryId: this.item.categoryId };
-    this.service.update(this.categoryId, data).subscribe(res => { this.router.navigate(['/category']); });
+    data = { category_Name: this.category_Name, categoryId: this.item.categoryId };   
+    this.service.update(data.categoryId, data).subscribe(res => { this.router.navigate(['/category']); });
   }
-
+  cancel() {
+    this.router.navigate(['/category']);
+  }
 }

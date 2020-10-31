@@ -4,8 +4,16 @@ export class Product {
   price: number;
   productID: number;
   product_Description: string;
-  shipping_Price: number;
+  shipping_Price: number;  
+  reviewsID: number[]; 
+ 
+
+
+
+  category_Name: string;
   categoryId: number;
+
+
   supplierId: number;
-  reviewsID: number[];
+  name: string;
 }

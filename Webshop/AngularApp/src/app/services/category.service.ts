@@ -9,8 +9,7 @@ import { BASEURL } from './baseUrl';
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService {
-  readonly baseUrl = 'https://localhost:44308/api/Category';
+export class CategoryService {  
   constructor(private http: HttpClient) {
   }
 

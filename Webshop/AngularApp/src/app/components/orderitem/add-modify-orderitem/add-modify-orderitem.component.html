@@ -1,35 +1,42 @@
-<div class="form">
-  <label class="col-sm-2 col-form-label">
-    Amount
-  </label>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="amount"
-           *ngIf="orderItem == null" placeholder="Enter Amount" />
-    <input type="number" class="form-control" [(ngModel)]="amount"
-           *ngIf="orderItem != null" placeholder="{{orderItem.amount}}" />
-  </div>
+<body>
+  <div class="addmodify supplier">
+    <form *ngIf="addForm">
 
-  <label class="col-sm-2 col-form-label">
-    Price
-  </label>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="price"
-           *ngIf="orderItem == null" placeholder="Enter the price" />
-    <input type="number" class="form-control" [(ngModel)]="price"
-           *ngIf="orderItem != null" placeholder="{{orderItem.price}}" />
-  </div>
+      <p>Amount</p>
+      <div class="col-sm-10">
+        <input type="number" name="add_amount" class="form-control" [(ngModel)]="amount" placeholder="Enter Amount" />
+      </div>
 
-  <label class="col-sm-2 col-form-label">
-    productID
-  </label>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="productID"
-           *ngIf="orderItem == null" placeholder="Enter the productID" />
-    <input type="number" class="form-control" [(ngModel)]="productID"
-           *ngIf="orderItem != null" placeholder="{{orderItem.productID}}" />
-  </div>
-  <button (click)="addOrderItem()" *ngIf="orderItem == null" class=" btn btn-primary">Add</button>
-  <button (click)="updateOrderItem()" *ngIf="orderItem != null" class=" btn btn-primary">Update</button>
+      <p>Price</p>
+      <div class="col-sm-10">
+        <input type="number" name="add_price" class="form-control" [(ngModel)]="price"  placeholder="Enter the price" />      
+      </div>
+
+      <p>productID</p>
+      <div class="col-sm-10">
+        <input type="number" name="add_productID" class="form-control" [(ngModel)]="productID"  placeholder="Enter the productID" />       
+      </div>
+      <input type="submit" name="addButton" (click)="addOrderItem()" value="Add"/>
+      <input type="submit" name="cancelButton" (click)="cancel()" value="Cancel" />
+    </form>
+
+
+    <form *ngIf="!addForm">
+      <h1>Orderitem modify</h1>
+
+      <p>Status</p>
+      <input type="text" name="status" [(ngModel)]="statusName" *ngIf="selectedStatus != true" placeholder="{{item.statusName}}"
+             (click)="selectStatus()" />
+      <div *ngIf="selectedStatus">
+        <select class="form-control" name="status_edit" [(ngModel)]="selectedOption_statusId">
+          <option *ngFor="let dataItem of StatusList" value="{{dataItem.statusId}}" >{{dataItem.name}}</option>
+        </select>
+      </div>
+      <input type="submit" name="" value="Modify" (click)="updateOrderItem()">
+      <input type="submit" name="" value="Cancel" (click)="cancel()">
+    </form>
 </div>
+</body>
+
 
 

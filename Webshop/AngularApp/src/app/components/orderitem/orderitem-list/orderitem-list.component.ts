@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Order } from '../../../classes/Order';
 import { OrderItem } from '../../../classes/OrderItem';
 import { OrderitemService } from '../../../services/orderitem.service';
+import { ProductService } from '../../../services/product.service';
+import { StatusService } from '../../../services/status.service';
 import { UserService } from '../../../services/user.service';
 
 @Component({
@@ -12,14 +14,13 @@ import { UserService } from '../../../services/user.service';
 })
 export class OrderitemListComponent implements OnInit {
 
-  constructor(private service: OrderitemService, private router: Router, private userService: UserService) { }
+  constructor(private service: OrderitemService, private router: Router, private userService: UserService,
+    private productService: ProductService, private statusService: StatusService) { }
   item: Order;
   userDetails;
 
   OrderItemList: OrderItem[] = []
-  ModalTitle: string;
-  ActivateAddEditOrderitemComp: boolean = false;
-  orderitem: OrderItem;
+ 
 
   ngOnInit(): void {
 
@@ -30,14 +31,38 @@ export class OrderitemListComponent implements OnInit {
     } catch (err) { console.log(err); }
     this.refreshOrderItemList();
   }
+  
+
+  refreshProduct(id: number, orderItem: OrderItem) {
+    this.productService.get(id).subscribe(data => {
+      orderItem.productName = data.product_Name;
+    });
+  }
+  
+  refreshStatus(id: number, orderItem: OrderItem) {
+    this.statusService.get(id).subscribe(data => {
+      orderItem.statusName = data.name;
+    });
+  }
+  
+
+
+
+
   refreshOrderItemList() {
-    this.service.getAll().subscribe(data => {
+    console.log(this.item.orderId);
+    this.service.getByOrderId(this.item.orderId).subscribe(data => {
       this.OrderItemList = data;
+      for (let orderItem of this.OrderItemList) {
+        this.refreshProduct(orderItem.productID, orderItem);
+        this.refreshStatus(orderItem.statusId, orderItem);
+      };
     });
   }
 
   editClick(item) {
     localStorage.setItem('orderItem', JSON.stringify(item));
+    localStorage.setItem('addForm', JSON.stringify(false));
     this.router.navigate(['/order/orderitems/add']);
   }
 
@@ -54,6 +79,7 @@ export class OrderitemListComponent implements OnInit {
     this.router.navigate(['/login']);
   }
   addOrderItem() {
+    localStorage.setItem('addForm', JSON.stringify(true));
     this.router.navigate(['/order/orderitems/add']);
   }
   goBack() {

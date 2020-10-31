@@ -17,10 +17,10 @@
       <thead>
         <tr>
           <th>ID</th>
-          <th>Product name_id</th>
+          <th>Product name</th>
           <th>Price</th>
           <th>Amount</th>
-          <th>Status_id</th>
+          <th>Status</th>
           <th></th>
         </tr>
       </thead>
@@ -28,10 +28,10 @@
       <tbody>
         <tr *ngFor="let dataItem of OrderItemList">
           <td data-heading="ID">{{dataItem.orderItemId}}</td>
-          <td data-heading="Product name_id">{{dataItem.productID}}</td>
+          <td data-heading="Product name">{{dataItem.productName}}</td>
           <td data-heading="Price">{{dataItem.price}}</td>
           <td data-heading="Amount">{{dataItem.amount}}</td>
-          <td data-heading="Status_id">{{dataItem.statusId}}</td>
+          <td data-heading="Status">{{dataItem.statusName}}</td>
           <td data-heading="Modify/Delete">
             <a><i class="fas fa-edit" (click)="editClick(dataItem)"></i></a>
             <a><i class="fas fa-trash-alt" (click)="deleteClick(dataItem)"></i></a>

@@ -1,64 +1,45 @@
+<body>
+  <div class="addmodify order">
+    <h1 *ngIf="item == null">Order add</h1>
+    <h1 *ngIf="item != null">Order modify</h1>
+    <form *ngIf="item!= null">
+      <p>Username:</p> <p>{{item.userId}}</p>
+      <p>Status</p>
+      <input type="text" name="status" [(ngModel)]="statusName" *ngIf="selectedStatus != true" placeholder="{{item.statusName}}"
+             (click)="selectStatus()" />
+      <div *ngIf="selectedStatus">
+        <select class="form-control" name="status_edit" [(ngModel)]="selectedOption_status">
+          <option *ngFor="let dataItem of StatusList" value="{{dataItem.name}}">{{dataItem.name}}</option>
+        </select>
+      </div>
+      <input type="submit" name="editButton" value="Modify" (click)="updateOrder()">
+      <input type="submit" name="cancelButton" value="Cancel" (click)="cancel()">
+    </form>
 
 
- 
 
-
-
-
-
-
-<div class="form">
-  <label class="col-sm-2 col-form-label">
-    User name
-  </label>
-  <div class="col-sm-10">
-
-
- 
-  <div *ngIf="item == null">
-    <select [(ngModel)]="selectedOption">
-      <option *ngFor="let dataItem of UserList" value="{{dataItem.username}}">{{dataItem.username}}</option>
-    </select>
-  </div>
-    <input type="text" class="form-control" [(ngModel)]="userName"
-           *ngIf="item != null" placeholder="{{item.userName}}" />
-  </div>
-  <label class="col-sm-2 col-form-label">
-    PaymentMethod
-  </label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="paymentMetod"
-           *ngIf="item == null" placeholder="Enter the paymentmetod" />
-    <input type="text" class="form-control" [(ngModel)]="paymentMetod"
-           *ngIf="item != null" placeholder="{{item.paymentMetod}}" />
-  </div>
-
-  <label class="col-sm-2 col-form-label">
-    ShippingMethod
-  </label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="shippingMethod"
-           *ngIf="item == null" placeholder="Enter the shippingMethod" />
-    <input type="text" class="form-control" [(ngModel)]="shippingMethod"
-           *ngIf="item != null" placeholder="{{item.shippingMethod}}" />
-  </div>
-  <label class="col-sm-2 col-form-label">
-    OrderTime
-  </label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="orderTime"
-           *ngIf="item == null" placeholder="Enter the orderTime" />
-    <input type="text" class="form-control" [(ngModel)]="orderTime"
-           *ngIf="item != null" placeholder="{{item.orderTime}}" />
-  </div>
-  <label *ngIf="item != null" class="col-sm-2 col-form-label">
-    statusName
-  </label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="statusName"
-           *ngIf="item != null" placeholder="{{item.statusName}}" />
-  </div>
-  <button (click)="addOrder()" *ngIf="item== null" class=" btn btn-primary">Add</button>
-  <button (click)="updateOrder()" *ngIf="item != null" class=" btn btn-primary">Update</button>
-</div>
-
+    <form *ngIf="item == null">
+      <p>User name</p>             
+      <div class="col-sm-10">
+        <div *ngIf="item == null">
+          <select [(ngModel)]="selectedOption" class="form-control" name="username_select">
+            <option *ngFor="let dataItem of UserList" value="{{dataItem.username}}">{{dataItem.username}}</option>
+          </select>
+        </div>
+        <input type="text" name="username" class="form-control" [(ngModel)]="userName"  *ngIf="item != null" placeholder="{{item.userName}}" />
+      </div>
+      <p>PaymentMethod</p>     
+      <div class="col-sm-10">
+        <input type="text" name="paymentmethod_null" class="form-control" [(ngModel)]="paymentMetod" *ngIf="item == null" placeholder="Enter the paymentmetod" />
+        <input type="text" name="paymentmethod" class="form-control" [(ngModel)]="paymentMetod" *ngIf="item != null" placeholder="{{item.paymentMetod}}" />
+      </div>
+      <p>ShippingMethod</p>    
+      <div class="col-sm-10">
+        <input type="text" name="shippingMethod_null" class="form-control" [(ngModel)]="shippingMethod" *ngIf="item == null" placeholder="Enter the shippingMethod" />
+        <input type="text" name="shippingMethod" class="form-control" [(ngModel)]="shippingMethod" *ngIf="item != null" placeholder="{{item.shippingMethod}}" />
+      </div>   
+      <input type="submit" name="addButton" (click)="addOrder()" value="Add"/>
+      <input type="submit" name="cancelButton" (click)="cancel()" value="Cancel"/>
+    </form>
+    </div>
+</body>

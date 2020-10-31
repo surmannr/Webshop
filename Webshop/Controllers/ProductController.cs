@@ -72,7 +72,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] ProductDto newProduct)
         {
             Product product = _mapper.Map<Product>(newProduct);
-            if (product.Product_Name == null || product.Price == 0 || product.Shipping_Price == 0) return NoContent();
+            if (product.Product_Name == null || product.Price == 0 || product.Shipping_Price == 0) return null;
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
             return Ok();

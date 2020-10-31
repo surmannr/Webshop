@@ -12,8 +12,8 @@
       <input type="password" class="form-control" #Username="ngModel" name="Password" [(ngModel)]="formModel.Password" required>
       <input type="submit" name="" value="Login" [disabled]="form.invalid">
     </form>
-    <a href="#">Forget your password?</a><br>
-    <a href="#">Don't have an account?</a>
+    <a href="#">Forgot your password?</a><br>
+    <a routerLink="/register">Don't have an account?</a>
   </div>
 </body>
 

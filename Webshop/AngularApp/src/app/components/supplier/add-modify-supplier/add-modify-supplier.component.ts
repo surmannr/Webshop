@@ -29,18 +29,21 @@ export class AddModifySupplierComponent implements OnInit {
       localStorage.removeItem('item');
     } catch (err) {
       this.item = null;
-    }
-    console.log(this.item);
+    }   
   }
   addSupplier() {
     let val: Supplier;
-    val = { supplierId: this.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };
-    this.service.create(val).subscribe(res => { this.router.navigate(['/supplier']); });
+    val = { supplierId: this.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };   
+    this.service.create(val).subscribe(res => { this.router.navigate(['/supplier']); });   
   }
 
   updateSupplier() {
     let val: Supplier;
     val = { supplierId: this.item.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };
+   
     this.service.update(val.supplierId, val).subscribe(res => { this.router.navigate(['/supplier']); });
+  }
+  cancel() {
+    this.router.navigate(['/supplier']);
   }
 }

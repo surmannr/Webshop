@@ -35,10 +35,10 @@
         <tr *ngFor="let dataItem of ProductList">
           <td data-heading="ID">{{dataItem.productID}}</td>
           <td data-heading="Product name">{{dataItem.product_Name}}</td>
-          <td data-heading="Category">{{dataItem.categoryId}}</td>
+          <td data-heading="Category">{{dataItem.category_Name}}</td>
           <td data-heading="Price">{{dataItem.price}}</td>
           <td data-heading="Shipping Price">{{dataItem.shipping_Price}}</td>
-          <td data-heading="Supplier">{{dataItem.supplierId}}</td>
+          <td data-heading="Supplier">{{dataItem.name}}</td>
           <td data-heading="Modify/Delete">
             <a><i class="fas fa-edit" (click)="editClick(dataItem)"></i></a>
             <a><i class="fas fa-trash-alt" (click)="deleteClick(dataItem)"></i></a>
