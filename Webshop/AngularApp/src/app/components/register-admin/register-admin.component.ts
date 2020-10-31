@@ -21,23 +21,17 @@ export class RegisterAdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.id = this.makeid(10);
-    this.username = this.user.username;
-    this.email = this.user.email;
-    this.password = this.user.password;
+    this.username = "";
+    this.email = "";
+    this.password = "";
   }
 
   addUser() {
     let val: User;
     val = { id: this.id, username: this.username, email: this.email, password: this.password };
-    this.service.createAdmin(val).subscribe(res => { alert("Added the admin"); });
-    this.router.navigate(['/login']);
+    this.service.createAdmin(val).subscribe(res => { this.router.navigate(['/user']); });  
   }
-
-  updateUser() {
-    let data: User;
-    data = { id: this.id, username: this.username, email: this.email, password: this.password };
-    this.service.update(this.id, data).subscribe(res => { alert("Updated the user"); });
-  }
+ 
 
   makeid(length) {
     var result = '';
@@ -47,5 +41,8 @@ export class RegisterAdminComponent implements OnInit {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+  }
+  cancel() {
+    this.router.navigate(['/user']);
   }
 }

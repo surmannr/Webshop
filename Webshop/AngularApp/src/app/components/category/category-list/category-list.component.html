@@ -1,58 +1,44 @@
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary float-right m-2"
-        data-toggle="modal" data-target="#exampleModal"
-        (click)="addClick()"
-        data-backdrop="static" data-keyboard="false">
-  Add a new category
-</button>
+<body>
+  <nav>
+    <input type="checkbox" id="check">
+    <label for="check" class="checkbtn">
+      <i class="fas fa-bars"></i>
+    </label>
+    <label class="logo">Techonomy</label>
+    <ul>
+      <li><a routerLink="/admin">Home</a></li>
+      <li><a routerLink="/product">Products</a></li>
+      <li><a routerLink="/supplier">Suppliers</a></li>
+      <li><a routerLink="/category" class="active" >Categories</a></li>
+      <li><a routerLink="/user">Users</a></li>
+      <li><a routerLink="/order">Orders</a></li>
+      <li><a><i class="fas fa-user" (click)="onLogout()"></i></a></li>
+    </ul>
+  </nav>
+  <div class="table-container">
+    <h2 class="table-heading">Category list</h2>
+    <table>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">{{ModalTitle}}</h5>
-        <button type="button" class="close"
-                data-dismiss="modal" aria-label="Close"
-                (click)="closeClick()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <app-add-modify-category [cat]="cat" *ngIf="ActivateAddEditCatComp">
-        </app-add-modify-category>
-      </div>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Category name</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let dataItem of CategoryList">
+          <td data-heading="ID">{{dataItem.categoryId}}</td>
+          <td data-heading="Category name">{{dataItem.category_Name}}</td>
+          <td data-heading="Modify/Delete">
+            <a><i class="fas fa-edit" (click)="editClick(dataItem)"></i></a>
+            <a><i class="fas fa-trash-alt" (click)="deleteClick(dataItem)"></i></a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="newbutton">
+      <button type="submit" name="new" (click)="addCategory()">+</button>
     </div>
   </div>
-</div>
-
-
-
-<table class="tableStyle">
-  <thead>
-    <tr>
-      <th scope="col">CategoryId</th>
-      <th scope="col">Category Name</th>
-      <th scope="col">Options</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let dataItem of CategoryList">
-      <td>{{dataItem.categoryId}}</td>
-      <td>{{dataItem.category_Name}}</td>
-      <td>
-        <button type="button" class="btn btn-primary"
-                data-toggle="modal" data-target="#exampleModal"
-                (click)="editClick(dataItem)"
-                data-backdrop="static" data-keyboard="false">
-          Edit
-        </button>
-        <button type="button" class="btn btn-primary"
-                (click)="deleteClick(dataItem)">
-          Delete
-        </button>
-      </td>
-    </tr>
-
-  </tbody>
-</table>
+</body>

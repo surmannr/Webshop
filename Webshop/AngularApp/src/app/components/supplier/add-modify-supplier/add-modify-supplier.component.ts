@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Supplier } from '../../../classes/Supplier';
 import { SupplierService } from '../../../services/supplier.service';
 
@@ -10,7 +11,9 @@ import { SupplierService } from '../../../services/supplier.service';
 export class AddModifySupplierComponent implements OnInit {
 
 
-  constructor(private service: SupplierService) { }
+  constructor(private service: SupplierService, private router: Router) { }
+
+  item: Supplier;
 
   @Input() sup: Supplier;  
   name: string;
@@ -19,20 +22,25 @@ export class AddModifySupplierComponent implements OnInit {
   supplierId: number;
 
   ngOnInit(): void {
-    this.name = this.sup.name;
-    this.address = this.sup.address;
-    this.multiplier = this.sup.multiplier;
-    this.supplierId = this.sup.supplierId;
+    try {
+      var _item_json = localStorage.getItem('item');
+      this.item = JSON.parse(_item_json);
+      // console.log(this.item.product_Name);
+      localStorage.removeItem('item');
+    } catch (err) {
+      this.item = null;
+    }
+    console.log(this.item);
   }
   addSupplier() {
     let val: Supplier;
-    val = { supplierId: this.supplierId, name: this.name, address: this.address, multiplier: this.multiplier};
-    this.service.create(val).subscribe(res => { alert("Added the supplier"); });
+    val = { supplierId: this.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };
+    this.service.create(val).subscribe(res => { this.router.navigate(['/supplier']); });
   }
 
   updateSupplier() {
     let val: Supplier;
-    val = { supplierId: this.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };
-    this.service.update(this.supplierId, val).subscribe(res => { alert("Updated the supplier"); });
+    val = { supplierId: this.item.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };
+    this.service.update(val.supplierId, val).subscribe(res => { this.router.navigate(['/supplier']); });
   }
 }

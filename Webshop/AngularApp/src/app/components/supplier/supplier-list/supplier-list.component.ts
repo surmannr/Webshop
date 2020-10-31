@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { SupplierService } from 'src/app/services/supplier.service';
 import { Supplier } from '../../../classes/Supplier';
 @Component({
@@ -9,11 +10,9 @@ import { Supplier } from '../../../classes/Supplier';
 export class SupplierListComponent implements OnInit {
 
   SupplierList: Supplier[] = [];
-  ModalTitle: string;
-  ActivateAddEditSupComp: boolean = false;
-  sup: Supplier;
+ 
 
-  constructor(private service: SupplierService) { }
+  constructor(private service: SupplierService, private router: Router) { }
 
   ngOnInit(): void {
     this.refreshSupList();
@@ -23,34 +22,25 @@ export class SupplierListComponent implements OnInit {
       this.SupplierList = data;
     });
   }
-  addClick() {
-    this.sup = {
-      supplierId: 0,
-      name: "",
-      address: "",
-      multiplier: 0
-    }
-    this.ModalTitle = "Add Supplier";
-    this.ActivateAddEditSupComp = true;
+
+  editClick(item: Supplier) {
+    localStorage.setItem('item', JSON.stringify(item));
+    this.router.navigate(['/supplier/add']);
   }
 
-  editClick(item) {
-    this.sup = item;
-    this.ModalTitle = "Edit Supplier";
-    this.ActivateAddEditSupComp = true;
-  }
-
-  closeClick() {
-    this.ActivateAddEditSupComp = false;
-    this.refreshSupList();
-  }
-
-  deleteClick(item) {
+  deleteClick(item: Supplier) {
     if (confirm("Do you want to delete this item?")) {
-      this.service.delete(item.supplierId).subscribe( _ => {
+      this.service.delete(item.supplierId).subscribe(_ => {
         this.refreshSupList();
       });
     }
   }
 
+  onLogout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+  addSupplier() {
+    this.router.navigate(['/supplier/add']);
+  }
 }

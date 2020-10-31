@@ -1,6 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Order } from '../../../classes/Order';
+import { User } from '../../../classes/User';
 import { OrderService } from '../../../services/order.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-add-modify-order',
@@ -9,10 +12,14 @@ import { OrderService } from '../../../services/order.service';
 })
 export class AddModifyOrderComponent implements OnInit {
 
-  constructor(private service: OrderService) { }
+  item: Order;
+
+  UserList: User[] = [];
+
+  constructor(private service: OrderService, private router: Router, private userService: UserService) { }
 
   @Input() order: Order;
-  userId: string;
+  userName: string;
   paymentMetod: string;
   shippingMethod: string;
   orderTime: string;
@@ -20,32 +27,39 @@ export class AddModifyOrderComponent implements OnInit {
   kiVette: string;
   orderId: number;
   orderItemsID: number[];
+  selectedOption: string;
 
   ngOnInit(): void {
-    this.userId = this.order.userId;
-    this.paymentMetod = this.order.paymentMetod;
-    this.shippingMethod = this.order.shippingMethod;
-    this.orderTime = this.order.orderTime;
-    this.statusName = this.order.statusName;
-    this.kiVette = this.order.kiVette;
-    this.orderId = this.order.orderId;
-    this.orderItemsID = this.order.orderItemsID;
+    this.refreshUserList();
+    try {
+      var _item_json = localStorage.getItem('item');
+      this.item = JSON.parse(_item_json);
+       //console.log(this.item);
+      localStorage.removeItem('item');
+    } catch (err) {
+      this.item = null;
+    }
   }
-
+  refreshUserList() {
+    this.userService.getAll().subscribe(data => {
+      this.UserList = data;     
+    });
+  }
   addOrder() {
     let val: Order;
     val = {
-      userId: this.userId, paymentMetod: this.paymentMetod, shippingMethod: this.shippingMethod, orderTime: this.orderTime, statusName: this.statusName,
-      kiVette: this.kiVette, orderId: this.orderId, orderItemsID: this.orderItemsID};
-    this.service.create(val).subscribe(res => { alert("Added the Order"); });
+      userId: this.selectedOption, paymentMetod: this.paymentMetod, shippingMethod: this.shippingMethod, orderTime: this.orderTime, statusName: this.statusName,
+      kiVette: this.kiVette, orderId: this.orderId, orderItemsID: this.orderItemsID
+    };
+    this.service.create(val).subscribe(res => { this.router.navigate(['/order']); });
   }
 
   updateOrder() {
-    let val: Order;
+    let val: Order; 
     val = {
-      userId: this.userId, paymentMetod: this.paymentMetod, shippingMethod: this.shippingMethod, orderTime: this.orderTime, statusName: this.statusName,
-      kiVette: this.kiVette, orderId: this.orderId, orderItemsID: this.orderItemsID
+      userId: this.userName, paymentMetod: this.paymentMetod, shippingMethod: this.shippingMethod, orderTime: this.orderTime, statusName: this.statusName,
+      kiVette: this.item.kiVette, orderId: this.item.orderId, orderItemsID: this.orderItemsID
     };
-    this.service.update(this.orderId, val).subscribe(res => { alert("Updated the Order"); });
+    this.service.update(val.orderId, val).subscribe(res => { this.router.navigate(['/order']); });
   }
 }

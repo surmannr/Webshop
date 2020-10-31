@@ -60,10 +60,6 @@ export class UserService {
   }
 
 
-
-
-
-
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(BASEURL.baseUrl + 'User');
   }

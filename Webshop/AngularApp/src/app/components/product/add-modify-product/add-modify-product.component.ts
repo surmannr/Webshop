@@ -27,7 +27,6 @@ export class AddModifyProductComponent implements OnInit {
   reviewsID: number[];
 
   ngOnInit(): void {
-
     try {
       var _item_json = localStorage.getItem('item');
       this.item = JSON.parse(_item_json);
@@ -36,9 +35,6 @@ export class AddModifyProductComponent implements OnInit {
     } catch (err) {
       this.item = null;
     }
-    
-   
-
   }
 
   addProduct() {
@@ -56,11 +52,11 @@ export class AddModifyProductComponent implements OnInit {
     let data: Product;
     data = {
       product_Name: this.product_Name, price: this.price,
-      productID: this.productID, product_Description: this.product_Description,
+      productID: this.item.productID, product_Description: this.product_Description,
       shipping_Price: this.shipping_Price, categoryId: this.categoryId,
       supplierId: this.supplierId, reviewsID: this.reviewsID
     };
-    this.service.update(this.productID, data).subscribe(res => { alert("Updated the product"); });
+    this.service.update(data.productID, data).subscribe(res => { this.router.navigate(['/product']); });
    
   }
 

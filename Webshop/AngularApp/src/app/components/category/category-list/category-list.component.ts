@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from '../../../classes/Category';
 
@@ -9,48 +10,35 @@ import { Category } from '../../../classes/Category';
 })
 export class CategoryListComponent implements OnInit {
 
-  CategoryList: Category[] = [];
-  ModalTitle: string;
-  ActivateAddEditCatComp: boolean = false;;
-  cat: Category;
+  CategoryList: Category[] = []; 
 
-  constructor(private service: CategoryService) { }
+  constructor(private service: CategoryService, private router: Router) { }
 
   ngOnInit(): void {
     this.refreshCatList();
   }
-
   refreshCatList() {
     this.service.getAll().subscribe(data => {
       this.CategoryList = data;
     });
   }
 
-  addClick() {
-    this.cat = {
-      categoryId: 0,
-      category_Name: ""
-    }
-    this.ModalTitle = "Add Category";
-    this.ActivateAddEditCatComp = true;
+  editClick(item: Category) {
+    localStorage.setItem('item', JSON.stringify(item));
+    this.router.navigate(['/category/add']);
   }
-
-  editClick(item) {
-    this.cat = item;
-    this.ModalTitle = "Edit Category";
-    this.ActivateAddEditCatComp = true;
-  }
-
-  closeClick() {
-    this.ActivateAddEditCatComp = false;
-    this.refreshCatList();
-  }
-
   deleteClick(item) {
     if (confirm("Do you want to delete this item?")) {
       this.service.delete(item.categoryId).subscribe(_ => {
         this.refreshCatList();
       });
     }
+  }
+  onLogout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+  addCategory() {
+    this.router.navigate(['/category/add']);
   }
 }

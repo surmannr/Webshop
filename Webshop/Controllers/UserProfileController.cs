@@ -27,17 +27,19 @@ namespace Webshop.Controllers
         [Authorize]
         public async Task<Object> GetUserProfile() {
             string userId = User.Claims.First(c => c.Type == "UserID").Value;
-           // Debug.WriteLine(userId);
+            // Debug.WriteLine(userId);
             var user = await _userManager.FindByIdAsync(userId);
             var cart = await _context.Carts.FirstOrDefaultAsync(x => x.UserId == userId);
             return new
             {
                 user.UserName,
-                user.Email,  
+                user.Email,
                 user.Id,
-               cart.CartId
+                cart.CartId
             };
         }
+
+
 
         [HttpGet]
         [Authorize(Roles = "Admin")]

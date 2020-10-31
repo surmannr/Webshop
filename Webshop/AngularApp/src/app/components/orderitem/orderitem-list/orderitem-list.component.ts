@@ -1,15 +1,20 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Order } from '../../../classes/Order';
 import { OrderItem } from '../../../classes/OrderItem';
 import { OrderitemService } from '../../../services/orderitem.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-orderitem-list',
-  templateUrl: './orderitem-list.component.html',
-  styleUrls: ['./orderitem-list.component.css']
+  templateUrl: './orderitem-list.component.html'
+
 })
 export class OrderitemListComponent implements OnInit {
 
-  constructor(private service: OrderitemService) { }
+  constructor(private service: OrderitemService, private router: Router, private userService: UserService) { }
+  item: Order;
+  userDetails;
 
   OrderItemList: OrderItem[] = []
   ModalTitle: string;
@@ -17,6 +22,12 @@ export class OrderitemListComponent implements OnInit {
   orderitem: OrderItem;
 
   ngOnInit(): void {
+
+    try {
+      var _item_json = localStorage.getItem('item');
+      this.item = JSON.parse(_item_json);
+      console.log(this.userDetails);
+    } catch (err) { console.log(err); }
     this.refreshOrderItemList();
   }
   refreshOrderItemList() {
@@ -25,29 +36,11 @@ export class OrderitemListComponent implements OnInit {
     });
   }
 
-  addClick() {
-    this.orderitem = {
-      amount: 0,
-      price: 0,
-      productID: 0,
-      orderId: 0,
-      statusId: 0,
-      orderItemId: 0
-    }
-    this.ModalTitle = "Add OrderItem";
-    this.ActivateAddEditOrderitemComp = true;
-  }
-
   editClick(item) {
-    this.orderitem = item;
-    this.ModalTitle = "Edit OrderItem";
-    this.ActivateAddEditOrderitemComp = true;
+    localStorage.setItem('orderItem', JSON.stringify(item));
+    this.router.navigate(['/order/orderitems/add']);
   }
 
-  closeClick() {
-    this.ActivateAddEditOrderitemComp = false;
-    this.refreshOrderItemList();
-  }
 
   deleteClick(item) {
     if (confirm("Do you want to delete this item?")) {
@@ -55,5 +48,16 @@ export class OrderitemListComponent implements OnInit {
         this.refreshOrderItemList();
       });
     }
+  }
+  onLogout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+  addOrderItem() {
+    this.router.navigate(['/order/orderitems/add']);
+  }
+  goBack() {
+    localStorage.removeItem('item');
+    this.router.navigate(['/order']);
   }
 }

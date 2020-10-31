@@ -1,46 +1,18 @@
-<div class="form">
-  <form [formGroup]="service.formModel" autocomplete="off">
-
-    <div class="form-group">
-      <label>Username</label>
-      <input class="form-control required" formControlName="UserName" [(ngModel)]="username" placeholder="Enter username" />
-      <label class="text-danger" *ngIf="service.formModel.get('UserName').touched && service.formModel.get('UserName').errors?.required">
-        This field is mandatory.
-      </label>
-    </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input class="form-control" formControlName="Email" [(ngModel)]="email" placeholder="Enter the email address" />
-      <label class="text-danger" *ngIf="service.formModel.get('Email').touched && service.formModel.get('Email').errors?.email">
-        Invalid Email address.
-      </label>
-    </div>
-    <div formGroupName="Passwords">
-      <div class="form-group">
-        <label>Password</label>
-        <input type="password" class="form-control" formControlName="Password" [(ngModel)]="password" placeholder="Enter the password" />
-        <label class="text-danger" *ngIf="service.formModel.get('Passwords.Password').touched && service.formModel.get('Passwords.Password').errors?.required">
-          This item is mandatory.
-        </label>
-        <label class="text-danger" *ngIf="service.formModel.get('Passwords.Password').touched && service.formModel.get('Passwords.Password').errors?.password">
-          Invalid Password.
-        </label>
-      </div>
-      <div class="form-group">
-        <label>ConfirmPassword</label>
-        <input type="password" class="form-control" formControlName="ConfirmPassword" placeholder="Confirm the password" />
-        <label class="text-danger" *ngIf="service.formModel.get('Passwords.ConfirmPassword').touched && service.formModel.get('Passwords.ConfirmPassword').errors?.required">
-          This item is mandatory.
-        </label>
-        <label class="text-danger" *ngIf="service.formModel.get('Passwords.ConfirmPassword').touched && service.formModel.get('Passwords.ConfirmPassword').errors?.passwordMismatch">
-          Confirmed password does not match.
-        </label>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="form-group col-md-8 offset-md-2">
-        <button (click)="addUser()" class=" btn btn-primary" [disabled]="!service.formModel.valid">Sign Up</button>
-      </div>
-    </div>
+<div class="loginbox reg">
+  <div>
+    <img src="assets/avatar.png" class="avatar" alt="hello">
+  </div>
+  <h1>Edit user Credentials</h1>
+  <form>
+    <p>Username</p>
+    <input type="text" [(ngModel)]="username" name="username" placeholder="{{item.username}}">
+    <p>Email</p>
+    <input type="text" [(ngModel)]="email" name="email" placeholder="{{item.email}}">
+    <p>Password</p>
+    <input type="password" [(ngModel)]="password" name="password">
+    <p>Password again</p>
+    <input type="password"  name="confirm_password" >
+    <input type="submit" name="edit"   value ="Edit"    (click)="updateUser()">
+    <input type="submit" name="cancel" value="Cancel"    (click)="cancel()">
   </form>
 </div>

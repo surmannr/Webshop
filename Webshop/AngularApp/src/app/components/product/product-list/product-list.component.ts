@@ -28,7 +28,7 @@ export class ProductListComponent implements OnInit {
     this.router.navigate(['/product/add']);
   }
 
-  deleteClick(item) {
+  deleteClick(item: Product) {
     if (confirm("Do you want to delete this item?")) {
       this.service.delete(item.productID).subscribe(_ => {
         this.refreshProdList();

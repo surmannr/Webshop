@@ -1,18 +1,36 @@
+
+
+ 
+
+
+
+
+
+
 <div class="form">
   <label class="col-sm-2 col-form-label">
-    UserID
+    User name
   </label>
   <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="userId"
-           placeholder="Enter UserID" />
-  </div>
 
+
+ 
+  <div *ngIf="item == null">
+    <select [(ngModel)]="selectedOption">
+      <option *ngFor="let dataItem of UserList" value="{{dataItem.username}}">{{dataItem.username}}</option>
+    </select>
+  </div>
+    <input type="text" class="form-control" [(ngModel)]="userName"
+           *ngIf="item != null" placeholder="{{item.userName}}" />
+  </div>
   <label class="col-sm-2 col-form-label">
     PaymentMethod
   </label>
   <div class="col-sm-10">
     <input type="text" class="form-control" [(ngModel)]="paymentMetod"
-           placeholder="Enter the paymentmetod" />
+           *ngIf="item == null" placeholder="Enter the paymentmetod" />
+    <input type="text" class="form-control" [(ngModel)]="paymentMetod"
+           *ngIf="item != null" placeholder="{{item.paymentMetod}}" />
   </div>
 
   <label class="col-sm-2 col-form-label">
@@ -20,19 +38,27 @@
   </label>
   <div class="col-sm-10">
     <input type="text" class="form-control" [(ngModel)]="shippingMethod"
-           placeholder="Enter the shippingMethod" />
+           *ngIf="item == null" placeholder="Enter the shippingMethod" />
+    <input type="text" class="form-control" [(ngModel)]="shippingMethod"
+           *ngIf="item != null" placeholder="{{item.shippingMethod}}" />
   </div>
-
   <label class="col-sm-2 col-form-label">
     OrderTime
   </label>
   <div class="col-sm-10">
     <input type="text" class="form-control" [(ngModel)]="orderTime"
-           placeholder="Enter the orderTime" />
+           *ngIf="item == null" placeholder="Enter the orderTime" />
+    <input type="text" class="form-control" [(ngModel)]="orderTime"
+           *ngIf="item != null" placeholder="{{item.orderTime}}" />
   </div>
-
-  <button (click)="addOrder()" *ngIf="order.orderId == 0" class=" btn btn-primary">Add</button>
-  <button (click)="updateOrder()" *ngIf="order.orderId != 0" class=" btn btn-primary">Update</button>
-
+  <label *ngIf="item != null" class="col-sm-2 col-form-label">
+    statusName
+  </label>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" [(ngModel)]="statusName"
+           *ngIf="item != null" placeholder="{{item.statusName}}" />
+  </div>
+  <button (click)="addOrder()" *ngIf="item== null" class=" btn btn-primary">Add</button>
+  <button (click)="updateOrder()" *ngIf="item != null" class=" btn btn-primary">Update</button>
 </div>
 

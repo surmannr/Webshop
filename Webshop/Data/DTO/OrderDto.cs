@@ -18,7 +18,7 @@ namespace Webshop.Data
 
      //   public int StatusId { get; set; }
         public string StatusName { get; set; }
-        public string kiVette { get; set; }
+     //   public string kiVette { get; set; }
         public int OrderId { get; set; }
 
         public List<int> orderItemsID { get; set; } = new List<int>();

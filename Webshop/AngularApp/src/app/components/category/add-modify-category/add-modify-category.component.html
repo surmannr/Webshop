@@ -4,9 +4,13 @@
   </label>
   <div class="col-sm-10">
     <input type="text" class="form-control" [(ngModel)]="category_Name "
-           placeholder="Enter category name" />
+           *ngIf="item == null" placeholder="Enter category name" />
   </div>
-  <button (click)="addCategory()" *ngIf="cat.categoryId == 0" class=" btn btn-primary">Add</button>
-  <button (click)="updateCategory()" *ngIf="cat.categoryId != 0" class=" btn btn-primary">Update</button>
+  <div class="col-sm-10">
+    <input type="text" class="form-control" [(ngModel)]="category_Name "
+           *ngIf="item != null" placeholder="{{item.category_Name}}" />
+  </div>
+  <button (click)="addCategory()" *ngIf="item == null" class=" btn btn-primary">Add</button>
+  <button (click)="updateCategory()" *ngIf="item != null" class=" btn btn-primary">Update</button>
 
 </div>

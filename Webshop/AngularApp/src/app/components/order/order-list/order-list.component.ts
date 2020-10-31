@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Order } from '../../../classes/Order';
 import { OrderService } from '../../../services/order.service';
 
@@ -9,12 +10,10 @@ import { OrderService } from '../../../services/order.service';
 })
 export class OrderListComponent implements OnInit {
 
-  constructor(private service: OrderService) { }
+  constructor(private service: OrderService, private router: Router) { }
 
   OrderList: Order[] = [];
-  ModalTitle: string;
-  ActivateAddEditOrderComp: boolean = false;
-  order: Order;
+
 
   ngOnInit(): void {
     this.refreshOrderList();
@@ -24,33 +23,14 @@ export class OrderListComponent implements OnInit {
       this.OrderList = data;
     });
   }
-  addClick() {
-    this.order = {
-      userId: "",
-      paymentMetod: "",
-      shippingMethod: "",
-      orderTime: "",
-      statusName: "",
-      kiVette: "",
-      orderId: 0,
-      orderItemsID: [0]
-    }
-    this.ModalTitle = "Add Order";
-    this.ActivateAddEditOrderComp = true;
+
+
+  editClick(item: Order) {
+    localStorage.setItem('item', JSON.stringify(item));
+    this.router.navigate(['/order/add']);
   }
 
-  editClick(item) {
-    this.order = item;
-    this.ModalTitle = "Edit Order";
-    this.ActivateAddEditOrderComp = true;
-  }
-
-  closeClick() {
-    this.ActivateAddEditOrderComp = false;
-    this.refreshOrderList();
-  }
-
-  deleteClick(item) {
+  deleteClick(item: Order) {
     if (confirm("Do you want to delete this item?")) {
       this.service.delete(item.orderId).subscribe(_ => {
         this.refreshOrderList();
@@ -58,4 +38,18 @@ export class OrderListComponent implements OnInit {
     }
   }
 
+  onLogout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+
+  addOrder() {
+    this.router.navigate(['/order/add']);
+  }
+
+
+  ProductsClick(item: Order) {
+    localStorage.setItem('item', JSON.stringify(item));
+    this.router.navigate(['/order/orderitems']);
+  }
 }

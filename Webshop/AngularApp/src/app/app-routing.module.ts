@@ -8,9 +8,7 @@ import { SupplierComponent } from './components/supplier/supplier/supplier.compo
 import { UserComponent } from './components/user/user/user.component';
 import { CartComponent } from './components/cart/cart/cart.component';
 import { OrderComponent } from './components/order/order/order.component';
-import { OrderitemComponent } from './components/orderitem/orderitem/orderitem.component';
 import { ProductcartComponent } from './components/productcart/productcart/productcart.component';
-import { UserLoginComponent } from './components/user/user-login/user-login.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthGuard } from './components/auth/auth.guard';
 import { ForbiddenComponent } from './components/forbidden/forbidden.component';
@@ -20,16 +18,20 @@ import { RegisterCustomerComponent } from './components/register-customer/regist
 import { RegisterAdminComponent } from './components/register-admin/register-admin.component';
 import { EditUserCredentials } from './components/home/editCredentials/editUserCredentials';
 import { AddModifyProductComponent } from './components/product/add-modify-product/add-modify-product.component';
+import { AddModifySupplierComponent } from './components/supplier/add-modify-supplier/add-modify-supplier.component';
+import { AddModifyCategoryComponent } from './components/category/add-modify-category/add-modify-category.component';
+import { AddModifyUserComponent } from './components/user/add-modify-user/add-modify-user.component';
+import { AddModifyOrderComponent } from './components/order/add-modify-order/add-modify-order.component';
+import { OrderitemComponent } from './components/orderitem/orderitem/orderitem.component';
+import { AddModifyOrderitemComponent } from './components/orderitem/add-modify-orderitem/add-modify-orderitem.component';
 const routes: Routes = [
-  { path: 'category', component: CategoryComponent },
+  { path: 'category', component: CategoryComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
   { path: 'review', component: ReviewComponent },
-  { path: 'supplier', component: SupplierComponent },
-  {
-    path: 'user', component: UserComponent},
-  { path: 'product', component: ProductComponent },
+  { path: 'supplier', component: SupplierComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
+  { path: 'user', component: UserComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] }},
+  { path: 'product', component: ProductComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
   { path: 'cart', component: CartComponent },
-  { path: 'order', component: OrderComponent },
-  { path: 'orderitem', component: OrderitemComponent },
+  { path: 'order', component: OrderComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } }, 
   { path: 'productcart', component: ProductcartComponent },
   { path: 'home', component: HomeComponent, canActivate: [AuthGuard] },
   { path: 'forbidden', component: ForbiddenComponent },
@@ -38,7 +40,13 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterCustomerComponent },
   { path: 'user/edit', component: EditUserCredentials, canActivate: [AuthGuard] },
-  { path: 'product/add', component: AddModifyProductComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } }
+  { path: 'product/add', component: AddModifyProductComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
+  { path: 'supplier/add', component: AddModifySupplierComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
+  { path: 'category/add', component: AddModifyCategoryComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
+  { path: 'user/add', component: AddModifyUserComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
+  { path: 'order/add', component: AddModifyOrderComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
+  { path: 'order/orderitems', component: OrderitemComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
+  { path: 'order/orderitems/add', component: AddModifyOrderitemComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } }
 ];
 
 @NgModule({

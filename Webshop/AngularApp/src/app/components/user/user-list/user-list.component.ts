@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { User } from '../../../classes/User';
 import { UserService } from '../../../services/user.service';
 
@@ -9,13 +10,10 @@ import { UserService } from '../../../services/user.service';
 })
 export class UserListComponent implements OnInit {
 
-
+  
   UserList: User[] = [];
-  ModalTitle: string;
-  ActivateAddEditUserComp: boolean = false;;
-  user: User;
 
-  constructor(readonly service: UserService) { }
+  constructor(readonly service: UserService, private router: Router) { }
 
   ngOnInit(): void {
     this.refreshUserList();
@@ -24,36 +22,28 @@ export class UserListComponent implements OnInit {
     this.service.getAll().subscribe(data => {
       this.UserList = data;
     });
-    }
-
-  addClick() {
-    this.user = {
-      id: "",
-      username: "",
-      email: "",
-      password: ""
-    }
-    this.ModalTitle = "Add User";
-    this.ActivateAddEditUserComp = true;
   }
 
-  editClick(item) {
-    this.user = item;
-    this.ModalTitle = "Edit User";
-    this.ActivateAddEditUserComp = true;
+  editClick(item: User) {
+    localStorage.setItem('item', JSON.stringify(item));
+    this.router.navigate(['/user/add']);
   }
 
-  closeClick() {
-    this.ActivateAddEditUserComp = false;
-    this.refreshUserList();
-  }
-
-  deleteClick(item) {
+  deleteClick(item: User) {
     if (confirm("Do you want to delete this item?")) {
       this.service.delete(item.id).subscribe(_ => {
         this.refreshUserList();
       });
     }
+  }
+
+  onLogout() {
+    localStorage.removeItem('token');
+    this.router.navigate(['/login']);
+  }
+
+  addAdmin() {
+    this.router.navigate(['/adminRegister']);
   }
 
 }
