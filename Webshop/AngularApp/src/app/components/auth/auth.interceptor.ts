@@ -17,10 +17,12 @@ export class AuthInterceptor implements HttpInterceptor {
       return next.handle(clonedRequest).pipe(tap(
         succ => { },
         err => {
+          //Ha nincs bejelentkezve akkor átnavigáljuk a login felületre
           if (err.status == 401) {
             localStorage.removeItem('token');
             this.router.navigateByUrl('/login');
           }
+          //Ha nincs megfelelő jogosultsága akkor átnavigáljuk egy forbidden oldalra.
           else if (err.status == 403)
             this.router.navigateByUrl('/forbidden');
         }

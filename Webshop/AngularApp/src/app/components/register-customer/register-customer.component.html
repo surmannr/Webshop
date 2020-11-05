@@ -1,52 +1,28 @@
-<div class="loginbox reg">
-  <div>
-    <img src="assets/avatar.png" class="avatar" alt="hello">
+<form #registerForm=ngForm>
+  <div class="loginbox reg">
+    <div>
+      <img src="{{avatarImageRoute}}" class="avatar" alt="hello">
+    </div>
+    <h1>Register here</h1>
+    <div class="col-sm-10">
+      <p>Username</p>
+      <input type="text" name="" class="form-control required" [(ngModel)]="username" placeholder="Enter username"  />
+    </div>
+    <div class="col-sm-10">
+      <p>Email</p>
+      <input type="text" name="" class="form-control" [(ngModel)]="email" placeholder="Enter the email address" />
+    </div>
+    <div class="col-sm-10">
+      <p>Password</p>
+      <input type="password" name="" class="form-control" [(ngModel)]="password" placeholder="Enter the password"  />
+    </div>
+    <div class="col-sm-10">
+      <p>ConfirmPassword</p>
+      <input type="password" name="" class="form-control" placeholder="Confirm the password"/>
+    </div>
+    <input type="submit" (click)="addUser()" name="" value="Register"/>
   </div>
-  <h1>Register here</h1>
-  <div class="form">
-    <form [formGroup]="service.formModel" autocomplete="off">
+</form>
 
-      <div class="form-group">
-        <p>Username</p>
-        <input type="text" name="" class="form-control required" formControlName="UserName" [(ngModel)]="username" placeholder="Enter username" />
-        <label class="text-danger" *ngIf="service.formModel.get('UserName').touched && service.formModel.get('UserName').errors?.required">
-          This field is mandatory.
-        </label>
-      </div>
-      <div class="form-group">
-        <p>Email</p>
-        <input type="text" name="" class="form-control" formControlName="Email" [(ngModel)]="email" placeholder="Enter the email address" />
-        <label class="text-danger" *ngIf="service.formModel.get('Email').touched && service.formModel.get('Email').errors?.email">
-          Invalid Email address.
-        </label>
-      </div>
-      <div formGroupName="Passwords">
-        <div class="form-group">
-          <p>Password</p>
-          <input type="password" name="" class="form-control" formControlName="Password" [(ngModel)]="password" placeholder="Enter the password" />
-          <label class="text-danger" *ngIf="service.formModel.get('Passwords.Password').touched && service.formModel.get('Passwords.Password').errors?.required">
-            This item is mandatory.
-          </label>
-          <label class="text-danger" *ngIf="service.formModel.get('Passwords.Password').touched && service.formModel.get('Passwords.Password').errors?.password">
-            Invalid Password.
-          </label>
-        </div>
-        <div class="form-group">
-          <p>ConfirmPassword</p>
-          <input type="password" name="" class="form-control" formControlName="ConfirmPassword" placeholder="Confirm the password" />
-          <label class="text-danger" *ngIf="service.formModel.get('Passwords.ConfirmPassword').touched && service.formModel.get('Passwords.ConfirmPassword').errors?.required">
-            This item is mandatory.
-          </label>
-          <label class="text-danger" *ngIf="service.formModel.get('Passwords.ConfirmPassword').touched && service.formModel.get('Passwords.ConfirmPassword').errors?.passwordMismatch">
-            Confirmed password does not match.
-          </label>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-8 offset-md-2">
-          <input type="submit" (click)="addUser()" name="" value="Register"  [disabled]="!service.formModel.valid"/>
-        </div>
-      </div>
-    </form>
-  </div>
-</div>
+
+

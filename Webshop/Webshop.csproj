@@ -3,6 +3,11 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20201105120053_ada.cs" />
+    <Compile Remove="Migrations\20201105120053_ada.Designer.cs" />
+  </ItemGroup>
   <ItemGroup>
     <None Remove="Controllers\NewFile.txt" />
     <None Remove="Data\DTO\CartDto" />
@@ -42,6 +47,7 @@
     <Folder Include="AngularApp\src\app\components\product\" />
     <Folder Include="AngularApp\src\app\components\supplier\" />
     <Folder Include="AngularApp\src\app\components\review\" />
+    <Folder Include="Resources\Images\" />
   </ItemGroup>
 
 	<PropertyGroup>

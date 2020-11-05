@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Category } from '../../../classes/Category';
 import { Product } from '../../../classes/Product';
 import { Supplier } from '../../../classes/Supplier';
+import { BASEURL } from '../../../services/baseUrl';
 import { CategoryService } from '../../../services/category.service';
 import { ProductService } from '../../../services/product.service';
 import { SupplierService } from '../../../services/supplier.service';
@@ -15,11 +16,12 @@ import { SupplierService } from '../../../services/supplier.service';
 export class ProductListComponent implements OnInit {
 
   ProductList: Product[] = [];
-
+  ImageNameList: string[] = [];
+ 
   constructor(private service: ProductService, private router: Router, private categoryService: CategoryService, private supplierService: SupplierService) { }
 
   ngOnInit(): void {
-    this.refreshProdList(); 
+    this.refreshProdList();
   }
 
   refreshCategory(id: number, product: Product) {
@@ -32,14 +34,21 @@ export class ProductListComponent implements OnInit {
       product.name = data.name;
     });
   }
-
+ 
   refreshProdList() {
     this.service.getAll().subscribe(data => {
       this.ProductList = data;
       for (let product of this.ProductList) {
         this.refreshCategory(product.categoryId, product);
-        this.refreshSupplier(product.supplierId, product);      
+        this.refreshSupplier(product.supplierId, product);   
       };
+    
+    
+      for (let product of this.ProductList) {       
+        let tmp = "https://localhost:44308/Resources/Images/" + product.imageName;        
+        this.ImageNameList.push(tmp);
+      }
+      
     });
     }
 
@@ -63,6 +72,5 @@ export class ProductListComponent implements OnInit {
   addProduct() {
     this.router.navigate(['/product/add']);
   }
-
 
 }

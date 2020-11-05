@@ -2,16 +2,19 @@
   <div class="addmodify supplier">
     <h1 *ngIf="item == null">Supplier add</h1>
     <h1 *ngIf="item != null">Supplier modify</h1> 
-    <form>
+    <form autocomplete="off">
       <p>Supplier Name</p>
       <input type="text" [(ngModel)]="name" name="name_null" placeholder="Enter supplier name" *ngIf="item == null" />
-      <input type="text" [(ngModel)]="name" name="name" placeholder="{{item.name}}" *ngIf="item != null" />
+      <input type="text" [(ngModel)]="name" name="name" placeholder="{{item.name}}" *ngIf="item != null"
+             (click)="swapToValueFromPlaceHolder_name()"/>
       <p>Supplier address</p>
       <input type="text" [(ngModel)]="address" name="address_null" placeholder="Enter supplier address" *ngIf="item == null" />
-      <input type="text" [(ngModel)]="address" name="address" placeholder="{{item.address}}" *ngIf="item != null" />
+      <input type="text" [(ngModel)]="address" name="address" placeholder="{{item.address}}" *ngIf="item != null"
+             (click)="swapToValueFromPlaceHolder_address()"/>
       <p>Multiplier</p>
       <input type="number" [(ngModel)]="multiplier " name="multiplier_null" placeholder="Enter multiplier" *ngIf="item == null" />
-      <input type="number" [(ngModel)]="multiplier " name="multiplier" placeholder="{{item.multiplier}}" *ngIf="item != null" />
+      <input type="number" [(ngModel)]="multiplier " name="multiplier" placeholder="{{item.multiplier}}" *ngIf="item != null"
+             (click)="swapToValueFromPlaceHolder_multiplier()"/>
       <input type="submit" name="" value="Add" (click)="addSupplier()" *ngIf="item == null">
       <input type="submit" name="" value="Modify" (click)="updateSupplier()" *ngIf="item != null">
       <input type="submit" name="" value="Cancel" (click)="cancel()">

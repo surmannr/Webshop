@@ -12,6 +12,9 @@ export class LoginComponent implements OnInit {
 
   constructor(private service: UserService, private router: Router) { }
 
+  avatarImageRoute: string = this.service.avatarImageRoute;
+
+
   formModel = {
     Username: '',
     Password: ''

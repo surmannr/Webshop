@@ -51,6 +51,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterCustomerComponent } from './components/register-customer/register-customer.component';
 import { RegisterAdminComponent } from './components/register-admin/register-admin.component';
 import { EditUserCredentials } from './components/home/editCredentials/editUserCredentials';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -97,7 +98,7 @@ import { EditUserCredentials } from './components/home/editCredentials/editUserC
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [
+  providers: [    
     CategoryService,
     ReviewService,
     SupplierService,

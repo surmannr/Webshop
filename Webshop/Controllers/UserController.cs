@@ -82,9 +82,9 @@ namespace Webshop.Controllers
             user.Cart = newCart;
 
 
+           
 
-            //System.Diagnostics.Debug.WriteLine("user.Cart: " + user.Cart.CartId);
-
+            // _userManager segítségével megadjuk a felhasználó role-ját
             try
             {
                 var result = await _userManager.CreateAsync(user, newUser.Password);
@@ -194,15 +194,17 @@ namespace Webshop.Controllers
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
+                //Lekérjük a felhasználó role-ját mert szükség lesz rá authentication-nél
                 var role = await _userManager.GetRolesAsync(user);
                 IdentityOptions _options = new IdentityOptions();
 
                 var tokenDescriptor = new SecurityTokenDescriptor
-                {         
+                {      
+                    //User-rel kapcsolatos követelmények
                     Subject = new ClaimsIdentity(new Claim[]
                     {
                         new Claim("UserID", user.Id.ToString()),
-                        new Claim(_options.ClaimsIdentity.RoleClaimType,role.FirstOrDefault())
+                        new Claim(_options.ClaimsIdentity.RoleClaimType, role.FirstOrDefault())
                     }),
                     Expires = DateTime.UtcNow.AddMinutes(5),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
+
 
 namespace Webshop.Data
 {
@@ -25,5 +27,7 @@ namespace Webshop.Data
 
         //Egy terméknek több review-ja is lehet
         public List<Review> Reviews { get; set; } = new List<Review>();
+
+        public string ImageName { get; set; }
     }
 }

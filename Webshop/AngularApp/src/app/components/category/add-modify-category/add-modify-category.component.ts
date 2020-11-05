@@ -17,6 +17,7 @@ export class AddModifyCategoryComponent implements OnInit {
   @Input() cat: Category;
   category_Name: string;
   categoryId: number;
+  swap_enabled: boolean;
 
   ngOnInit(): void {
     try {
@@ -27,6 +28,7 @@ export class AddModifyCategoryComponent implements OnInit {
     } catch (err) {
       this.item = null;
     }
+    this.swap_enabled = true;
   }
 
   addCategory() {
@@ -42,5 +44,12 @@ export class AddModifyCategoryComponent implements OnInit {
   }
   cancel() {
     this.router.navigate(['/category']);
+  }
+  swapToValueFromPlaceHolder() {
+    if (this.swap_enabled) {
+      this.category_Name = this.item.category_Name;
+      this.swap_enabled = !this.swap_enabled;
+    }
+   
   }
 }

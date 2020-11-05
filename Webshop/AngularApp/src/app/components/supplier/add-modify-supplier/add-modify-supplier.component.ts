@@ -21,6 +21,10 @@ export class AddModifySupplierComponent implements OnInit {
   multiplier: number;
   supplierId: number;
 
+  swap_enabled_name: boolean;
+  swap_enabled_address: boolean;
+  swap_enabled_multiplier: boolean;
+
   ngOnInit(): void {
     try {
       var _item_json = localStorage.getItem('item');
@@ -29,7 +33,10 @@ export class AddModifySupplierComponent implements OnInit {
       localStorage.removeItem('item');
     } catch (err) {
       this.item = null;
-    }   
+    }
+    this.swap_enabled_name = true;
+    this.swap_enabled_multiplier = true;
+    this.swap_enabled_address = true;
   }
   addSupplier() {
     let val: Supplier;
@@ -45,5 +52,27 @@ export class AddModifySupplierComponent implements OnInit {
   }
   cancel() {
     this.router.navigate(['/supplier']);
+  }
+
+  swapToValueFromPlaceHolder_name() {
+    if (this.swap_enabled_name) {
+      this.name = this.item.name;
+      this.swap_enabled_name = !this.swap_enabled_name;
+    }
+  
+  }
+  swapToValueFromPlaceHolder_address() {
+    if (this.swap_enabled_address) {
+      this.address = this.item.address;
+      this.swap_enabled_address = !this.swap_enabled_address;
+    }
+  
+  }
+  swapToValueFromPlaceHolder_multiplier() {
+    if (this.swap_enabled_multiplier) {
+      this.multiplier = this.item.multiplier;
+      this.swap_enabled_multiplier = !this.swap_enabled_multiplier;
+    }
+   
   }
 }

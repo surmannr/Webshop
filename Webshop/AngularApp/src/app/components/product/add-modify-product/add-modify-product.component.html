@@ -2,21 +2,24 @@
   <div class="addmodify product">
     <h1 *ngIf="item == null">Product add</h1>
     <h1 *ngIf="item != null">Product modify</h1>
-    <form>
+    <form autocomplete="off">
 
       <p>Product Name</p>
       <input type="text" [(ngModel)]="product_Name" name="name_null" placeholder="Enter product name" *ngIf="item == null" />
-      <input type="text" name="name" [(ngModel)]="product_Name" *ngIf="item != null" placeholder="{{item.product_Name}}">
+      <input type="text" name="name" [(ngModel)]="product_Name" *ngIf="item != null" placeholder="{{item.product_Name}}"
+             (click)="swapToValueFromPlaceHolder_name()">
 
 
       <p>Price</p>
       <input type="number" [(ngModel)]="price" name="price_null" placeholder="Enter price" *ngIf="item == null" />
-      <input type="number" name="price" [(ngModel)]="price" *ngIf="item != null" placeholder="{{item.price}}">
+      <input type="number" name="price" [(ngModel)]="price" *ngIf="item != null" placeholder="{{item.price}}"
+             (click)="swapToValueFromPlaceHolder_price()">
 
 
       <p>Shipping Price</p>
       <input type="number" [(ngModel)]="shipping_Price" name="shippping_price_null" placeholder="Enter shipping price" *ngIf="item == null" />
-      <input type="number" name="shipping_price" [(ngModel)]="shipping_Price" *ngIf="item != null" placeholder="{{item.shipping_Price}}">
+      <input type="number" name="shipping_price" [(ngModel)]="shipping_Price" *ngIf="item != null" placeholder="{{item.shipping_Price}}"
+             (click)="swapToValueFromPlaceHolder_shippingPrice()">
 
 
       <p>Category</p>
@@ -53,11 +56,19 @@
       </div>
 
 
-
-
       <p>Product Description</p>
-      <input type="text" name="description" [(ngModel)]="product_Description" *ngIf="item != null" placeholder="{{item.product_Description}}" />
+      <input type="text" name="description" [(ngModel)]="product_Description" *ngIf="item != null" placeholder="{{item.product_Description}}"
+             (click)="swapToValueFromPlaceHolder_description()" />
       <input type="text" name="description_null" [(ngModel)]="product_Description" *ngIf="item == null" placeholder="Enter product description" />
+
+
+      <p>Product Image</p>
+      <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display: none" />
+      <button type="button" class="btn btn-success" (click)="file.click()">Upload file</button>
+      <div class="col-md-4">
+        <span class="upload" *ngIf="progress >0">{{progress}}%</span>
+        <span class="upload" *ngIf="message">{{message}}</span>
+      </div>
 
 
       <input type="submit" name="addButton" value="Add" (click)="addProduct()" *ngIf="item == null">

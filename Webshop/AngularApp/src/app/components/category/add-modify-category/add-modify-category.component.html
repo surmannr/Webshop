@@ -4,8 +4,8 @@
     <h1 *ngIf="item != null">Category modify</h1>
     <form>
       <p>Category Name</p>
-      <input type="text" [(ngModel)]="category_Name" name="null" placeholder="Enter category name" *ngIf="item == null" />
-      <input type="text" name="notNull" [(ngModel)]="category_Name" *ngIf="item != null" placeholder="{{item.category_Name}}">
+      <input type="text" [(ngModel)]="category_Name" name="null" placeholder="Enter category name" *ngIf="item == null"  />
+      <input type="text" name="notNull" [(ngModel)]="category_Name" *ngIf="item != null" placeholder="{{item.category_Name}}" (click)="swapToValueFromPlaceHolder()">
 
       <input type="submit" name="" value="Add" (click)="addCategory()" *ngIf="item == null">
       <input type="submit" name="" value="Modify" (click)="updateCategory()" *ngIf="item != null">

@@ -6,7 +6,7 @@ export class Product {
   product_Description: string;
   shipping_Price: number;  
   reviewsID: number[]; 
- 
+  imageName: string;
 
 
 
