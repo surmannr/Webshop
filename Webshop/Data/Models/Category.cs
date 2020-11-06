@@ -10,5 +10,6 @@ namespace Webshop.Data
 
         //Egy Category több termékhez tartozik.
         public List<Product> Products { get; set; }
+        public string ImageName { get; set; }
     }
 }

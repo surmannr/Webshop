@@ -51,6 +51,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterCustomerComponent } from './components/register-customer/register-customer.component';
 import { RegisterAdminComponent } from './components/register-admin/register-admin.component';
 import { EditUserCredentials } from './components/home/editCredentials/editUserCredentials';
+import { MainPage } from './components/main/main-page.component/main-page.component.component';
 
 @NgModule({
   declarations: [
@@ -89,7 +90,8 @@ import { EditUserCredentials } from './components/home/editCredentials/editUserC
     LoginComponent,
     RegisterCustomerComponent,
     RegisterAdminComponent,
-    EditUserCredentials
+    EditUserCredentials,   
+    MainPage
   ],
   imports: [
     BrowserModule,

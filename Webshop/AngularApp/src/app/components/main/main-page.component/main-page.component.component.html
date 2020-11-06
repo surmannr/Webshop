@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <title>Techonomy főoldal</title> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="webshopstyle.css" />
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav>
+    <div class="logo">
+      Techonomy
+    </div>
+    <label for="btn" class="icon">
+      <span class="fa fa-bars"></span>
+    </label>
+    <input type="checkbox" id="btn">
+    <ul>
+      <li><a routerLink="#">Home</a></li>
+      <li>
+        <label for="btn-1" class="show">Categories</label>
+        <a routerLink="#">Categories</a>
+        <input type="checkbox" id="btn-1">
+        <ul>
+          <li *ngFor="let categoryItem of CategoryList"><a routerLink="">{{categoryItem.category_Name}}</a></li>
+        </ul>
+      </li>
+      <li><a routerLink=""><i class="fas fa-shopping-cart"></i></a></li>
+      <li><a routerLink=""><i class="fas fa-heart"></i></a></li>
+      <li>
+        <label for="btn-2" class="show"><i class="fas fa-user"></i></label>
+        <a routerLink="#"><i class="fas fa-user"></i></a>
+        <input type="checkbox" id="btn-2">
+        <ul>
+          <li><a routerLink="/user/edit">Edit profile</a></li>
+          <li><a routerLink="#" (click)="onLogout()">Logout</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+
+  <!---------- featured categories----------->
+  <div class="categories">
+    <div class="small-container">
+      <div class="row">
+        <div class="col-3" *ngFor="let dataItem of CategoryImageNameList; let i = index">
+          <img src="{{CategoryImageNameList[i]}}" *ngIf="i < 3">
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <!---------- featured products ----------->
+  <div class="small-container">
+    <h2 class="title">Featured Products</h2>
+    <div class="row">
+      <div class="col-4" *ngFor="let item of ProductImageNameList; let j = index" >
+        <img src="{{ProductImageNameList[j]}}">
+        <h4>{{ProductList[j].product_Name}}</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>   <!-- Egy sorba 4 kép kerülhet.-->
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>{{ProductList[j].price}}</p>
+      </div>
+      <div class="col-4">
+        <img src="images/product-2.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+      <div class="col-4">
+        <img src="images/product-1.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+      <div class="col-4">
+        <img src="images/product-2.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <img src="images/product-1.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+      <div class="col-4">
+        <img src="images/product-2.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+      <div class="col-4">
+        <img src="images/product-1.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+      <div class="col-4">
+        <img src="images/product-2.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-4">
+        <img src="images/product-1.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+      <div class="col-4">
+        <img src="images/product-2.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+      <div class="col-4">
+        <img src="images/product-1.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+      <div class="col-4">
+        <img src="images/product-2.jpg">
+        <h4>Baromi jó ruha kappa</h4>
+        <div class="rating">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="far fa-star"></i>  <!--- vigyazz itt van kulonbseg ----->
+        </div>
+        <p>4990Ft</p>
+      </div>
+    </div>
+  </div>
+
+  <!------- footer ------------>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12 segment-one">
+          <h6>About us</h6>
+          <p class="footer-p">
+            BME Training Project lab<br>
+            Made by<br>Roland Surmann, Kristóf Varga<br>
+            2020<br>
+            Design from:<br>https://easytutorialspro.com/
+          </p>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12 segment-two">
+          <h6>Follow us</h6>
+          <p class="footer-p">Please follow us on our social media profile in order to keep updated.</p>
+          <a href="#"><i class="foot fab fa-facebook"></i> </a>
+          <a href="#"><i class="foot fab fa-twitter"></i> </a>
+          <a href="#"><i class="foot fab fa-instagram"></i> </a>
+          <a href="#"><i class="foot fab fa-youtube"></i> </a>
+        </div>
+        <div class="col-md-3 col-sm-6 col-xs-12 segment-three">
+          <h6>Our Newsletter</h6>
+          <p class="footer-p">Please subscribe our newsletter to get the latest news!</p>
+          <form action="">
+            <input type="email" name="email" id="email">
+            <input type="submit" value="Subscribe">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

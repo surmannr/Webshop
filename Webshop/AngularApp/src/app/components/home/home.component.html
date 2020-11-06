@@ -1,29 +1,31 @@
-<nav>
-  <input type="checkbox" id="check">
-  <label for="check" class="checkbtn">
-    <i class="fas fa-bars"></i>
-  </label>
-  <label class="logo">Techonomy</label>
-  <ul>
-    <li><a routerLink="/admin">Admin panel</a></li>
-    <li><a routerLink="/user/edit">Edit user credentials</a></li>   
-    <li><a><i class="fas fa-user" (click)="onLogout()"></i></a></li>
-  </ul>
-</nav>
+<body>
+  <nav>
+    <input type="checkbox" id="check">
+    <label for="check" class="checkbtn">
+      <i class="fas fa-bars"></i>
+    </label>
+    <label class="logo">Techonomy</label>
+    <ul>
+      <li><a routerLink="/admin">Admin panel</a></li>
+      <li><a routerLink="/user/edit">Edit user credentials</a></li>
+      <li><a><i class="fas fa-user" (click)="onLogout()"></i></a></li>
+    </ul>
+  </nav>
 
-<div class="card m-5" style="width: 18rem" *ngIf="userDetails">
-  <ul class="list-group">
-    <li class="list-group-item">
-      <strong>Username: </strong>{{userDetails.userName}}
-    </li>
-    <li class="list-group-item">
-      <strong>Email: </strong>{{userDetails.email}}
-    </li>
-    <li class="list-group-item">
-      <strong>Id: </strong>{{userDetails.id}}
-    </li>
-    <li class="list-group-item">
-      <strong>Cart Id: </strong>{{userDetails.cartId}}
-    </li>
-  </ul>
-</div>
+  <div class="card m-5" style="width: 18rem" *ngIf="userDetails">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <strong>Username: </strong>{{userDetails.userName}}
+      </li>
+      <li class="list-group-item">
+        <strong>Email: </strong>{{userDetails.email}}
+      </li>
+      <li class="list-group-item">
+        <strong>Id: </strong>{{userDetails.id}}
+      </li>
+      <li class="list-group-item">
+        <strong>Cart Id: </strong>{{userDetails.cartId}}
+      </li>
+    </ul>
+  </div>
+</body>

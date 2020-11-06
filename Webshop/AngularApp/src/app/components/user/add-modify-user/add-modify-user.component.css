@@ -1,8 +1,8 @@
 body {
-  margin: 0;
-  padding: 0;
-  background-color: aliceblue;
   font-family: sans-serif;
+  background: linear-gradient(-30deg,#ff6b6b,#ff9f43);
+  background-size: cover;
+  min-height: 100vh;
 }
 
 .reg {

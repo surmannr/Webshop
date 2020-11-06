@@ -69,8 +69,9 @@ namespace Webshop.Controllers
                 return NotFound();
 
             // modositasok elvegzese
-            categoryWaitingForUpdate.Category_Name = newCategory.Category_Name;
-
+            
+            if (newCategory.Category_Name != null) categoryWaitingForUpdate.Category_Name = newCategory.Category_Name;
+            if (newCategory.ImageName != null) categoryWaitingForUpdate.ImageName = newCategory.ImageName;
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
 

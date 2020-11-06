@@ -13,6 +13,10 @@ export class CategoryService {
   constructor(private http: HttpClient) {
   }
 
+  uploadFile(formData): Observable<any> {
+    return this.http.post<any>(BASEURL.baseUrl + 'Upload', formData, { reportProgress: true, observe: 'events' });
+  }
+
   getAll(): Observable<Category[]> {
     return this.http.get<Category[]>(BASEURL.baseUrl + 'Category');
   }

@@ -21,13 +21,15 @@
 
       <thead>
         <tr>
+          <th>Image</th>
           <th>ID</th>
           <th>Category name</th>
           <th></th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let dataItem of CategoryList">
+        <tr *ngFor="let dataItem of CategoryList;let i = index">
+          <td data-heading="Image"><img src="{{ImageNameList[i]}}" style="width:60px;height:60px;"></td>
           <td data-heading="ID">{{dataItem.categoryId}}</td>
           <td data-heading="Category name">{{dataItem.category_Name}}</td>
           <td data-heading="Modify/Delete">

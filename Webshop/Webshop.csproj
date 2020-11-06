@@ -47,7 +47,6 @@
     <Folder Include="AngularApp\src\app\components\product\" />
     <Folder Include="AngularApp\src\app\components\supplier\" />
     <Folder Include="AngularApp\src\app\components\review\" />
-    <Folder Include="Resources\Images\" />
   </ItemGroup>
 
 	<PropertyGroup>

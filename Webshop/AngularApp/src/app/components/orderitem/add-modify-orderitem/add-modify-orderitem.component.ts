@@ -8,7 +8,8 @@ import { StatusService } from '../../../services/status.service';
 
 @Component({
   selector: 'app-add-modify-orderitem',
-  templateUrl: './add-modify-orderitem.component.html'
+  templateUrl: './add-modify-orderitem.component.html',
+  styleUrls: ['./add-modify-orderitem.component.css']
  
 })
 export class AddModifyOrderitemComponent implements OnInit {

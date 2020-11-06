@@ -11,7 +11,7 @@ import { Category } from '../../../classes/Category';
 export class CategoryListComponent implements OnInit {
 
   CategoryList: Category[] = []; 
-
+  ImageNameList: string[] = [];
   constructor(private service: CategoryService, private router: Router) { }
 
   ngOnInit(): void {
@@ -20,6 +20,11 @@ export class CategoryListComponent implements OnInit {
   refreshCatList() {
     this.service.getAll().subscribe(data => {
       this.CategoryList = data;
+
+      for (let category of this.CategoryList) {
+        let tmp = "https://localhost:44308/Resources/Images/" + category.imageName;
+        this.ImageNameList.push(tmp);
+      }
     });
   }
 
