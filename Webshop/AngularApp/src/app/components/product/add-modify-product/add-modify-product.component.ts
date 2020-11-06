@@ -112,7 +112,8 @@ export class AddModifyProductComponent implements OnInit {
       shipping_Price: this.shipping_Price, categoryId: JSON.parse(this.selectedOption_category),
       supplierId: JSON.parse(this.selectedOption_supplier), reviewsID: this.reviewsID,
       category_Name: this.category_Name, name: this.name,
-      imageName: this.product_image_name
+      imageName: this.product_image_name, stars: 0,
+      hidden: false
      
     };
     console.log(data);
@@ -129,7 +130,9 @@ export class AddModifyProductComponent implements OnInit {
     else data.supplierId = JSON.parse(this.selectedOption_supplier);
     data.reviewsID = this.reviewsID; data.category_Name = this.category_Name; data.name = this.name;
     data.shipping_Price = this.shipping_Price;
-    data.imageName = this.product_image_name;   
+    data.imageName = this.product_image_name;
+    data.stars = 0;
+    data.hidden = false;
     this.service.update(data.productID, data).subscribe(res => { this.router.navigate(['/product']); });
     
   }

@@ -8,7 +8,8 @@ export class Product {
   reviewsID: number[]; 
   imageName: string;
 
-
+  stars: number;
+  hidden: boolean;
 
   category_Name: string;
   categoryId: number;

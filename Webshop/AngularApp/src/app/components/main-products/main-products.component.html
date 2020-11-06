@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
+<html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Techonomy főoldal</title>
+  <title>Techonomy</title>
+  <link rel="stylesheet" href="webshopstyle.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="webshopstyle.css" />
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css">
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 </head>
 <body>
   <nav>
@@ -18,59 +19,56 @@
     </label>
     <input type="checkbox" id="btn">
     <ul>
-      <li><a routerLink="">Home</a></li>
+      <li><a routerLink="/">Home</a></li>
       <li>
         <label for="btn-1" class="show">Categories</label>
         <a>Categories</a>
         <input type="checkbox" id="btn-1">
-        <ul>
-          <li *ngFor="let categoryItem of CategoryList"><a (click)="categorySelector(categoryItem.categoryId)">{{categoryItem.category_Name}}</a></li>
+        <ul >
+          <li *ngFor="let categoryItem of CategoryList"><a  (click)="categorySelector(categoryItem.categoryId)"  >{{categoryItem.category_Name}}</a></li>
         </ul>
       </li>
       <li><a routerLink=""><i class="fas fa-shopping-cart"></i></a></li>
       <li><a routerLink=""><i class="fas fa-heart"></i></a></li>
       <li>
-        <label for="btn-2" class="show"><i class="fas fa-user"></i></label>
+        <label for="btn-2" class="show"><i class="fas fa-user" ></i></label>
         <a><i class="fas fa-user"  (click)="checkLogin()"></i></a>
         <input type="checkbox" id="btn-2">
-        <ul [(ngModel)]="isLoggedIn" *ngIf="isLoggedIn" >
+        <ul [(ngModel)]="isLoggedIn" *ngIf="isLoggedIn">
           <li><a routerLink="/user/edit">Edit profile</a></li>
           <li><a routerLink="/" (click)="onLogout()">Logout</a></li>
         </ul>
       </li>
     </ul>
   </nav>
-
-  <div class="container">
-    <div class="row">
-      <div class="col-5">
-        <h1>Enjoy your food<br>everywhere!</h1>
-        <p>Food can make your life happier.Buy from us.</p>
-        <a href="" class="btn">Explore now &#10141;</a>
-      </div>
-
+  <!---------- content ---------------->
+  <div class="small-container" >
+    <div class="row marginer">
+      <p class="titlecart pta">Products</p>
     </div>
-  </div>
+    <div class="row marginer2">
+      <div class="filter">
+        <label for="name">Name filter:</label>
+        <input type="search" name="name" id="name"  #inputValue (change)="nameFilter(inputValue.value)" [(ngModel)]="inputFieldName">
+      </div>
+      <div class="filter">
+        <label for="category">Category filter:</label>
+        <select class="form-control" id="category" name="category" [(ngModel)]="selectedOption_category" >
+          <option selected="selected" value="-1">none</option>
+          <option *ngFor="let categoryItem of CategoryList" value="{{categoryItem.categoryId}}"   >{{categoryItem.category_Name}}</option>
 
-  <!---------- featured categories----------->
-  <div class="categories">
-    <div class="small-container">
-      <div class="row">
-        <div class="col-3" *ngFor="let dataItem of CategoryImageNameList; let i = index">
-          <img src="{{CategoryImageNameList[i]}}" *ngIf="i < 3"  (click)="categoryPictureClicked(i)">
-        </div>
+        </select>
+      </div>
+      <div class="filter">
+        <a><i class="fas fa-search"  (click)="filterClicked()"></i></a>
       </div>
     </div>
-
-  </div>
-  <!---------- featured products ----------->
-  <div class="small-container">
-    <h2 class="title">Featured Products</h2>
     <div class="row">
       <div class="col-4" *ngFor="let item of ProductImageNameList; let j = index">
-        <img src="{{ProductImageNameList[j]}}">
-        <h4>{{ProductList[j].product_Name}}</h4>
-        <div class="rating">
+
+        <img src="{{ProductImageNameList[j]}}" *ngIf="!ProductList[j].hidden">
+        <h4   *ngIf="!ProductList[j].hidden" >{{ProductList[j].product_Name}}</h4>
+        <div class="rating"  *ngIf="!ProductList[j].hidden">
 
           <!-- Nem akarom elhinni, hogy ezt nem lehetne másként megcsinálni -->
           <i class="fas fa-star" *ngIf="ProductList[j].stars >= 1"></i>
@@ -101,12 +99,11 @@
 
         </div>
 
-        <p>{{ProductList[j].price}}</p>
+        <p  *ngIf="!ProductList[j].hidden">{{ProductList[j].price}}</p>
 
       </div>
     </div>
   </div>
-
   <!------- footer ------------>
   <div class="footer">
     <div class="container">

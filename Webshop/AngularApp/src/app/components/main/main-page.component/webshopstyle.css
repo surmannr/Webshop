@@ -13,6 +13,7 @@ body{
 nav{
   background: #1b1b1b;
   width: auto;
+
 }
 nav:after{
   content: '';
@@ -243,7 +244,7 @@ p{
   margin-top: 50px;
 }
 .categories{
-  margin: 70px 0;
+  margin: 70px 0;  
 }
 .col-3{
   flex-basis: 30%;

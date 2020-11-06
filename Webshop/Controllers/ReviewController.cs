@@ -45,11 +45,11 @@ namespace Webshop.Controllers
 
         // GET api/<ReviewController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ReviewDto>> Get(int id)
+        public async Task<ActionResult<ReviewDto[]>> Get(int id)
         {
-            var res = await _context.Reviews.Where(c => c.ReviewId == id).FirstOrDefaultAsync();
+            var res = await _context.Reviews.Where(c => c.ProductId == id).ToListAsync();
             if (res == null) return NotFound();
-            var mapppelt = _mapper.Map<ReviewDto>(res);
+            var mapppelt = _mapper.Map<ReviewDto[]>(res);
             return mapppelt;
         }
 
