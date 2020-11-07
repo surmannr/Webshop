@@ -33,7 +33,7 @@
         <label for="btn-2" class="show"><i class="fas fa-user"></i></label>
         <a><i class="fas fa-user"  (click)="checkLogin()"></i></a>
         <input type="checkbox" id="btn-2">
-        <ul [(ngModel)]="isLoggedIn" *ngIf="isLoggedIn" >
+        <ul [(ngModel)]="isLoggedIn" *ngIf="isLoggedIn" ngDefaultControl >
           <li><a routerLink="/user/edit">Edit profile</a></li>
           <li><a routerLink="/" (click)="onLogout()">Logout</a></li>
         </ul>
@@ -68,7 +68,7 @@
     <h2 class="title">Featured Products</h2>
     <div class="row">
       <div class="col-4" *ngFor="let item of ProductImageNameList; let j = index">
-        <img src="{{ProductImageNameList[j]}}">
+        <img src="{{ProductImageNameList[j]}}" (click)="productPictureClicked(ProductList[j])">
         <h4>{{ProductList[j].product_Name}}</h4>
         <div class="rating">
 

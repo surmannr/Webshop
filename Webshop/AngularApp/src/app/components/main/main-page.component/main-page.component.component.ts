@@ -68,6 +68,12 @@ export class MainPage extends AppComponent implements OnInit {
     });
   }
 
+  productPictureClicked(product: Product) {
+    localStorage.setItem('product', JSON.stringify(product));
+    this.router.navigateByUrl('techonomy/products/' + product.productID);
+  }
+
+
 
 
   //Categóriára való szűrés navbar-ból

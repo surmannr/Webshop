@@ -14,6 +14,8 @@
 
         // Egy review egy felhasználóhoz tartozik
         public string UserId { get; set; }
+
+        public string Username { get; set; }
         public User User { get; set; }
     }
 }
