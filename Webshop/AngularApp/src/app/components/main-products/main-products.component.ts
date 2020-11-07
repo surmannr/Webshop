@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AppComponent } from '../../app.component';
 import { Category } from '../../classes/Category';
 import { Product } from '../../classes/Product';
 import { Review } from '../../classes/Review';
@@ -12,80 +13,50 @@ import { ReviewService } from '../../services/review.service';
   templateUrl: './main-products.component.html',
   styleUrls: ['./webshopstyle.css']
 })
-export class MainProductsComponent implements OnInit {
+export class MainProductsComponent extends AppComponent implements OnInit {
 
   @Input()
   selectedOption_category: string;
   inputFieldName: string;
 
-  constructor(private categoryService: CategoryService, private router: Router, private productService: ProductService,
-    private reviewService: ReviewService) { }
+  constructor(private categoryService: CategoryService, private productService: ProductService,
+    private reviewService: ReviewService,private router: Router) { super(); }
 
 
-  CategoryList: Category[] = [];
-  ProductList: Product[] = [];
-  isLoggedIn: boolean = true;
   
   ProductImageNameList: string[] = [];
 
-  imageRoute: string = "https://localhost:44308/Resources/Images/";
-
   ngOnInit(): void {
     this.refreshCategoryList();
-    
-    let json_categoryId: string = localStorage.getItem('categoryId');
-    console.log(json_categoryId);
-    if (json_categoryId !== null) {
-      this.filterViaCategory(JSON.parse(json_categoryId));
-    }
-    else {
-      this.refreshProductList();
-    }
-  
-    localStorage.removeItem('categoryId');
-    let json_token = localStorage.getItem('token');
-    if (json_token == null) {
-      this.isLoggedIn = false;
-    }
+    this.refreshProductList();
+    this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
   }
+
 
   refreshCategoryList() {
     this.categoryService.getAll().subscribe(data => {
-      this.CategoryList = data;     
+      this.CategoryList = data;
     });
   }
 
   refreshReviewList(product: Product) {
-    let ReviewList: Review[] = [];
-    let counter: number;
-    let sum: number;
-
-  
-      counter = 0;
-      sum = 0;
-
-
-      this.reviewService.get(product.productID).subscribe(data => {
-
-        ReviewList = data;
-
-        if (ReviewList.length === 0) {
-          product.stars = 0
-        }
-        else {
-
-          for (let review of ReviewList) {
-            counter = counter + 1;
-            sum = sum + review.stars;
-          };
-          let avg = Math.ceil(sum / counter);
-          product.stars = avg;
-        }
-
-      });
-    
-
+    let counter: number = 0;
+    let sum: number = 0;
+    this.reviewService.get(product.productID).subscribe(reviews => {
+      if (reviews.length === 0) {
+        product.stars = 0
+      }
+      else {
+        for (let review of reviews) {
+          counter = counter + 1;
+          sum = sum + review.stars;
+        };
+        let avg = Math.ceil(sum / counter);
+        product.stars = avg;
+      }
+    });
   }
+
   refreshProductList() {
     this.productService.getAll().subscribe(data => {
       this.ProductList = data;
@@ -94,119 +65,142 @@ export class MainProductsComponent implements OnInit {
         this.ProductImageNameList.push(this.imageRoute + product.imageName);
         this.refreshReviewList(product);
       };
-     
+      let json_categoryId: string = localStorage.getItem('categoryId');
+      if (json_categoryId !== null) {
+        this.filterByCategory(JSON.parse(json_categoryId));
+        localStorage.removeItem('categoryId');
+      }     
     });
   }
+
+
+  removeFilterFromProducts() {
+    for (let product of this.ProductList)
+      product.hidden = false;
+  }
+
   nameFilter(name: string) {
-    
+
     if (name.length > 1) {
+
       if (typeof this.selectedOption_category !== 'undefined') {
         if (JSON.parse(this.selectedOption_category) !== -1) {
-          this.filterViaNameAndCategory(name, JSON.parse(this.selectedOption_category));
-        }
-        else {
-          this.filterViaName(name);
-        }
-      }
-      else {
-        this.filterViaName(name);
-      }
-    }
-    else this.refreshProductList();
 
+          //Filter by using the name and the category of the product
+          this.filterByNameAndCategory(name, JSON.parse(this.selectedOption_category));
+        }
+
+        //There is a name for the filter and we dont want to filter by category
+        else this.filterByName(name);
+      }
+
+      // There is no category selected, but there is a name for the filter
+      else this.filterByName(name);
+    }
+
+    else if (typeof this.selectedOption_category !== 'undefined') {
+      if (JSON.parse(this.selectedOption_category) !== -1) {
+        //Remove the previous filter
+        this.removeFilterFromProducts();
+
+        //There is no name in the name filter field but there is a valid category selected
+        this.filterByCategory(JSON.parse(this.selectedOption_category));
+      }
+      else this.removeFilterFromProducts();
+    }
+
+    // The name for the filtering is empty and there is no category selected so remove the filtering property from the products
+    else this.removeFilterFromProducts();
   }
 
   filterClicked() {
+
+    //Remove the previous filter form the products
+    this.removeFilterFromProducts();
+
+
     if (typeof this.inputFieldName !== 'undefined') {
       if (this.inputFieldName.length > 1) {
+        //Had to use theese 2 conditions cause the empty input field is not undifined nor ""
+
+
         if (this.selectedOption_category !== 'undefined' && JSON.parse(this.selectedOption_category) !== -1) {
-          this.filterViaNameAndCategory(this.inputFieldName, JSON.parse(this.selectedOption_category));
+
+          //There is a valid category selected and there is a name for filtering too
+          this.filterByNameAndCategory(this.inputFieldName, JSON.parse(this.selectedOption_category));
         }
-        else {
-          this.filterViaName(this.inputFieldName);
-        }
+
+        //There is no valid category selected for filtering but there is a name
+        else this.filterByName(this.inputFieldName);
+
       }
       else {
+        //There is no name for the filter
+
         if (this.selectedOption_category !== 'undefined') {
           if (JSON.parse(this.selectedOption_category) !== -1) {
-            this.filterViaCategory(JSON.parse(this.selectedOption_category));
+
+            //There is a valid category for the filter
+            this.filterByCategory(JSON.parse(this.selectedOption_category));
           }
-          else {
-            this.refreshProductList();
-          }
+
+          //The category filter's value is none and there is no name for the filer so remove the filtering property from the products
+          else this.removeFilterFromProducts();
         }
       }
     }
     else if (this.selectedOption_category !== 'undefined') {
+      //Filter by only using the category
+
       if (JSON.parse(this.selectedOption_category) !== -1) {
-        this.filterViaCategory(JSON.parse(this.selectedOption_category));
+
+        //There is a valid category selected for filtering
+        this.filterByCategory(JSON.parse(this.selectedOption_category));
       }
-      else {
-        this.refreshProductList();
+
+      //There is no valid category selected for filtering
+      else this.removeFilterFromProducts();
+    }
+  }
+
+  filterByName(productName: string) {
+    for (let product of this.ProductList) {
+      if (!product.product_Name.includes(productName)) {
+        product.hidden = true;
       }
     }
- 
-    
-  }
-
-  filterViaName(productName: string) {
-   
-    this.productService.getAll().subscribe(data => {
-      this.ProductList = data;         
-      for (let product of this.ProductList) {
-        if (!product.product_Name.includes(productName)) {
-          product.hidden = true;
-        }
-        this.ProductImageNameList.push(this.imageRoute + product.imageName);
-        this.refreshReviewList(product);   
-      };
-      
-    });
   }
 
 
-  filterViaCategory(categoryId: number) {
-    this.productService.getAll().subscribe(data => {
-      this.ProductList = data;
-      for (let product of this.ProductList) {
-        if (product.categoryId !== categoryId) {
-          product.hidden = true;
-        }
-        this.ProductImageNameList.push(this.imageRoute + product.imageName);
-        this.refreshReviewList(product);
-      };
-
-    });
+  filterByCategory(categoryId: number) {
+    for (let product of this.ProductList) {
+      if (product.categoryId !== categoryId) {
+        product.hidden = true;
+      }
+    }
   }
 
 
-  filterViaNameAndCategory(productName: string, categoryId: number) {    
-    this.productService.getAll().subscribe(data => {
-      this.ProductList = data;
-      for (let product of this.ProductList) {
-        if (product.categoryId !== categoryId || product.product_Name !== productName) {
-          product.hidden = true;
-        }
-        this.ProductImageNameList.push(this.imageRoute + product.imageName);
-        this.refreshReviewList(product);
-      };
-
-    });
+  filterByNameAndCategory(productName: string, categoryId: number) {
+    for (let product of this.ProductList) {
+      if (product.categoryId !== categoryId || !product.product_Name.includes(productName)) {
+        product.hidden = true;
+      }
+    };
   }
+
+  //Categóriára való szűrés navbar-ból
   categorySelector(categoryId: number) {
-    this.filterViaCategory(categoryId);
+    this.removeFilterFromProducts();
+    this.filterByCategory(categoryId);
   }
 
+
+  //User kiléptetés && bejelenetkezés ellenőrzés
   checkLogin() {
-    if (!this.isLoggedIn)
-      this.router.navigateByUrl('/login');
+    super.checkLogin(this.isLoggedIn, this.router);
   }
-
-
-
   onLogout() {
-    localStorage.removeItem('token');
-    this.isLoggedIn = false;
-    this.router.navigateByUrl('');
+    super.onLogout(this.router);
   }
 }

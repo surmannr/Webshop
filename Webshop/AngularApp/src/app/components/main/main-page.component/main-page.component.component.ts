@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { count } from 'console';
-import { empty } from 'rxjs';
-import { concat } from 'rxjs/operators';
+import { AppComponent } from '../../../app.component';
 import { Category } from '../../../classes/Category';
 import { Product } from '../../../classes/Product';
 import { Review } from '../../../classes/Review';
@@ -14,67 +12,42 @@ import { ReviewService } from '../../../services/review.service';
   selector: 'app-main-page.component',
   templateUrl: './main-page.component.component.html',
   styleUrls: ['./webshopstyle.css']
- 
+
 })
-export class MainPage implements OnInit {
+export class MainPage extends AppComponent implements OnInit {
 
-  constructor(private categoryService: CategoryService, private router: Router, private productService: ProductService,
-              private reviewService: ReviewService) { }
+  constructor(private categoryService: CategoryService, private productService: ProductService,
+    private reviewService: ReviewService, private router: Router) { super(); }
 
-    CategoryList: Category[] = [];
-    ProductList: Product[] = [];
-
-  isLoggedIn: boolean = true;
  
-
   CategoryImageNameList: string[] = [];
   ProductImageNameList: string[] = [];
-  
 
-  imageRoute: string = "https://localhost:44308/Resources/Images/";
 
   ngOnInit(): void {
     this.refreshCategoryList();
     this.refreshProductList();
-    let json_token = localStorage.getItem('token');
-    if (json_token == null) {
-      this.isLoggedIn = false;
-    }
+    this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
   }
 
-  refreshReviewList(product: Product) {   
-    let ReviewList: Review[] = [];
-    let counter: number;
-    let sum: number;
-
-   
-      counter = 0;
-      sum = 0;
-
-
-      this.reviewService.get(product.productID).subscribe(data => {
-
-        ReviewList = data;
-
-        if (ReviewList.length === 0) {
-          product.stars = 0         
-        }
-        else {
-
-          for (let review of ReviewList) {
-            counter = counter + 1;
-            sum = sum + review.stars;
-          };
-          let avg = Math.ceil(sum / counter);
-          product.stars = avg;      
-        }       
-      });      
-    
-    
+  
+  refreshReviewList(product: Product) {
+    let counter: number = 0;
+    let sum: number = 0;
+    this.reviewService.get(product.productID).subscribe(reviews => {
+      if (reviews.length === 0) {
+        product.stars = 0
+      }
+      else {
+        for (let review of reviews) {
+          counter = counter + 1;
+          sum = sum + review.stars;
+        };
+        let avg = Math.ceil(sum / counter);
+        product.stars = avg;
+      }
+    });
   }
-         
-
-
 
   refreshProductList() {
     this.productService.getAll().subscribe(data => {
@@ -86,40 +59,40 @@ export class MainPage implements OnInit {
     });
   }
 
-
-
   refreshCategoryList() {
     this.categoryService.getAll().subscribe(data => {
       this.CategoryList = data;
       for (let category of this.CategoryList) {
         this.CategoryImageNameList.push(this.imageRoute + category.imageName);
-      };     
+      };
     });
   }
 
-  
+
+
+  //Categóriára való szűrés navbar-ból
   categorySelector(categoryId: number) {
     localStorage.setItem('categoryId', JSON.stringify(categoryId));
-    this.router.navigateByUrl('techonomy/products');
-   
+    this.router.navigateByUrl('techonomy/products/category/' + categoryId);
   }
 
+  //Categóriára való szűrés képre kattintás esetén
   categoryPictureClicked(str: string) {
     let index = str;
-    let categoryId = this.CategoryList[index].categoryId;    
+    let categoryId = this.CategoryList[index].categoryId;
     localStorage.setItem('categoryId', JSON.stringify(categoryId));
-    this.router.navigateByUrl('techonomy/products');
+    this.router.navigateByUrl('techonomy/products/category/' + categoryId);
   }
+
+
+
+  //User kiléptetés && bejelenetkezés ellenőrzés
   checkLogin() {
-    if (!this.isLoggedIn)
-      this.router.navigateByUrl('/login');
+    super.checkLogin(this.isLoggedIn, this.router);
   }
-
-
 
   onLogout() {
-    localStorage.removeItem('token');
     this.isLoggedIn = false;
-    this.router.navigateByUrl('');
+    super.onLogout(this.router);
   }
 }

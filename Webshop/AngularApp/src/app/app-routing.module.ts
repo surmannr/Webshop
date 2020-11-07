@@ -23,6 +23,7 @@ import { OrderitemComponent } from './components/orderitem/orderitem/orderitem.c
 import { AddModifyOrderitemComponent } from './components/orderitem/add-modify-orderitem/add-modify-orderitem.component';
 import { MainPage } from './components/main/main-page.component/main-page.component.component';
 import { MainProductsComponent } from './components/main-products/main-products.component';
+import { SingleProductComponent } from './components/single-product/single-product.component';
 const routes: Routes = [  
   { path: 'category', component: CategoryComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },  
   { path: 'supplier', component: SupplierComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
@@ -44,8 +45,10 @@ const routes: Routes = [
   { path: 'order/orderitems', component: OrderitemComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
   { path: 'order/orderitems/add', component: AddModifyOrderitemComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
   { path: '', component: MainPage },
-  { path: 'techonomy/products', component: MainProductsComponent }
-
+  { path: 'techonomy/products/category/:id', component: MainProductsComponent },
+  { path: 'techonomy/products/:id', component: SingleProductComponent }
+ 
+  
 
 ];
 

@@ -53,6 +53,7 @@ import { RegisterAdminComponent } from './components/register-admin/register-adm
 import { EditUserCredentials } from './components/home/editCredentials/editUserCredentials';
 import { MainPage } from './components/main/main-page.component/main-page.component.component';
 import { MainProductsComponent } from './components/main-products/main-products.component';
+import { SingleProductComponent } from './components/single-product/single-product.component';
 
 @NgModule({
   declarations: [
@@ -92,7 +93,7 @@ import { MainProductsComponent } from './components/main-products/main-products.
     RegisterCustomerComponent,
     RegisterAdminComponent,
     EditUserCredentials,   
-    MainPage, MainProductsComponent
+    MainPage, MainProductsComponent, SingleProductComponent
   ],
   imports: [
     BrowserModule,
