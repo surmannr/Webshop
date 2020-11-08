@@ -18,6 +18,10 @@ export class AppComponent {
   isLoggedIn: boolean;
   CategoryList: Category[];
   ProductList: Product[];
+
+  
+
+
   constructor() {
     this.imageRoute = "https://localhost:44308/Resources/Images/";
     this.isLoggedIn = true;

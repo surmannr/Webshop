@@ -22,7 +22,7 @@ export class MainPage extends AppComponent implements OnInit {
  
   CategoryImageNameList: string[] = [];
   ProductImageNameList: string[] = [];
-
+  FeaturedCategoryImageNameList: string[] = [];
 
   ngOnInit(): void {
     this.refreshCategoryList();
@@ -64,6 +64,12 @@ export class MainPage extends AppComponent implements OnInit {
       this.CategoryList = data;
       for (let category of this.CategoryList) {
         this.CategoryImageNameList.push(this.imageRoute + category.imageName);
+        if (this.FeaturedCategoryImageNameList.length < 3) {
+
+
+          //Here you can set logic for the featured categories
+          this.FeaturedCategoryImageNameList.push(this.imageRoute + category.imageName);
+        }
       };
     });
   }

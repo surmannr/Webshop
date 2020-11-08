@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { async } from 'rxjs';
 import { AppComponent } from '../../app.component';
+import { Cart } from '../../classes/Cart';
 import { Category } from '../../classes/Category';
 import { Product } from '../../classes/Product';
 import { Review } from '../../classes/Review';
@@ -29,9 +30,16 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   RecommendedProductImageRouteList: string[];
   AllProducts: Product[];
   RecommendedProductStarList: number[];
+  productQuantity: number;
+  cartProductList: Product[] = [];
+  cartProductQuantityList: number[] = [];
+  ProductsInCart: Product[] = [];
+  ProductsInCartQuantities: number[] = [];
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
     private reviewService: ReviewService, private appComponent: AppComponent, private router: Router, private userService: UserService) { super(); }
+
+
 
 
   async ngOnInit() {
@@ -45,6 +53,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
     this.AllProducts = [];
     this.RecommendedProductStarList = [];    
     this.refreshCategoryList();
+    this.productQuantity = 1;
 
 
     this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
@@ -147,6 +156,37 @@ export class SingleProductComponent extends AppComponent implements OnInit {
     this.router.navigateByUrl('techonomy/products/' + product.productID);
     this.ngOnInit();
   }
+
+
+  addedToCartClicked(productQuantity: number, product: Product) {
+    let json_productsInCart = localStorage.getItem('productsInCart');
+    let json_productQuantitiesInCart = localStorage.getItem('productQuantitiesInCart');
+    if (json_productsInCart != null && json_productQuantitiesInCart != null) {
+      this.cartProductList = JSON.parse(localStorage.getItem('productsInCart'));
+      this.cartProductQuantityList = JSON.parse(localStorage.getItem('productQuantitiesInCart'));
+    }
+    let counter: number = 0;
+    if (productQuantity > 0) {
+      this.ProductsInCart.push(product);
+      this.ProductsInCartQuantities.push(productQuantity);  
+    }
+    for (let product of this.ProductsInCart) {
+      this.cartProductList.push(product);
+      this.cartProductQuantityList.push(this.ProductsInCartQuantities[counter]);
+      counter = counter + 1;
+      localStorage.setItem('productsInCart', JSON.stringify(this.cartProductList));
+      localStorage.setItem('productQuantitiesInCart', JSON.stringify(this.cartProductQuantityList));
+    }
+    this.ProductsInCart = [];
+    this.ProductsInCartQuantities = [];
+    alert("Added the product to your cart!");
+  }
+
+  checkQuantityInputValue() {
+    if (this.productQuantity < 0)
+      this.productQuantity = 0;
+  }
+
 
   //Categóriára való szűrés navbar-ból
   categorySelector(categoryId: number) {

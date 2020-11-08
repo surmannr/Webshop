@@ -1,9 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppComponent } from '../../app.component';
-import { Category } from '../../classes/Category';
 import { Product } from '../../classes/Product';
-import { Review } from '../../classes/Review';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
 import { ReviewService } from '../../services/review.service';

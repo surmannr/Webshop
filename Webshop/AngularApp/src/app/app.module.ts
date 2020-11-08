@@ -54,6 +54,7 @@ import { EditUserCredentials } from './components/home/editCredentials/editUserC
 import { MainPage } from './components/main/main-page.component/main-page.component.component';
 import { MainProductsComponent } from './components/main-products/main-products.component';
 import { SingleProductComponent } from './components/single-product/single-product.component';
+import { CustomerCartComponent } from './components/customer-cart/customer-cart.component';
 
 @NgModule({
   declarations: [
@@ -93,7 +94,7 @@ import { SingleProductComponent } from './components/single-product/single-produ
     RegisterCustomerComponent,
     RegisterAdminComponent,
     EditUserCredentials,   
-    MainPage, MainProductsComponent, SingleProductComponent
+    MainPage, MainProductsComponent, SingleProductComponent, CustomerCartComponent
   ],
   imports: [
     BrowserModule,
