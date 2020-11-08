@@ -288,18 +288,37 @@ namespace Webshop.Migrations
 
             modelBuilder.Entity("Webshop.Data.ProductCart", b =>
                 {
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductCartId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CartId")
                         .HasColumnType("int");
 
-                    b.HasKey("CartId", "ProductId");
+                    b.Property<int?>("ProductID")
+                        .HasColumnType("int");
 
-                    b.HasIndex("ProductId");
+                    b.Property<int>("cartIndex")
+                        .HasColumnType("int");
+
+                    b.Property<int>("price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("productIndex")
+                        .HasColumnType("int");
+
+                    b.Property<string>("product_Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductCartId");
+
+                    b.HasIndex("CartId");
+
+                    b.HasIndex("ProductID");
 
                     b.ToTable("ProductCarts");
                 });
@@ -534,15 +553,11 @@ namespace Webshop.Migrations
                 {
                     b.HasOne("Webshop.Data.Cart", "Cart")
                         .WithMany("ProductCart")
-                        .HasForeignKey("CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CartId");
 
                     b.HasOne("Webshop.Data.Product", "Product")
                         .WithMany("ProductCart")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductID");
                 });
 
             modelBuilder.Entity("Webshop.Data.Review", b =>

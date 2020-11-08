@@ -55,6 +55,7 @@ import { MainPage } from './components/main/main-page.component/main-page.compon
 import { MainProductsComponent } from './components/main-products/main-products.component';
 import { SingleProductComponent } from './components/single-product/single-product.component';
 import { CustomerCartComponent } from './components/customer-cart/customer-cart.component';
+import { MainFavouritesComponent } from './components/main-favourites/main-favourites.component';
 
 @NgModule({
   declarations: [
@@ -94,7 +95,7 @@ import { CustomerCartComponent } from './components/customer-cart/customer-cart.
     RegisterCustomerComponent,
     RegisterAdminComponent,
     EditUserCredentials,   
-    MainPage, MainProductsComponent, SingleProductComponent, CustomerCartComponent
+    MainPage, MainProductsComponent, SingleProductComponent, CustomerCartComponent, MainFavouritesComponent
   ],
   imports: [
     BrowserModule,

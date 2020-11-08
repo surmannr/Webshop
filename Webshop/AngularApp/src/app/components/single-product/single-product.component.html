@@ -29,7 +29,7 @@
         </ul>
       </li>
       <li><a href="techonomy/cart"><i class="fas fa-shopping-cart"></i></a></li>
-      <li><a routerLink=""><i class="fas fa-heart"></i></a></li>
+      <li><a href="techonomy/favourites"><i class="fas fa-heart"></i></a></li>
       <li>
         <label for="btn-2" class="show"><i class="fas fa-user"></i></label>
         <a><i class="fas fa-user" (click)="checkLogin()"></i></a>
@@ -50,10 +50,11 @@
       <div class="col-6">
         <h1>{{singleProduct.product_Name}}</h1>
         <h4>{{singleProduct.price}} Ft</h4>
-        <input type="number" value="{{productQuantity}}"  [(ngModel)]="productQuantity" (click)="checkQuantityInputValue()"(change)="checkQuantityInputValue()">
-            <a class="btn" (click)="addedToCartClicked(productQuantity,singleProduct)">Add to Cart</a>
+        <input type="number" value="{{productQuantity}}" [(ngModel)]="productQuantity" (click)="checkQuantityInputValue()" (change)="checkQuantityInputValue()" min="0">
+        <a class="btn" (click)="addedToCartClicked(productQuantity,singleProduct)">Add to Cart</a>
         <h3>Product Details <i class="fas fa-indent"></i></h3>
         <p>{{singleProduct.product_Description}}</p>
+        <a class="btn" style="margin-right: 20px">Add to favorite</a><a href="" class="btn">Add a review</a>
       </div>
     </div>
     <div class="row review" *ngFor="let review of ReviewList; let i = index">

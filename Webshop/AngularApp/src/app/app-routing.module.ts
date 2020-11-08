@@ -25,6 +25,7 @@ import { MainPage } from './components/main/main-page.component/main-page.compon
 import { MainProductsComponent } from './components/main-products/main-products.component';
 import { SingleProductComponent } from './components/single-product/single-product.component';
 import { CustomerCartComponent } from './components/customer-cart/customer-cart.component';
+import { MainFavouritesComponent } from './components/main-favourites/main-favourites.component';
 const routes: Routes = [  
   { path: 'category', component: CategoryComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },  
   { path: 'supplier', component: SupplierComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
@@ -48,7 +49,8 @@ const routes: Routes = [
   { path: '', component: MainPage },
   { path: 'techonomy/products/category/:id', component: MainProductsComponent },
   { path: 'techonomy/products/:id', component: SingleProductComponent },
-  { path: 'techonomy/cart', component: CustomerCartComponent, canActivate: [AuthGuard], data: { permittedRoles: [ 'Admin','Customer']  } }
+  { path: 'techonomy/cart', component: CustomerCartComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin', 'Customer'] } },
+  { path: 'techonomy/favourites', component: MainFavouritesComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin', 'Customer'] }  }
  
   
 

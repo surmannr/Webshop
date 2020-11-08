@@ -1,6 +1,9 @@
 
 export class ProductCart {
   productCartId: number;
-  productId: number;
-  cartId: number;
+  productIndex: number;
+  cartIndex: number;
+  price: number;
+  quantity: number;
+  product_Name: string;
 }

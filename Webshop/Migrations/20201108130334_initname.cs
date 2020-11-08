@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Webshop.Migrations
 {
-    public partial class init : Migration
+    public partial class initname : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,7 +53,8 @@ namespace Webshop.Migrations
                 {
                     CategoryId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Category_Name = table.Column<string>(nullable: true)
+                    Category_Name = table.Column<string>(nullable: true),
+                    ImageName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -247,7 +248,8 @@ namespace Webshop.Migrations
                     Product_Description = table.Column<string>(nullable: true),
                     Shipping_Price = table.Column<int>(nullable: false),
                     CategoryId = table.Column<int>(nullable: false),
-                    SupplierId = table.Column<int>(nullable: false)
+                    SupplierId = table.Column<int>(nullable: false),
+                    ImageName = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -293,25 +295,28 @@ namespace Webshop.Migrations
                 name: "ProductCarts",
                 columns: table => new
                 {
-                    ProductId = table.Column<int>(nullable: false),
-                    CartId = table.Column<int>(nullable: false),
                     ProductCartId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    productIndex = table.Column<int>(nullable: false),
+                    ProductID = table.Column<int>(nullable: true),
+                    cartIndex = table.Column<int>(nullable: false),
+                    CartId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCarts", x => new { x.CartId, x.ProductId });
+                    table.PrimaryKey("PK_ProductCarts", x => x.ProductCartId);
                     table.ForeignKey(
                         name: "FK_ProductCarts_Carts_CartId",
                         column: x => x.CartId,
                         principalTable: "Carts",
                         principalColumn: "CartId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_ProductCarts_Products_ProductId",
-                        column: x => x.ProductId,
+                        name: "FK_ProductCarts_Products_ProductID",
+                        column: x => x.ProductID,
                         principalTable: "Products",
                         principalColumn: "ProductID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -323,7 +328,8 @@ namespace Webshop.Migrations
                     Description = table.Column<string>(nullable: true),
                     Stars = table.Column<int>(nullable: false),
                     ProductId = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(nullable: true),
+                    Username = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -399,9 +405,14 @@ namespace Webshop.Migrations
                 column: "StatusId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductCarts_ProductId",
+                name: "IX_ProductCarts_CartId",
                 table: "ProductCarts",
-                column: "ProductId");
+                column: "CartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProductCarts_ProductID",
+                table: "ProductCarts",
+                column: "ProductID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",

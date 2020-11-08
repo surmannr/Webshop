@@ -31,7 +31,7 @@ export class RegisterCustomerComponent implements OnInit {
   addUser() {
     let val: User;
     val = { id: this.id, username: this.username, email: this.email, password: this.password };
-    this.service.createAdmin(val).subscribe(res => { this.router.navigate(['/user']); });
+    this.service.create(val).subscribe(res => { this.router.navigate(['/user']); });
   }
 
 

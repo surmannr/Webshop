@@ -3,11 +3,6 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Migrations\20201105120053_ada.cs" />
-    <Compile Remove="Migrations\20201105120053_ada.Designer.cs" />
-  </ItemGroup>
   <ItemGroup>
     <None Remove="Controllers\NewFile.txt" />
     <None Remove="Data\DTO\CartDto" />

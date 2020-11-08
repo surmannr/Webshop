@@ -33,7 +33,7 @@ namespace Webshop.Controllers
         public async Task<IEnumerable<CartDto>> Get()
         {
             var res = await _context.Carts.ToListAsync();
-            var products = await _context.ProductCarts.Where(c => c.CartId!=0).ToListAsync();
+            var products = await _context.ProductCarts.Where(c => c.cartIndex!=0).ToListAsync();
             List<CartDto> cartList = new List<CartDto>();
             //public SortedSet<int> ProductsID { get; set; }
             foreach (Cart c in res)
@@ -43,7 +43,7 @@ namespace Webshop.Controllers
                 var mapppelt = _mapper.Map<CartDto>(c);
                 foreach (ProductCart rev in products)
                 {
-                    if (c.CartId == rev.CartId) mapppelt.ProductsID.Add(rev.ProductId);
+                    if (c.CartId == rev.cartIndex) mapppelt.ProductsID.Add(rev.productIndex);
                 }
                 cartList.Add(mapppelt);
             }
@@ -61,13 +61,13 @@ namespace Webshop.Controllers
             // Hibakezelés
             if (res == null) return NotFound();
 
-            var products = await _context.ProductCarts.Where(p=>p.CartId == id).ToListAsync();
+            var products = await _context.ProductCarts.Where(p=>p.cartIndex == id).ToListAsync();
             var user = await _userManager.FindByIdAsync(res.UserId);
             var mapppelt = _mapper.Map<CartDto>(res);
 
             foreach (ProductCart rev in products)
             {
-                if (res.CartId == rev.CartId) mapppelt.ProductsID.Add(rev.ProductId);
+                if (res.CartId == rev.cartIndex) mapppelt.ProductsID.Add(rev.productIndex);
             }
             return mapppelt;
         }

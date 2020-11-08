@@ -17,8 +17,8 @@ export class ProductcartService {
     return this.http.get<ProductCart[]>(BASEURL.baseUrl + 'ProductCart');
   }
 
-  get(id): Observable<ProductCart> {
-    return this.http.get<ProductCart>(BASEURL.baseUrl + 'ProductCart/' + id);
+  get(id): Observable<ProductCart[]> {
+    return this.http.get<ProductCart[]>(BASEURL.baseUrl + 'ProductCart/' + id);
   }
 
   create(data): Observable<ProductCart> {

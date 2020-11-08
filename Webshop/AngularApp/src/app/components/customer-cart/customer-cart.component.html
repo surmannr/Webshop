@@ -28,7 +28,7 @@
           <li *ngFor="let categoryItem of CategoryList"><a  (click)="categorySelector(categoryItem.categoryId)">{{categoryItem.category_Name}}</a></li>
         </ul>
       </li>
-      <li><a routerLink=""><i class="fas fa-shopping-cart"></i></a></li>
+      <li><a ><i class="fas fa-shopping-cart"></i></a></li>
       <li><a routerLink=""><i class="fas fa-heart"></i></a></li>
       <li>
         <label for="btn-2" class="show"><i class="fas fa-user"></i></label>
@@ -51,8 +51,8 @@
         </div>
       </div>
     </div>
-    <h1 *ngIf="cartProductList.length ==0">Your cart is empty</h1>
-    <table *ngIf="cartProductList.length != 0">
+    <h1 *ngIf="productCartList.length ==0" style="height: 18vh">Your cart is empty</h1>
+    <table *ngIf="productCartList.length != 0">
       <tr>
         <th>Product</th>
         <th>Price</th>
@@ -60,15 +60,15 @@
         <th>Quantity</th>
         <th>Subtotal</th>
       </tr>
-      <tr *ngFor="let product of cartProductList; let i = index">
-        <td>{{product.product_Name}}</td>
-        <td>{{product.price}}</td>
+      <tr *ngFor="let productCart of productCartList; let i = index">
+        <td>{{productCart.product_Name}}</td>
+        <td>{{productCart.price}} Ft</td>
         <td> <a (click)="removeClicked(i)">Remove</a></td>
-        <td>{{cartProductQuantityList[i]}}</td>
+        <td>{{productCart.quantity}}</td>
         <td>{{priceInRows[i]}} Ft</td>
       </tr>
     </table>
-    <div class="total-price" *ngIf="cartProductList.length != 0">
+    <div class="total-price" *ngIf="productCartList.length != 0">
       <table>
         <tr>
           <td>Subtotal</td>
@@ -83,6 +83,9 @@
           <td>{{TotalPriceWithTax}} Ft</td>
         </tr>
       </table>
+    </div>
+    <div class="row">
+      <button style="margin-top: 50px;font-weight:900; font-size:150%;background:#ff523b;color:white;border:none;padding:5px;outline:none">Order</button>
     </div>
   </div>
 

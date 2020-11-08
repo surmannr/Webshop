@@ -5,10 +5,12 @@ import { AppComponent } from '../../app.component';
 import { Cart } from '../../classes/Cart';
 import { Category } from '../../classes/Category';
 import { Product } from '../../classes/Product';
+import { ProductCart } from '../../classes/ProductCart';
 import { Review } from '../../classes/Review';
 import { User } from '../../classes/User';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
+import { ProductcartService } from '../../services/productcart.service';
 import { ReviewService } from '../../services/review.service';
 import { UserService } from '../../services/user.service';
 
@@ -31,13 +33,14 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   AllProducts: Product[];
   RecommendedProductStarList: number[];
   productQuantity: number;
-  cartProductList: Product[] = [];
+  cartProductIdList: number[] = [];
   cartProductQuantityList: number[] = [];
   ProductsInCart: Product[] = [];
   ProductsInCartQuantities: number[] = [];
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
-    private reviewService: ReviewService, private appComponent: AppComponent, private router: Router, private userService: UserService) { super(); }
+    private reviewService: ReviewService, private appComponent: AppComponent, private router: Router, private userService: UserService,
+    private productCartSerivce: ProductcartService) { super(); }
 
 
 
@@ -159,28 +162,23 @@ export class SingleProductComponent extends AppComponent implements OnInit {
 
 
   addedToCartClicked(productQuantity: number, product: Product) {
-    let json_productsInCart = localStorage.getItem('productsInCart');
-    let json_productQuantitiesInCart = localStorage.getItem('productQuantitiesInCart');
-    if (json_productsInCart != null && json_productQuantitiesInCart != null) {
-      this.cartProductList = JSON.parse(localStorage.getItem('productsInCart'));
-      this.cartProductQuantityList = JSON.parse(localStorage.getItem('productQuantitiesInCart'));
-    }
-    let counter: number = 0;
-    if (productQuantity > 0) {
-      this.ProductsInCart.push(product);
-      this.ProductsInCartQuantities.push(productQuantity);  
-    }
-    for (let product of this.ProductsInCart) {
-      this.cartProductList.push(product);
-      this.cartProductQuantityList.push(this.ProductsInCartQuantities[counter]);
-      counter = counter + 1;
-      localStorage.setItem('productsInCart', JSON.stringify(this.cartProductList));
-      localStorage.setItem('productQuantitiesInCart', JSON.stringify(this.cartProductQuantityList));
-    }
-    this.ProductsInCart = [];
-    this.ProductsInCartQuantities = [];
-    alert("Added the product to your cart!");
-  }
+    let userDetails;
+    this.userService.getUserProfile().subscribe(data => {
+      this.userService.getUserProfile().subscribe(
+        res => {
+          userDetails = res;
+          let val: ProductCart;
+          val = { productCartId: 0, productIndex: product.productID, cartIndex: userDetails.cartId, price: product.price, product_Name: product.product_Name, quantity: productQuantity };
+          
+          this.productCartSerivce.create(val).subscribe(res => { alert("Added the productcart"); });         
+          console.log(val);
+        },
+        err => {
+          console.log(err);
+        });      
+    });
+   
+   }
 
   checkQuantityInputValue() {
     if (this.productQuantity < 0)
