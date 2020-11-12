@@ -54,13 +54,17 @@
         <a class="btn" (click)="addedToCartClicked(productQuantity,singleProduct)">Add to Cart</a>
         <h3>Product Details <i class="fas fa-indent"></i></h3>
         <p>{{singleProduct.product_Description}}</p>
-        <a class="btn" style="margin-right: 20px">Add to favorite</a><a href="" class="btn">Add a review</a>
+        <a class="btn" style="margin-right: 20px" (click)="AddToFavouriteClicked(singleProduct)">Add to favorite</a><a href="" class="btn">Add a review</a>
       </div>
     </div>
     <div class="row review" *ngFor="let review of ReviewList; let i = index">
       <div class="col-n">
         <h3>{{UsernameList[i]}}</h3>
         <h3>
+          <div class="row" *ngFor="let reviewStars of ProductStarList; let j = index">
+            <i class="fas fa-star" *ngFor="let star of ProductStarList[j]"></i>
+          </div>
+          
           <!-- Nem akarom elhinni, hogy ezt nem lehetne másként megcsinálni -->
           <i class="fas fa-star" *ngIf="StarList[i] >= 1"></i>
           <i class="fas fa-star" *ngIf="StarList[i] >= 2"></i>

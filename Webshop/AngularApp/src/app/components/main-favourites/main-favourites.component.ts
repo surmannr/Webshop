@@ -1,11 +1,14 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { flatMap } from 'rxjs/operators';
 import { AppComponent } from '../../app.component';
 import { Product } from '../../classes/Product';
+import { UsersFavouriteProducts } from '../../classes/UsersFavouriteProducts';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
 import { ReviewService } from '../../services/review.service';
-
+import { UserFavouriteProductsService } from '../../services/user-favourite-products.service';
+import { map } from 'rxjs/operators';
 @Component({
   selector: 'app-main-favourites',
   templateUrl: './main-favourites.component.html',
@@ -18,14 +21,21 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
   selectedOption_category: string;
   inputFieldName: string;
 
-  constructor(private categoryService: CategoryService, private productService: ProductService,
-    private reviewService: ReviewService, private router: Router) { super(); }
+  constructor(private categoryService: CategoryService, private userFavouriteProducts: UserFavouriteProductsService, private productService: ProductService,
+    private reviewService: ReviewService, private router: Router, private userFavouriteProductService: UserFavouriteProductsService) { super(); }
+
+
 
 
 
   ProductImageNameList: string[] = [];
+  ProductNameList: string[] = [];
+  ProductIdList: number[] = [];
+  UserFavouriteProductIdList: number[] = [];
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    localStorage.removeItem('product');    
+    this.selectedOption_category = JSON.parse(JSON.stringify(-1));
     this.refreshCategoryList();
     this.refreshProductList();
     this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
@@ -38,166 +48,36 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
     });
   }
 
-  refreshReviewList(product: Product) {
-    let counter: number = 0;
-    let sum: number = 0;
-    this.reviewService.get(product.productID).subscribe(reviews => {
-      if (reviews.length === 0) {
-        product.stars = 0
-      }
-      else {
-        for (let review of reviews) {
-          counter = counter + 1;
-          sum = sum + review.stars;
-        };
-        let avg = Math.ceil(sum / counter);
-        product.stars = avg;
-      }
-    });
-  }
-
   refreshProductList() {
-    this.productService.getAll().subscribe(data => {
-      this.ProductList = data;
-      for (let product of this.ProductList) {
-        product.hidden = false;
-        this.ProductImageNameList.push(this.imageRoute + product.imageName);
-        this.refreshReviewList(product);
-      };
-      let json_categoryId: string = localStorage.getItem('categoryId');
-      if (json_categoryId !== null) {
-        this.filterByCategory(JSON.parse(json_categoryId));
-        localStorage.removeItem('categoryId');
+
+    this.userFavouriteProducts.Get().subscribe(data => {      
+      for (let res of data) {        
+        this.productService.get(res.productIndex).subscribe(productData => {
+          this.ProductImageNameList.push(this.imageRoute + productData.imageName);
+          this.ProductNameList.push(productData.product_Name);
+          this.ProductIdList.push(productData.productID);
+          this.UserFavouriteProductIdList.push(res.id);
+        });
       }
-    });
+      
+    });    
+       
   }
 
 
-  removeFilterFromProducts() {
-    for (let product of this.ProductList)
-      product.hidden = false;
-  }
 
-  nameFilter(name: string) {
-
-    if (name.length > 1) {
-
-      if (typeof this.selectedOption_category !== 'undefined') {
-        if (JSON.parse(this.selectedOption_category) !== -1) {
-
-          //Filter by using the name and the category of the product
-          this.filterByNameAndCategory(name, JSON.parse(this.selectedOption_category));
-        }
-
-        //There is a name for the filter and we dont want to filter by category
-        else this.filterByName(name);
-      }
-
-      // There is no category selected, but there is a name for the filter
-      else this.filterByName(name);
-    }
-
-    else if (typeof this.selectedOption_category !== 'undefined') {
-      if (JSON.parse(this.selectedOption_category) !== -1) {
-        //Remove the previous filter
-        this.removeFilterFromProducts();
-
-        //There is no name in the name filter field but there is a valid category selected
-        this.filterByCategory(JSON.parse(this.selectedOption_category));
-      }
-      else this.removeFilterFromProducts();
-    }
-
-    // The name for the filtering is empty and there is no category selected so remove the filtering property from the products
-    else this.removeFilterFromProducts();
-  }
-
-  filterClicked() {
-
-    //Remove the previous filter form the products
-    this.removeFilterFromProducts();
-
-
-    if (typeof this.inputFieldName !== 'undefined') {
-      if (this.inputFieldName.length > 1) {
-        //Had to use theese 2 conditions cause the empty input field is not undifined nor ""
-
-
-        if (this.selectedOption_category !== 'undefined' && JSON.parse(this.selectedOption_category) !== -1) {
-
-          //There is a valid category selected and there is a name for filtering too
-          this.filterByNameAndCategory(this.inputFieldName, JSON.parse(this.selectedOption_category));
-        }
-
-        //There is no valid category selected for filtering but there is a name
-        else this.filterByName(this.inputFieldName);
-
-      }
-      else {
-        //There is no name for the filter
-
-        if (this.selectedOption_category !== 'undefined') {
-          if (JSON.parse(this.selectedOption_category) !== -1) {
-
-            //There is a valid category for the filter
-            this.filterByCategory(JSON.parse(this.selectedOption_category));
-          }
-
-          //The category filter's value is none and there is no name for the filer so remove the filtering property from the products
-          else this.removeFilterFromProducts();
-        }
-      }
-    }
-    else if (this.selectedOption_category !== 'undefined') {
-      //Filter by only using the category
-
-      if (JSON.parse(this.selectedOption_category) !== -1) {
-
-        //There is a valid category selected for filtering
-        this.filterByCategory(JSON.parse(this.selectedOption_category));
-      }
-
-      //There is no valid category selected for filtering
-      else this.removeFilterFromProducts();
-    }
-  }
-
-  filterByName(productName: string) {
-    for (let product of this.ProductList) {
-      if (!product.product_Name.includes(productName)) {
-        product.hidden = true;
-      }
-    }
-  }
-
-
-  filterByCategory(categoryId: number) {
-    for (let product of this.ProductList) {
-      if (product.categoryId !== categoryId) {
-        product.hidden = true;
-      }
-    }
-  }
-
-
-  filterByNameAndCategory(productName: string, categoryId: number) {
-    for (let product of this.ProductList) {
-      if (product.categoryId !== categoryId || !product.product_Name.includes(productName)) {
-        product.hidden = true;
-      }
-    };
-  }
-
-  productPictureClicked(product: Product) {
-    localStorage.setItem('product', JSON.stringify(product));
-    this.router.navigateByUrl('techonomy/products/' + product.productID);
+  productPictureClicked(productId: number) {
+    this.productService.get(productId).subscribe(data => {
+      localStorage.setItem('product', JSON.stringify(data));
+      this.router.navigateByUrl('techonomy/products/' + productId);
+    });     
   }
 
 
   //Categóriára való szűrés navbar-ból
   categorySelector(categoryId: number) {
-    this.removeFilterFromProducts();
-    this.filterByCategory(categoryId);
+    localStorage.setItem('categoryId', JSON.stringify(categoryId));
+    this.router.navigateByUrl('techonomy/products/category/categoryFilter/' + categoryId);
   }
 
 
@@ -207,5 +87,11 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
   }
   onLogout() {
     super.onLogout(this.router);
+  }
+
+  removeFromFavourite(index: number) { 
+    this.userFavouriteProductService.Delete(index).subscribe(_ => {
+     this.ngOnInit;
+    });
   }
 }

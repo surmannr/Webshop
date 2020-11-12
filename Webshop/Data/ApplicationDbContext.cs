@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Webshop.Data.Models;
 
 namespace Webshop.Data
 {
@@ -14,7 +15,7 @@ namespace Webshop.Data
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Status> Status { get; set; }
         public DbSet<ProductCart> ProductCarts { get; set; }
-        
+        public DbSet<UsersFavouriteProducts> UsersFavouriteProducts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

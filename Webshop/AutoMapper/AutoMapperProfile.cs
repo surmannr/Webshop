@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Webshop.Data;
+using Webshop.Data.DTO;
+using Webshop.Data.Models;
 
 namespace Webshop.AutoMapper
 {
@@ -18,9 +20,13 @@ namespace Webshop.AutoMapper
             CreateMap<Review, ReviewDto>().ReverseMap();
             CreateMap<Supplier, SupplierDto>().ReverseMap();
             CreateMap<Product, ProductDto>().ReverseMap();
+            CreateMap<List<string>, List<string>>().ReverseMap();
             CreateMap<ProductCart, ProductCartDto>().ReverseMap();
             CreateMap<OrderItem, OrderItemDto>().ReverseMap();
             CreateMap<Status, StatusDto>().ReverseMap();
+            CreateMap<UsersFavouriteProducts, UsersFavouriteProductsDto>().ReverseMap();
+               
+           
         }
     }
 }

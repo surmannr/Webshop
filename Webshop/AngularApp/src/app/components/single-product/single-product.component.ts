@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ENGINE_METHOD_ALL } from 'constants';
 import { async } from 'rxjs';
 import { AppComponent } from '../../app.component';
 import { Cart } from '../../classes/Cart';
@@ -8,10 +9,12 @@ import { Product } from '../../classes/Product';
 import { ProductCart } from '../../classes/ProductCart';
 import { Review } from '../../classes/Review';
 import { User } from '../../classes/User';
+import { UsersFavouriteProducts } from '../../classes/UsersFavouriteProducts';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
 import { ProductcartService } from '../../services/productcart.service';
 import { ReviewService } from '../../services/review.service';
+import { UserFavouriteProductsService } from '../../services/user-favourite-products.service';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -37,15 +40,16 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   cartProductQuantityList: number[] = [];
   ProductsInCart: Product[] = [];
   ProductsInCartQuantities: number[] = [];
+  userDetails;
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
-    private reviewService: ReviewService, private appComponent: AppComponent, private router: Router, private userService: UserService,
-    private productCartSerivce: ProductcartService) { super(); }
+    private reviewService: ReviewService, private router: Router, private userService: UserService,
+    private productCartSerivce: ProductcartService, private usersFavouriteProducts: UserFavouriteProductsService) { super(); }
 
 
 
 
-  async ngOnInit() {
+   ngOnInit() {
     this.CategoryList = [];
     this.isLoggedIn = true;
     this.ReviewList = [];
@@ -68,9 +72,10 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   refreshREcommendedProductStarList(product: Product) {
     let counter: number = 0;
     let sum: number = 0;
+    let tmp: any[] = [];
     this.reviewService.get(product.productID).subscribe(reviews => {
       if (reviews.length === 0) {
-        product.stars = 0
+        product.stars = 0;      
       }
       else {
         for (let review of reviews) {
@@ -78,10 +83,9 @@ export class SingleProductComponent extends AppComponent implements OnInit {
           sum = sum + review.stars;
         };
         let avg = Math.ceil(sum / counter);
-        product.stars = avg;
+        product.stars = avg;       
       }
-      this.RecommendedProductStarList.push(product.stars);
-  
+      this.RecommendedProductStarList.push(product.stars);  
     });
   }
 
@@ -91,14 +95,18 @@ export class SingleProductComponent extends AppComponent implements OnInit {
     let tmp: Product;
     let run: boolean = true;
     this.productService.getAll().subscribe(data => {
+    
       this.AllProducts = data;
       let counter = 0;
+    
       if (this.AllProducts.length > 5) {
         while (run) {
           random = this.getRandomInt(this.AllProducts.length);
+          
           if (!indexes.includes(random)) {
 
             tmp = this.AllProducts[random];
+           
             if (tmp.productID !== this.singleProduct.productID) {
               this.refreshREcommendedProductStarList(this.AllProducts[random]);
               indexes.push(random);
@@ -132,18 +140,20 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   }
 
   productCheck() {
-    let json_product: string = localStorage.getItem('product');
-    if (json_product == null) this.router.navigateByUrl("");
+    let json_product: string = localStorage.getItem('product');    
+    if (json_product == null) {
+      this.router.navigateByUrl("");
+    }
     else {
       this.singleProduct = JSON.parse(json_product);
       this.singleProductImageName = this.imageRoute + this.singleProduct.imageName;
       this.refreshReviewList();
-    }
+    }   
   }
 
 
 
-  refreshReviewList() {
+  refreshReviewList() {   
     this.reviewService.get(this.singleProduct.productID).subscribe(data => {
       this.ReviewList = data;
       for (let review of data) {
@@ -172,7 +182,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
             val = { productCartId: 0, productIndex: product.productID, cartIndex: userDetails.cartId, price: product.price, product_Name: product.product_Name, quantity: productQuantity };
 
             this.productCartSerivce.create(val).subscribe(res => { alert("Added the productcart"); });
-            console.log(val);
+          
           },
           err => {
             console.log(err);
@@ -210,5 +220,20 @@ export class SingleProductComponent extends AppComponent implements OnInit {
     super.onLogout(this.router);
   }
 
+  AddToFavouriteClicked(product: Product) {
+    if (!this.isLoggedIn) alert("You must log in to do this");
+    else {
+      let favouriteProduct: UsersFavouriteProducts;
+      
+      this.userService.getUserProfile().subscribe(data => {
+        this.userDetails = data;
+        favouriteProduct = {
+          productIndex: product.productID.toString(), userIndex: this.userDetails.id, id: 0
+        };       
 
+        this.usersFavouriteProducts.Post(favouriteProduct).subscribe(_ => { alert("Added this product to your favourites"); });
+      });
+      
+    }
+  }
 }

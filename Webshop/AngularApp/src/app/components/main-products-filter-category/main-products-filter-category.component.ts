@@ -186,7 +186,10 @@ export class MainProductsFilterCategoryComponent extends AppComponent implements
   }
 
  
-
+  productPictureClicked(product: Product) {
+    localStorage.setItem('product', JSON.stringify(product));
+    this.router.navigateByUrl('techonomy/products/' + product.productID);
+  }
 
   //Categóriára való szűrés navbar-ból
   categorySelector(categoryId: number) {
