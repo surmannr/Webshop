@@ -61,18 +61,20 @@ export class AddModifyProductComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     this.product_image_name = fileToUpload.name;
-   // console.log(fileToUpload.name);
-
-
-    this.service.uploadFile(formData).subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        this.progress = Math.round(100 * event.loaded / event.total);
-      }
-      else if (event.type === HttpEventType.Response) {
-        this.message = 'Upload success';
-        this.onUpLoadFinished.emit(event.body);
-      }
-    });;
+    //console.log(fileToUpload.type);
+    if (!fileToUpload.type.includes("image"))
+      alert("This is not an image");
+    else {
+      this.service.uploadFile(formData).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.progress = Math.round(100 * event.loaded / event.total);
+        }
+        else if (event.type === HttpEventType.Response) {
+          this.message = 'Upload success';
+          this.onUpLoadFinished.emit(event.body);
+        }
+      });;
+    }
   }
 
 /*----------------------------------------*/

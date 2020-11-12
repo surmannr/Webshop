@@ -56,6 +56,9 @@ import { MainProductsComponent } from './components/main-products/main-products.
 import { SingleProductComponent } from './components/single-product/single-product.component';
 import { CustomerCartComponent } from './components/customer-cart/customer-cart.component';
 import { MainFavouritesComponent } from './components/main-favourites/main-favourites.component';
+import { MainProductsFilterCategoryComponent } from './components/main-products-filter-category/main-products-filter-category.component';
+import { MainProductsFilterProductNameComponent } from './components/main-products-filter-product-name/main-products-filter-product-name.component';
+import { MainProductsFilterProductNameCategoryComponent } from './components/main-products-filter-product-name-category/main-products-filter-product-name-category.component';
 
 @NgModule({
   declarations: [
@@ -95,7 +98,7 @@ import { MainFavouritesComponent } from './components/main-favourites/main-favou
     RegisterCustomerComponent,
     RegisterAdminComponent,
     EditUserCredentials,   
-    MainPage, MainProductsComponent, SingleProductComponent, CustomerCartComponent, MainFavouritesComponent
+    MainPage, MainProductsComponent, SingleProductComponent, CustomerCartComponent, MainFavouritesComponent, MainProductsFilterCategoryComponent, MainProductsFilterProductNameComponent, MainProductsFilterProductNameCategoryComponent
   ],
   imports: [
     BrowserModule,

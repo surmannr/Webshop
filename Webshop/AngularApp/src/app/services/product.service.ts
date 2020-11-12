@@ -28,6 +28,19 @@ export class ProductService {
     return this.http.get<Product>(BASEURL.baseUrl+ 'Product/' + id);
   }
 
+  GetProductsByProductName(ProductNameForFiltering: string): Observable<Product[]> {
+    return this.http.get<Product[]>(BASEURL.baseUrl + 'Product/FilterByProductName/' + ProductNameForFiltering);
+  }
+
+  GetProductsByCategoryId(categoryIdForFiltering: number): Observable<Product[]> {
+    return this.http.get<Product[]>(BASEURL.baseUrl + 'Product/FilterByCategoryId/' + categoryIdForFiltering.toString());
+  }
+
+  GetByCategoryIdAndProductName(categoryIdForFiltering: number, ProductNameForFiltering: string): Observable<Product[]> {
+    return this.http.get<Product[]>(BASEURL.baseUrl + 'Product/FilterByCategoryIdAndProductName/1%2Ckarora?categoryIdForFiltering='
+      + categoryIdForFiltering.toString() + '&ProductNameForFiltering=' + ProductNameForFiltering);
+  }
+
   create(data): Observable<Product> {
     return this.http.post<Product>(BASEURL.baseUrl + 'Product', data);
   }

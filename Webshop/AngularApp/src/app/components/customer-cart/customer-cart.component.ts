@@ -90,7 +90,7 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
   //Categóriára való szűrés navbar-ból
   categorySelector(categoryId: number) {
     localStorage.setItem('categoryId', JSON.stringify(categoryId));
-    this.router.navigateByUrl('techonomy/products/category/' + categoryId);
+    this.router.navigateByUrl('techonomy/products/category/categoryFilter/' + categoryId);
   }
 
   //User kiléptetés && bejelenetkezés ellenőrzés

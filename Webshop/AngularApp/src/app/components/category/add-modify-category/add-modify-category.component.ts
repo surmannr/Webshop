@@ -38,15 +38,19 @@ export class AddModifyCategoryComponent implements OnInit {
     // console.log(fileToUpload.name);
 
 
-    this.service.uploadFile(formData).subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
-        this.progress = Math.round(100 * event.loaded / event.total);
-      }
-      else if (event.type === HttpEventType.Response) {
-        this.message = 'Upload success';
-        this.onUpLoadFinished.emit(event.body);
-      }
-    });;
+    if (!fileToUpload.type.includes("image"))
+      alert("This is not an image");
+    else {
+      this.service.uploadFile(formData).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
+          this.progress = Math.round(100 * event.loaded / event.total);
+        }
+        else if (event.type === HttpEventType.Response) {
+          this.message = 'Upload success';
+          this.onUpLoadFinished.emit(event.body);
+        }
+      });;
+    }
   }
 
 

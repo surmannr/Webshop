@@ -162,22 +162,26 @@ export class SingleProductComponent extends AppComponent implements OnInit {
 
 
   addedToCartClicked(productQuantity: number, product: Product) {
-    let userDetails;
-    this.userService.getUserProfile().subscribe(data => {
-      this.userService.getUserProfile().subscribe(
-        res => {
-          userDetails = res;
-          let val: ProductCart;
-          val = { productCartId: 0, productIndex: product.productID, cartIndex: userDetails.cartId, price: product.price, product_Name: product.product_Name, quantity: productQuantity };
-          
-          this.productCartSerivce.create(val).subscribe(res => { alert("Added the productcart"); });         
-          console.log(val);
-        },
-        err => {
-          console.log(err);
-        });      
-    });
-   
+    if (localStorage.getItem('token') != null) {
+      let userDetails;
+      this.userService.getUserProfile().subscribe(data => {
+        this.userService.getUserProfile().subscribe(
+          res => {
+            userDetails = res;
+            let val: ProductCart;
+            val = { productCartId: 0, productIndex: product.productID, cartIndex: userDetails.cartId, price: product.price, product_Name: product.product_Name, quantity: productQuantity };
+
+            this.productCartSerivce.create(val).subscribe(res => { alert("Added the productcart"); });
+            console.log(val);
+          },
+          err => {
+            console.log(err);
+          });
+      });
+    }
+    else {
+      this.router.navigateByUrl('/login');
+    }
    }
 
   checkQuantityInputValue() {
@@ -189,7 +193,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   //Categóriára való szűrés navbar-ból
   categorySelector(categoryId: number) {
     localStorage.setItem('categoryId', JSON.stringify(categoryId));
-    this.router.navigateByUrl('techonomy/products/category/' + categoryId);
+    this.router.navigateByUrl('techonomy/products/category/categoryFilter/' + categoryId);
   }
 
 

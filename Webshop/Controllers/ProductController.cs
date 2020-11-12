@@ -71,6 +71,77 @@ namespace Webshop.Controllers
             return mapppelt;
         }
 
+
+
+        // GET api/<ProductController>/5
+        [HttpGet("FilterByProductName/{ProductNameForFiltering}")]
+        public async Task<IEnumerable<ProductDto>> GetProductsByProductName(string ProductNameForFiltering)
+        {
+            var res = await _context.Products.Where(p => p.Product_Name.Contains(ProductNameForFiltering)).ToListAsync();
+            List<ProductDto> productList = new List<ProductDto>();
+            var reviews = await _context.Reviews.ToListAsync();
+
+            foreach (Product r in res)
+            {
+                var mapppelt = _mapper.Map<ProductDto>(r);
+                foreach (Review rev in reviews)
+                {
+                    if (r.ProductID == rev.ProductId) mapppelt.ReviewsID.Add(rev.ReviewId);
+                }
+                productList.Add(mapppelt);               
+            }
+
+            return productList;
+        }
+
+
+        // GET api/<ProductController>/5
+        [HttpGet("FilterByCategoryId/{categoryIdForFiltering}")]
+        public async Task<IEnumerable<ProductDto>> GetProductsByCategoryId(int categoryIdForFiltering)
+        {
+            var res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering).ToListAsync();
+            List<ProductDto> productList = new List<ProductDto>();
+            var reviews = await _context.Reviews.ToListAsync();
+
+            foreach (Product r in res)
+            {
+                var mapppelt = _mapper.Map<ProductDto>(r);
+                foreach (Review rev in reviews)
+                {
+                    if (r.ProductID == rev.ProductId) mapppelt.ReviewsID.Add(rev.ReviewId);
+                }
+                productList.Add(mapppelt);
+            }
+
+            return productList;
+        }
+
+
+
+        // GET api/<ProductController>/5
+        [HttpGet("FilterByCategoryIdAndProductName/{categoryIdForFiltering,ProductNameForFiltering}")]
+        public async Task<IEnumerable<ProductDto>> GetByCategoryIdAndProductName(int categoryIdForFiltering, string ProductNameForFiltering)
+        {
+            var res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering &&p.Product_Name.Contains(ProductNameForFiltering)).ToListAsync();
+            List<ProductDto> productList = new List<ProductDto>();
+            var reviews = await _context.Reviews.ToListAsync();
+
+            foreach (Product r in res)
+            {
+                var mapppelt = _mapper.Map<ProductDto>(r);
+                foreach (Review rev in reviews)
+                {
+                    if (r.ProductID == rev.ProductId) mapppelt.ReviewsID.Add(rev.ReviewId);
+                }
+                productList.Add(mapppelt);
+            }
+
+            return productList;
+        }
+
+
+
+
         // POST api/<ProductController>
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] ProductDto newProduct)

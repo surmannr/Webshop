@@ -42,33 +42,35 @@
     </ul>
   </nav>
   <!---------- content ---------------->
-  <div class="small-container" >
+  <div class="small-container">
     <div class="row marginer">
       <p class="titlecart pta">Products</p>
     </div>
     <div class="row marginer2">
       <div class="filter">
         <label for="name">Name filter:</label>
-        <input type="search" name="name" id="name"  #inputValue (change)="nameFilter(inputValue.value)" [(ngModel)]="inputFieldName">
+        <input type="search" name="name" id="name" [(ngModel)]="inputFieldName">
       </div>
       <div class="filter">
         <label for="category">Category filter:</label>
-        <select class="form-control" id="category" name="category" [(ngModel)]="selectedOption_category" >
+        <select class="form-control" id="category" name="category" [(ngModel)]="selectedOption_category">
           <option selected="selected" value="-1">none</option>
-          <option *ngFor="let categoryItem of CategoryList" value="{{categoryItem.categoryId}}"   >{{categoryItem.category_Name}}</option>
+          <option *ngFor="let categoryItem of CategoryList" value="{{categoryItem.categoryId}}">{{categoryItem.category_Name}}</option>
 
         </select>
       </div>
       <div class="filter">
-        <a><i class="fas fa-search"  (click)="filterClicked()"></i></a>
+        <a><i class="fas fa-search" (click)="filterClicked()"></i></a>
       </div>
     </div>
+    <div class="row" *ngIf="ProductImageNameList.length == 0" style="padding-top:100px;padding-bottom:100px;"><h2>Couldn't find any products that you were looking for</h2></div>
+
     <div class="row">
       <div class="col-4" *ngFor="let item of ProductImageNameList; let j = index">
 
-        <img src="{{ProductImageNameList[j]}}" *ngIf="!ProductList[j].hidden"  (click)="productPictureClicked(ProductList[j])">
-        <h4   *ngIf="!ProductList[j].hidden" >{{ProductList[j].product_Name}}</h4>
-        <div class="rating"  *ngIf="!ProductList[j].hidden">
+        <img src="{{ProductImageNameList[j]}}" (click)="productPictureClicked(ProductList[j])">
+        <h4>{{ProductList[j].product_Name}}</h4>
+        <div class="rating">
 
           <!-- Nem akarom elhinni, hogy ezt nem lehetne másként megcsinálni -->
           <i class="fas fa-star" *ngIf="ProductList[j].stars >= 1"></i>
@@ -99,7 +101,7 @@
 
         </div>
 
-        <p  *ngIf="!ProductList[j].hidden">{{ProductList[j].price}}</p>
+        <p>{{ProductList[j].price}}</p>
 
       </div>
     </div>

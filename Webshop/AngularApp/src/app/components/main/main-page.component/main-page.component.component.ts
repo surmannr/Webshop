@@ -85,7 +85,7 @@ export class MainPage extends AppComponent implements OnInit {
   //Categóriára való szűrés navbar-ból
   categorySelector(categoryId: number) {
     localStorage.setItem('categoryId', JSON.stringify(categoryId));
-    this.router.navigateByUrl('techonomy/products/category/' + categoryId);
+    this.router.navigateByUrl('techonomy/products/category/categoryFilter/' + categoryId);
   }
 
   //Categóriára való szűrés képre kattintás esetén
@@ -93,7 +93,7 @@ export class MainPage extends AppComponent implements OnInit {
     let index = str;
     let categoryId = this.CategoryList[index].categoryId;
     localStorage.setItem('categoryId', JSON.stringify(categoryId));
-    this.router.navigateByUrl('techonomy/products/category/' + categoryId);
+    this.router.navigateByUrl('techonomy/products/category/categoryFilter/' + categoryId);
   }
 
 

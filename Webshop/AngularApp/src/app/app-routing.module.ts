@@ -26,6 +26,9 @@ import { MainProductsComponent } from './components/main-products/main-products.
 import { SingleProductComponent } from './components/single-product/single-product.component';
 import { CustomerCartComponent } from './components/customer-cart/customer-cart.component';
 import { MainFavouritesComponent } from './components/main-favourites/main-favourites.component';
+import { MainProductsFilterCategoryComponent } from './components/main-products-filter-category/main-products-filter-category.component';
+import { MainProductsFilterProductNameComponent } from './components/main-products-filter-product-name/main-products-filter-product-name.component';
+import { MainProductsFilterProductNameCategoryComponent } from './components/main-products-filter-product-name-category/main-products-filter-product-name-category.component';
 const routes: Routes = [  
   { path: 'category', component: CategoryComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },  
   { path: 'supplier', component: SupplierComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
@@ -47,7 +50,10 @@ const routes: Routes = [
   { path: 'order/orderitems', component: OrderitemComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
   { path: 'order/orderitems/add', component: AddModifyOrderitemComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin'] } },
   { path: '', component: MainPage },
-  { path: 'techonomy/products/category/:id', component: MainProductsComponent },
+  { path: 'techonomy/products/category/nofilter', component: MainProductsComponent },
+  { path: 'techonomy/products/category/categoryFilter/:id', component: MainProductsFilterCategoryComponent },
+  { path: 'techonomy/products/category/productnameFilter/:name', component: MainProductsFilterProductNameComponent },
+  { path: 'techonomy/products/category/mixedFilter/categoryId/:id/productName/:productName', component: MainProductsFilterProductNameCategoryComponent },
   { path: 'techonomy/products/:id', component: SingleProductComponent },
   { path: 'techonomy/cart', component: CustomerCartComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin', 'Customer'] } },
   { path: 'techonomy/favourites', component: MainFavouritesComponent, canActivate: [AuthGuard], data: { permittedRoles: ['Admin', 'Customer'] }  }

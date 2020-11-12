@@ -18,13 +18,18 @@ export class MainProductsComponent extends AppComponent implements OnInit {
   inputFieldName: string;
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
-    private reviewService: ReviewService,private router: Router) { super(); }
+    private reviewService: ReviewService, private router: Router) { super(); }
 
+
+   
 
   
   ProductImageNameList: string[] = [];
 
   ngOnInit(): void {
+    localStorage.removeItem('categoryId');
+    localStorage.removeItem('productName');
+    this.selectedOption_category = JSON.parse(JSON.stringify(-1));
     this.refreshCategoryList();
     this.refreshProductList();
     this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
@@ -73,8 +78,7 @@ export class MainProductsComponent extends AppComponent implements OnInit {
 
 
   removeFilterFromProducts() {
-    for (let product of this.ProductList)
-      product.hidden = false;
+    this.router.navigateByUrl("/techonomy/products/category/nofilter");
   }
 
   nameFilter(name: string) {
@@ -111,8 +115,8 @@ export class MainProductsComponent extends AppComponent implements OnInit {
     else this.removeFilterFromProducts();
   }
 
-  filterClicked() {
-
+   filterClicked() {
+     console.log("filterClicked");
     //Remove the previous filter form the products
     this.removeFilterFromProducts();
 
@@ -125,11 +129,11 @@ export class MainProductsComponent extends AppComponent implements OnInit {
         if (this.selectedOption_category !== 'undefined' && JSON.parse(this.selectedOption_category) !== -1) {
 
           //There is a valid category selected and there is a name for filtering too
-          this.filterByNameAndCategory(this.inputFieldName, JSON.parse(this.selectedOption_category));
+           this.filterByNameAndCategory(this.inputFieldName, JSON.parse(this.selectedOption_category));
         }
 
         //There is no valid category selected for filtering but there is a name
-        else this.filterByName(this.inputFieldName);
+        else  this.filterByName(this.inputFieldName);
 
       }
       else {
@@ -143,7 +147,7 @@ export class MainProductsComponent extends AppComponent implements OnInit {
           }
 
           //The category filter's value is none and there is no name for the filer so remove the filtering property from the products
-          else this.removeFilterFromProducts();
+          else   this.removeFilterFromProducts();
         }
       }
     }
@@ -153,38 +157,30 @@ export class MainProductsComponent extends AppComponent implements OnInit {
       if (JSON.parse(this.selectedOption_category) !== -1) {
 
         //There is a valid category selected for filtering
-        this.filterByCategory(JSON.parse(this.selectedOption_category));
+          this.filterByCategory(JSON.parse(this.selectedOption_category));
       }
 
       //There is no valid category selected for filtering
-      else this.removeFilterFromProducts();
+      else  this.removeFilterFromProducts();
     }
   }
 
   filterByName(productName: string) {
-    for (let product of this.ProductList) {
-      if (!product.product_Name.includes(productName)) {
-        product.hidden = true;
-      }
-    }
+    localStorage.setItem('productName', JSON.stringify(productName));
+    this.router.navigateByUrl('techonomy/products/category/productnameFilter/' + productName);
   }
 
 
-  filterByCategory(categoryId: number) {
-    for (let product of this.ProductList) {
-      if (product.categoryId !== categoryId) {
-        product.hidden = true;
-      }
-    }
+  filterByCategory(categoryId: number) {    
+       localStorage.setItem('categoryId', JSON.stringify(categoryId));
+       this.router.navigateByUrl('techonomy/products/category/categoryFilter/' + categoryId);
   }
 
 
   filterByNameAndCategory(productName: string, categoryId: number) {
-    for (let product of this.ProductList) {
-      if (product.categoryId !== categoryId || !product.product_Name.includes(productName)) {
-        product.hidden = true;
-      }
-    };
+    localStorage.setItem('productName', JSON.stringify(productName));
+    localStorage.setItem('categoryId', JSON.stringify(categoryId));       
+    this.router.navigateByUrl('techonomy/products/category/mixedFilter/categoryId/' + categoryId + "/productName/" + productName);
   }
 
   productPictureClicked(product: Product) {
