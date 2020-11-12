@@ -96,6 +96,14 @@ a {
   left: calc(50% - 90px);
 }
 
-  a:hover {
-    color: white;
+  a:hover{
+    color: white !important;
+    background: none !important;
   }
+.loginbox input[type="text"]:focus, input[type="password"]:focus {
+  outline: none !important;
+  outline-width: 0 !important;
+  box-shadow: none !important;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+}
