@@ -12,12 +12,17 @@ export class EditUserCredentials implements OnInit {
 
   constructor(private service: UserService, private router: Router) { }
 
+
+  avatarImageRoute: string = this.service.avatarImageRoute;
   userDetails;
 
   @Input() user: User;
   username: string;
   email: string;
   password: string;
+  swap_enabled_username: boolean;
+  swap_enabled_email: boolean;
+
 
   ngOnInit(): void {
 
@@ -27,7 +32,9 @@ export class EditUserCredentials implements OnInit {
       },
       err => {
         console.log(err);
-      });   
+      });
+    this.swap_enabled_username = true;
+    this.swap_enabled_email = true;
   }
 
   updateUser() {
@@ -37,7 +44,18 @@ export class EditUserCredentials implements OnInit {
    
   }
 
-
+  swapToValueFromPlaceHolder_username() {
+    if (this.swap_enabled_username) {
+      this.username = this.userDetails.username;
+      this.swap_enabled_username = !this.swap_enabled_username;
+    }
+  }
+  swapToValueFromPlaceHolder_email() {
+    if (this.swap_enabled_email) {
+      this.email = this.userDetails.email;
+      this.swap_enabled_email = !this.swap_enabled_email;
+    }
+  }
 
 
 }

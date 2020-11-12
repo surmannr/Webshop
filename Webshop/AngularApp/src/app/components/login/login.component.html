@@ -2,7 +2,7 @@
 <body>
   <div class="loginbox log">
     <div>
-      <img src="assets/avatar.png" class="avatar" alt="hello">
+      <img src="{{avatarImageRoute}}" class="avatar" alt="hello">
     </div>    
     <h1>Login here</h1>
     <form #form='ngForm' class="mb-4" autocomplete="off" (submit)="onSubmit(form)">
@@ -12,8 +12,8 @@
       <input type="password" class="form-control" #Username="ngModel" name="Password" [(ngModel)]="formModel.Password" required>
       <input type="submit" name="" value="Login" [disabled]="form.invalid">
     </form>
-    <a href="#">Forget your password?</a><br>
-    <a href="#">Don't have an account?</a>
+    <a href="#">Forgot your password?</a><br>
+    <a routerLink="/register">Don't have an account?</a>
   </div>
 </body>
 

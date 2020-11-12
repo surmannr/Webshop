@@ -1,4 +1,6 @@
-﻿namespace Webshop.Data
+﻿using System.Security.Cryptography;
+
+namespace Webshop.Data
 {
     public class ReviewDto
     {
@@ -14,6 +16,9 @@
 
         // Egy review egy felhasználóhoz tartozik
         public string UserId { get; set; }
+
+
+        public string Username { get; set; }
         //public User User { get; set; }
     }
 }

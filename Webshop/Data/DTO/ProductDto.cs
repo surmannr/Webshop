@@ -20,5 +20,10 @@ namespace Webshop.Data
 
         //Egy terméknek több review-ja is lehet
         public List<int> ReviewsID { get; set; } = new List<int>();
+
+        public string ImageName { get; set; }
+
+
+
     }
 }

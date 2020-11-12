@@ -1,39 +1,23 @@
-<div class="form">
-  <label class="col-sm-4 col-form-label">
-    Supplier name
-  </label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="name "
-           *ngIf="item !=null" placeholder="{{item.name}}" />
+<body>
+  <div class="addmodify supplier">
+    <h1 *ngIf="item == null">Supplier add</h1>
+    <h1 *ngIf="item != null">Supplier modify</h1> 
+    <form autocomplete="off">
+      <p>Supplier Name</p>
+      <input type="text" [(ngModel)]="name" name="name_null" placeholder="Enter supplier name" *ngIf="item == null" />
+      <input type="text" [(ngModel)]="name" name="name" placeholder="{{item.name}}" *ngIf="item != null"
+             (click)="swapToValueFromPlaceHolder_name()"/>
+      <p>Supplier address</p>
+      <input type="text" [(ngModel)]="address" name="address_null" placeholder="Enter supplier address" *ngIf="item == null" />
+      <input type="text" [(ngModel)]="address" name="address" placeholder="{{item.address}}" *ngIf="item != null"
+             (click)="swapToValueFromPlaceHolder_address()"/>
+      <p>Multiplier</p>
+      <input type="number" [(ngModel)]="multiplier " name="multiplier_null" placeholder="Enter multiplier" *ngIf="item == null" />
+      <input type="number" [(ngModel)]="multiplier " name="multiplier" placeholder="{{item.multiplier}}" *ngIf="item != null"
+             (click)="swapToValueFromPlaceHolder_multiplier()"/>
+      <input type="submit" name="" value="Add" (click)="addSupplier()" *ngIf="item == null">
+      <input type="submit" name="" value="Modify" (click)="updateSupplier()" *ngIf="item != null">
+      <input type="submit" name="" value="Cancel" (click)="cancel()">
+    </form>
   </div>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="name "
-           *ngIf="item ==null" placeholder="Enter the supplier name" />
-  </div>
-  <label class="col-sm-4 col-form-label">
-    Supplier address
-  </label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="address "
-           *ngIf="item == null" placeholder="enter the addresss" />
-  </div>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="address "
-           *ngIf="item != null" placeholder="{{item.address}}" />
-  </div>
-  <label class="col-sm-4 col-form-label">
-    Supplier multiplier
-  </label>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="multiplier "
-           *ngIf="item == null" placeholder="Enter the multiplier" />
-  </div>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="multiplier "
-           *ngIf="item !=null" placeholder="{{item.multiplier}}" />
-  </div>
-
-  <button (click)="addSupplier()" *ngIf="item == null" class=" btn btn-primary">Add</button>
-  <button (click)="updateSupplier()" *ngIf="item != null" class=" btn btn-primary">Update</button>
-
-</div>
+</body>

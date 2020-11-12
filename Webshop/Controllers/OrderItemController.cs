@@ -43,6 +43,20 @@ namespace Webshop.Controllers
             var mappelt = _mapper.Map<OrderItemDto>(res);
             return mappelt;
         }
+        
+        
+        [HttpGet("getByOrderId/{orderId}")]         
+        public async Task<ActionResult<List<OrderItemDto>>> GetByOrderId(int orderId)
+        {
+            var res = await _context.OrderItems.Where(c => c.OrderId == orderId).ToListAsync();
+            if (res == null) return null;
+            var mappelt = _mapper.Map<List<OrderItemDto>>(res);
+            return mappelt;
+        }
+
+
+
+
 
         // POST api/<ProductCartController>
         [HttpPost]

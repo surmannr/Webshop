@@ -27,16 +27,6 @@ namespace Webshop.Data
                 .WithOne(i => i.User)
                 .HasForeignKey<Cart>(b => b.UserId);
 
-            modelBuilder.Entity<ProductCart>()
-                        .HasKey(bc => new { bc.CartId, bc.ProductId });
-            modelBuilder.Entity<ProductCart>()
-                        .HasOne(bc => bc.Cart)
-                        .WithMany(b => b.ProductCart)
-                        .HasForeignKey(bc => bc.CartId);
-            modelBuilder.Entity<ProductCart>()
-                        .HasOne(bc => bc.Product)
-                        .WithMany(c => c.ProductCart)
-                        .HasForeignKey(bc => bc.ProductId);
         }
          public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
                : base(options)

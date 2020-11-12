@@ -12,7 +12,9 @@ export class OrderitemService {
  
   constructor(private http: HttpClient) {
   }
-
+  getByOrderId(orderId: number): Observable<OrderItem[]> {
+    return this.http.get<OrderItem[]>(BASEURL.baseUrl + 'OrderItem/getByOrderId/' + orderId);
+  }
   getAll(): Observable<OrderItem[]> {
     return this.http.get<OrderItem[]>(BASEURL.baseUrl + 'OrderItem');
   }
@@ -32,4 +34,5 @@ export class OrderitemService {
   delete(id): Observable<OrderItem> {
     return this.http.delete<OrderItem>(BASEURL.baseUrl+ 'OrderItem/' + id);
   }
+
 }

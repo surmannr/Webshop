@@ -22,6 +22,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Webshop.Data.Models;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace Webshop
 {
@@ -45,12 +46,18 @@ namespace Webshop
             services.AddCors(options =>
             {
                 options.AddPolicy("MyCorsPolicy", builder => builder
-                    .WithOrigins(Configuration["ApplicationSettings:Server_Url"].ToString(), Configuration["ApplicationSettings:Client_Url"].ToString(),
-                    Configuration["ApplicationSettings:Home_Url"].ToString())
-                    .AllowAnyMethod()
-                    .AllowCredentials()
-                    .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header", "Authorization"));
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()            
+                    .AllowAnyHeader());
             });
+            services.Configure<FormOptions>(o =>
+            {
+                o.ValueLengthLimit = int.MaxValue;
+                o.MultipartBodyLengthLimit = int.MaxValue;
+                o.MemoryBufferThreshold = int.MaxValue;
+
+            });
+
             services.AddAutoMapper(typeof(Startup));
             services.AddControllers();
             services.AddMvc();
@@ -59,7 +66,7 @@ namespace Webshop
                     Configuration.GetConnectionString("DefaultConnection")));
 
 
-
+            //Ahhoz, hogy a role hozzáadás mûködjön az ehhez szükséges service-t hozzá kell adni
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -94,19 +101,25 @@ namespace Webshop
                 c.IncludeXmlComments(xmlPath);
             });
 
-
+            //Titkosításhoz használt kulcs
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
+
             //JWT Authentication
             services.AddAuthentication(x => {
+                //JWT authentication scheme settings
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(x => {
+                //JWT configuration
                 x.RequireHttpsMetadata = false;
+                //Szerveren nem tároljuk a token-t
                 x.SaveToken = false;
                 x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
+                    //Security key-t ellenõrzi amikor  token-t maj használja
                     ValidateIssuerSigningKey = true,
+                    //A kulcs amit a titkosításhoz használunk
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
@@ -153,7 +166,11 @@ namespace Webshop
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-
+            app.UseStaticFiles(new StaticFileOptions 
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),@"Resources")),
+                RequestPath = new PathString("/Resources")
+            });
             app.UseRouting();
 
             app.UseAuthentication();

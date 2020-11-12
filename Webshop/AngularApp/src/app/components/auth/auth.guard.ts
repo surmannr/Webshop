@@ -16,7 +16,9 @@ export class AuthGuard implements CanActivate {
     ): boolean  {
     if (localStorage.getItem('token') != null) {
       let roles = route.data['permittedRoles'] as Array<string>;
+      //Ha role-hoz van kötve a route elérése
       if (roles) {
+        //Megvan-e minden role-ja ami kell a route-hoz
         if (this.service.roleMatch(roles)) return true;
         else {
           this.router.navigate(['/forbidden']);

@@ -1,70 +1,79 @@
-<div class="form">
-  <label class="col-sm-2 col-form-label">
-    Product Name
-  </label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="product_Name"
-           *ngIf="item != null" placeholder="{{item.product_Name}}" />
+<body>
+  <div class="addmodify product">
+    <h1 *ngIf="item == null">Product add</h1>
+    <h1 *ngIf="item != null">Product modify</h1>
+    <form autocomplete="off">
+
+      <p>Product Name</p>
+      <input type="text" [(ngModel)]="product_Name" name="name_null" placeholder="Enter product name" *ngIf="item == null" />
+      <input type="text" name="name" [(ngModel)]="product_Name" *ngIf="item != null" placeholder="{{item.product_Name}}"
+             (click)="swapToValueFromPlaceHolder_name()">
+
+
+      <p>Price</p>
+      <input type="number" [(ngModel)]="price" name="price_null" placeholder="Enter price" *ngIf="item == null" />
+      <input type="number" name="price" [(ngModel)]="price" *ngIf="item != null" placeholder="{{item.price}}"
+             (click)="swapToValueFromPlaceHolder_price()">
+
+
+      <p>Shipping Price</p>
+      <input type="number" [(ngModel)]="shipping_Price" name="shippping_price_null" placeholder="Enter shipping price" *ngIf="item == null" />
+      <input type="number" name="shipping_price" [(ngModel)]="shipping_Price" *ngIf="item != null" placeholder="{{item.shipping_Price}}"
+             (click)="swapToValueFromPlaceHolder_shippingPrice()">
+
+
+      <p>Category</p>
+      <div *ngIf="item == null">
+        <select id="category" class="form-control" name="category" [(ngModel)]="selectedOption_category">
+          <option *ngFor="let dataItem of CategoryList" value="{{dataItem.categoryId}}">{{dataItem.category_Name}}</option>
+        </select>
+      </div>
+
+      <input type="text" name="category_edit" [(ngModel)]="category" *ngIf="item != null && selectedCategory != true" placeholder="{{item.category_Name}}"
+             (click)="selectCategory()" />
+
+      <div *ngIf="item != null &&selectedCategory">
+        <select id="category" class="form-control" name="category" [(ngModel)]="selectedOption_category">
+          <option *ngFor="let dataItem of CategoryList" value="{{dataItem.categoryId}}">{{dataItem.category_Name}}</option>
+        </select>
+      </div>
+
+
+      <p>Supplier</p>
+      <div *ngIf="item == null">
+        <select class="form-control" id="beszallito" name="beszallito" [(ngModel)]="selectedOption_supplier">
+          <option *ngFor="let dataItem of SupplierList" value="{{dataItem.supplierId}}">{{dataItem.name}}</option>
+        </select>
+      </div>
+
+      <input type="text" name="supplier_edit" [(ngModel)]="supplier" *ngIf="item != null && selected_supplier != true" placeholder="{{item.name}}"
+             (click)="selectSupplier()" />
+
+      <div *ngIf="item != null && selected_supplier">
+        <select class="form-control" id="beszallito" name="beszallito" [(ngModel)]="selectedOption_supplier">
+          <option *ngFor="let dataItem of SupplierList" value="{{dataItem.supplierId}}">{{dataItem.name}}</option>
+        </select>
+      </div>
+
+
+      <p>Product Description</p>
+      <input type="text" name="description" [(ngModel)]="product_Description" *ngIf="item != null" placeholder="{{item.product_Description}}"
+             (click)="swapToValueFromPlaceHolder_description()" />
+      <input type="text" name="description_null" [(ngModel)]="product_Description" *ngIf="item == null" placeholder="Enter product description" />
+
+
+      <p>Product Image</p>
+      <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display: none" />
+      <button type="button" class="btn btn-success" (click)="file.click()">Upload file</button>
+      <div class="col-md-4">
+        <span class="upload" *ngIf="progress >0">{{progress}}%</span>
+        <span class="upload" *ngIf="message">{{message}}</span>
+      </div>
+
+
+      <input type="submit" name="addButton" value="Add" (click)="addProduct()" *ngIf="item == null">
+      <input type="submit" name="editButton" value="Modify" (click)="updateProduct()" *ngIf="item != null">
+      <input type="submit" name="cancelButton" value="Cancel" (click)="cancel()">
+    </form>
   </div>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="product_Name"
-           *ngIf="item == null" placeholder="Enter the product name" />
-  </div>
-  <label class="col-sm-2 col-form-label">
-    Product price
-  </label>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="price"
-           *ngIf="item == null" placeholder="Enter the price" />
-  </div>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="price"
-           *ngIf="item != null" placeholder="{{item.price}}" />
-  </div>
-  <label class="col-sm-2 col-form-label">
-    Product shipping price
-  </label>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="shipping_Price"
-           *ngIf="item == null" placeholder="Enter the price" />
-  </div>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="shipping_Price"
-           *ngIf="item  != null" placeholder="{{item.shipping_Price}}" />
-  </div>
-  <label class="col-sm-2 col-form-label">
-    Product category id
-  </label>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="categoryId"
-           *ngIf="item == null" placeholder="Enter the category id" />
-  </div>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="categoryId"
-           *ngIf="item != null" placeholder="{{item.categoryId}}" />
-  </div>
-  <label class="col-sm-2 col-form-label">
-    Product supplier id
-  </label>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="supplierId"
-           *ngIf="item == null" placeholder="Enter the supplier id" />
-  </div>
-  <div class="col-sm-10">
-    <input type="number" class="form-control" [(ngModel)]="supplierId"
-           *ngIf="item != null" placeholder="{{item.supplierId}}" />
-  </div>
-  <label class="col-sm-2 col-form-label">
-    Product description
-  </label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="product_Description"
-           *ngIf="item == null" placeholder="Enter the product description" />
-  </div>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="product_Description"
-           *ngIf="item != null" placeholder="{{item.product_Description}}" />
-  </div>
-  <button (click)="addProduct()" *ngIf="item == null" class=" btn btn-primary">Add</button>
-  <button (click)="updateProduct()" *ngIf="item != null" class=" btn btn-primary">Edit</button>
-</div>
+</body>

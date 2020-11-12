@@ -18,18 +18,18 @@ export class AddModifyProductcartComponent implements OnInit {
 
   ngOnInit(): void {
     this.productCartId = this.pcart.productCartId;
-    this.productId = this.pcart.productId;
-    this.cartId = this.pcart.cartId;
+    this.productId = this.pcart.productIndex;
+    this.cartId = this.pcart.cartIndex;
   }
   addProductCart() {
     let val: ProductCart;
-    val = { productCartId: this.productCartId, productId: this.productId, cartId: this.cartId };
+    val = { productCartId: this.productCartId, productIndex: this.productId, cartIndex: this.cartId, price: 0, product_Name: "", quantity: 0 };
     this.service.create(val).subscribe(res => { alert("Added the productcart"); });
   }
 
   updateProductCart() {
     let val: ProductCart;
-    val = { productCartId: this.productCartId, productId: this.productId, cartId: this.cartId };
+    val = { productCartId: this.productCartId, productIndex: this.productId, cartIndex: this.cartId, price: 0, product_Name: "", quantity: 0 };
     this.service.update(this.productCartId, val).subscribe(res => { alert("Updated the productcart"); });
   }
 }

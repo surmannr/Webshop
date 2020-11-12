@@ -5,4 +5,5 @@ export class Review {
   reviewId: number;
   productId: number;
   userId: string;
+  username: string;
 }

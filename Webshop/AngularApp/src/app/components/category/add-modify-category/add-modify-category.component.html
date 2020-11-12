@@ -1,16 +1,24 @@
-<div class="form">
-  <label class="col-sm-2 col-form-label">
-    Category Name
-  </label>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="category_Name "
-           *ngIf="item == null" placeholder="Enter category name" />
-  </div>
-  <div class="col-sm-10">
-    <input type="text" class="form-control" [(ngModel)]="category_Name "
-           *ngIf="item != null" placeholder="{{item.category_Name}}" />
-  </div>
-  <button (click)="addCategory()" *ngIf="item == null" class=" btn btn-primary">Add</button>
-  <button (click)="updateCategory()" *ngIf="item != null" class=" btn btn-primary">Update</button>
+<body>
+  <div class="addmodify category">
+    <h1 *ngIf="item == null">Category add</h1>
+    <h1 *ngIf="item != null">Category modify</h1>
+    <form>
+      <p>Category Name</p>
+      <input type="text" [(ngModel)]="category_Name" name="null" placeholder="Enter category name" *ngIf="item == null" />
+      <input type="text" name="notNull" [(ngModel)]="category_Name" *ngIf="item != null" placeholder="{{item.category_Name}}" (click)="swapToValueFromPlaceHolder()">
 
-</div>
+      <p>Category Image</p>
+      <input type="file" #file placeholder="Choose file" (change)="uploadFile(file.files)" style="display: none" />
+      <button type="button" class="btn btn-success" (click)="file.click()">Upload file</button>
+      <div class="col-md-4">
+        <span class="upload" *ngIf="progress >0">{{progress}}%</span>
+        <span class="upload" *ngIf="message">{{message}}</span>
+      </div>
+
+
+      <input type="submit" name="" value="Add" (click)="addCategory()" *ngIf="item == null">
+      <input type="submit" name="" value="Modify" (click)="updateCategory()" *ngIf="item != null">
+      <input type="submit" name="" value="Cancel" (click)="cancel()">
+    </form>
+  </div>
+</body>

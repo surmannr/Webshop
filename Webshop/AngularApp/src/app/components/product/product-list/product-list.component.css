@@ -23,9 +23,10 @@ body {
 }
 
 nav {
-  background: #2f3640;
+  background: #1e272e;
   height: 80px;
   width: 100%;
+  color: white;
 }
 
 label.logo {
@@ -131,6 +132,7 @@ a.active, a:hover {
   padding: 32px;
   font-family: "Roboto", sans-serif;
   background: linear-gradient(-30deg,#ff6b6b,#ff9f43);
+  min-height: 100vh;
 }
 
   .table-container h2.table-heading {
@@ -221,4 +223,137 @@ h3.table-heading {
 
 tbody tr:hover {
   background: #d1d8e0;
+}
+
+.newbutton label {
+  font-size: 30px;
+  font-weight: bolder;
+  margin-bottom: -10px;
+  border-bottom: 2px solid black;
+  padding: 10px;
+}
+
+.addmodify p {
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+}
+
+.addmodify input, .addmodify select {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+  .addmodify input[type="text"], input[type="number"] {
+    border: none;
+    border-bottom: 1px solid #ffffff;
+    background: transparent;
+    outline: none;
+    height: 40px;
+    color: white;
+    font-size: 20px;
+  }
+
+  .addmodify input[type="submit"] {
+    border: none;
+    outline: none;
+    height: 40px;
+    background: #fb2525;
+    color: white;
+    font-size: 20px;
+    border-radius: 20px;
+    margin-top: 20px;
+  }
+
+    .addmodify input[type="submit"]:hover {
+      cursor: pointer;
+      background: aliceblue;
+      color: #000;
+    }
+
+.addmodify select {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid #ffffff;
+}
+
+  .addmodify select:focus, select:active {
+    background: transparent;
+    border: none;
+  }
+
+option {
+  border: 1px solid #ffffff;
+  background: black;
+}
+
+  option:checked {
+    background: white;
+  }
+
+  option:hover {
+    background: #ff7f50;
+  }
+
+h1 {
+  margin: 0;
+  padding: 0 0 20px;
+  text-align: center;
+  font-size: 45px;
+}
+
+.product {
+  width: 520px;
+  height: 700px;
+  background: #000;
+  color: #fff;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  padding: 25px 30px;
+  border-radius: 20px;
+}
+
+.supplier {
+  width: 520px;
+  height: 500px;
+  background: #000;
+  color: #fff;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  padding: 25px 30px;
+  border-radius: 20px;
+}
+
+.category {
+  width: 520px;
+  height: 350px;
+  background: #000;
+  color: #fff;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  padding: 25px 30px;
+  border-radius: 20px;
+}
+
+.order {
+  width: 520px;
+  height: 550px;
+  background: #000;
+  color: #fff;
+  top: 50%;
+  left: 50%;
+  position: absolute;
+  transform: translate(-50%,-50%);
+  box-sizing: border-box;
+  padding: 25px 30px;
+  border-radius: 20px;
 }

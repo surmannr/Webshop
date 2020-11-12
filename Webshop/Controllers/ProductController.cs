@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
@@ -14,16 +16,18 @@ namespace Webshop.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-
+        private readonly IHostingEnvironment _hostingEnv;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
 
-        public ProductController(ApplicationDbContext context, IMapper mapper, Microsoft.AspNetCore.Identity.UserManager<User> userManager)
+        public ProductController(ApplicationDbContext context, IMapper mapper,
+            Microsoft.AspNetCore.Identity.UserManager<User> userManager, IHostingEnvironment hostingEnv)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
+            _hostingEnv = hostingEnv;
         }
         
         // GET: api/<ProductController>
@@ -72,7 +76,8 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] ProductDto newProduct)
         {
             Product product = _mapper.Map<Product>(newProduct);
-            if (product.Product_Name == null || product.Price == 0 || product.Shipping_Price == 0) return NoContent();
+            if (product.Product_Name == null || product.Price == 0 || product.Shipping_Price == 0) return null;
+         
             _context.Products.Add(product);
             await _context.SaveChangesAsync();
             return Ok();
@@ -91,7 +96,7 @@ namespace Webshop.Controllers
             if (newProduct.CategoryId != 0) productWaitingForUpdate.CategoryId = newProduct.CategoryId;
             if (newProduct.Shipping_Price != 0) productWaitingForUpdate.Shipping_Price = newProduct.Shipping_Price;
             if (newProduct.SupplierId != 0) productWaitingForUpdate.SupplierId = newProduct.SupplierId;
-
+            if (newProduct.ImageName != null) productWaitingForUpdate.ImageName = newProduct.ImageName;
             await _context.SaveChangesAsync();
             return Ok();
         }

@@ -27,8 +27,11 @@ export class ProductcartListComponent implements OnInit {
   addClick() {
     this.pcart = {
       productCartId: 0,
-      productId: 0,
-      cartId: 0
+      productIndex: 0,
+      cartIndex: 0,
+      price: 0,
+      product_Name: "",
+      quantity: 0
     }
     this.ModalTitle = "Add ProductCart";
     this.ActivateAddEditpcartComp = true;

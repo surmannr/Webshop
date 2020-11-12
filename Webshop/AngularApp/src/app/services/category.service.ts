@@ -9,9 +9,12 @@ import { BASEURL } from './baseUrl';
 @Injectable({
   providedIn: 'root'
 })
-export class CategoryService {
-  readonly baseUrl = 'https://localhost:44308/api/Category';
+export class CategoryService {  
   constructor(private http: HttpClient) {
+  }
+
+  uploadFile(formData): Observable<any> {
+    return this.http.post<any>(BASEURL.baseUrl + 'Upload', formData, { reportProgress: true, observe: 'events' });
   }
 
   getAll(): Observable<Category[]> {

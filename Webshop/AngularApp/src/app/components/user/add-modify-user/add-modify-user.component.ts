@@ -11,7 +11,7 @@ import { UserService } from '../../../services/user.service';
 export class AddModifyUserComponent implements OnInit {
 
   constructor(public service: UserService, private router: Router) { }
-
+  avatarImageRoute: string = this.service.avatarImageRoute;
   item: User;
 
   @Input() user: User;
@@ -20,7 +20,11 @@ export class AddModifyUserComponent implements OnInit {
   email: string;
   password: string;
 
+  swap_enabled_username: boolean;
+  swap_enabled_email: boolean;
+
   ngOnInit(): void {
+    console.log("image route: " + this.avatarImageRoute);
     try {
       var _item_json = localStorage.getItem('item');
       this.item = JSON.parse(_item_json);
@@ -29,6 +33,8 @@ export class AddModifyUserComponent implements OnInit {
     } catch (err) {
       this.item = null;
     }
+    this.swap_enabled_username = true;
+    this.swap_enabled_email = true;
   }
 
   addUser() {
@@ -57,4 +63,16 @@ export class AddModifyUserComponent implements OnInit {
     this.router.navigate(['/user']);
   }
 
+  swapToValueFromPlaceHolder_username() {
+    if (this.swap_enabled_username) {
+      this.username = this.item.username;
+      this.swap_enabled_username = !this.swap_enabled_username;
+    }
+  }
+  swapToValueFromPlaceHolder_email() {
+    if (this.swap_enabled_email) {
+      this.email = this.item.email;
+      this.swap_enabled_email = !this.swap_enabled_email;
+    }
+  }
 }

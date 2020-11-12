@@ -35,11 +35,11 @@ namespace Webshop.Controllers
         
         // GET api/<ProductCartController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<ProductCartDto>> Get(int id)
+        public async Task<List<ProductCartDto>> Get(int id)
         {
-            var res = await _context.ProductCarts.Where(c => c.ProductCartId == id).FirstOrDefaultAsync();
-            if (res == null) return NotFound();
-            var mappelt = _mapper.Map<ProductCartDto>(res);
+            var res = await _context.ProductCarts.Where(c => c.cartIndex == id).ToListAsync();
+            if (res == null) return new List<ProductCartDto>();
+            var mappelt = _mapper.Map<List<ProductCartDto>>(res);
             return mappelt;
         }
 
@@ -49,8 +49,8 @@ namespace Webshop.Controllers
         {
             ProductCart pc = _mapper.Map<ProductCart>(pcnew);
 
-            var cartIdCheck = _context.Carts.Where(p => p.CartId == pcnew.CartId);
-            var productIdCheck = _context.Products.Where(p => p.ProductID == pcnew.ProductId);
+            var cartIdCheck = _context.Carts.Where(p => p.CartId == pcnew.cartIndex);
+            var productIdCheck = _context.Products.Where(p => p.ProductID == pcnew.productIndex);
             if (cartIdCheck == null)
             {
                 return NoContent();

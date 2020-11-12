@@ -11,15 +11,17 @@ import { UserService } from '../../services/user.service';
 export class RegisterAdminComponent implements OnInit {
 
   constructor(public service: UserService, private router: Router) { }
-
+  
 
   @Input() user: User;
   id: string;
   username: string;
   email: string;
   password: string;
+  avatarImageRoute: string = this.service.avatarImageRoute;
 
   ngOnInit(): void {
+    
     this.id = this.makeid(10);
     this.username = "";
     this.email = "";

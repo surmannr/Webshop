@@ -21,7 +21,8 @@
 
       <thead>
         <tr>
-          <th>ID</th>
+          <th>Image</th>
+          <th>ID</th>       
           <th>Product name</th>
           <th>Category</th>
           <th>Price</th>
@@ -32,13 +33,14 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let dataItem of ProductList">
+        <tr *ngFor="let dataItem of ProductList; let i = index">
+          <td data-heading="Image"><img src="{{ImageNameList[i]}}"style="width:60px;height:60px;"></td>
           <td data-heading="ID">{{dataItem.productID}}</td>
           <td data-heading="Product name">{{dataItem.product_Name}}</td>
-          <td data-heading="Category">{{dataItem.categoryId}}</td>
+          <td data-heading="Category">{{dataItem.category_Name}}</td>
           <td data-heading="Price">{{dataItem.price}}</td>
           <td data-heading="Shipping Price">{{dataItem.shipping_Price}}</td>
-          <td data-heading="Supplier">{{dataItem.supplierId}}</td>
+          <td data-heading="Supplier">{{dataItem.name}}</td>
           <td data-heading="Modify/Delete">
             <a><i class="fas fa-edit" (click)="editClick(dataItem)"></i></a>
             <a><i class="fas fa-trash-alt" (click)="deleteClick(dataItem)"></i></a>

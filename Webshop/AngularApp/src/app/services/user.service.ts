@@ -5,6 +5,7 @@ import { User } from '../classes/User';
 import { BASEURL } from './baseUrl';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { element } from 'protractor';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,12 @@ export class UserService {
 
  
 
-  constructor(private http: HttpClient, private fb: FormBuilder) {
+  constructor(private http: HttpClient, private fb: FormBuilder, private router: Router) {
   }
+
+  avatarImageRoute: string = "https://localhost:44308/Resources/Images/avatar.png";
+
+
 
   formModel = this.fb.group({
     UserName: ['', Validators.required],
@@ -45,11 +50,19 @@ export class UserService {
   getUserProfile() {    
     return this.http.get(BASEURL.baseUrl + "UserProfile");
   }
-
+  //Ellenőrizzük, hogy a role-ja megfelel-e 
   roleMatch(allowedRoles): boolean {
     var isMatch = false;
-    var payload = JSON.parse(window.atob(localStorage.getItem('token').split('.')[1]));
+    //Dekódoljuk a payload-ot
+    try {
+      var payload = JSON.parse(window.atob(localStorage.getItem('token').split('.')[1]));
+    }
+    catch (err) {
+      localStorage.removeItem('token');
+      this.router.navigate(['login']);
+    }
     var userRole = payload.role;
+    //Végigmegyünk a role-okon és megnézzük megvan-e a user-nek
     allowedRoles.forEach(element => {
       if (userRole == element) {
         isMatch = true;

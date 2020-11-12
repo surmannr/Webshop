@@ -14,6 +14,12 @@ export class ProductService {
   constructor(private http: HttpClient) {
   }
 
+
+
+  uploadFile(formData): Observable<any> {
+    return this.http.post<any>(BASEURL.baseUrl + 'Upload', formData, { reportProgress: true, observe: 'events' });     
+  }
+
   getAll(): Observable<Product[]> {
     return this.http.get<Product[]>(BASEURL.baseUrl + 'Product');
   }
@@ -32,5 +38,5 @@ export class ProductService {
 
   delete(id): Observable<Product> {
     return this.http.delete<Product>(BASEURL.baseUrl+ 'Product/' + id);
-  }
+  } 
 }
