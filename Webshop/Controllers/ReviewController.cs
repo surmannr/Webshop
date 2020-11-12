@@ -57,38 +57,52 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] ReviewDto newReview)
         {
-            var user = await _userManager.FindByIdAsync(newReview.UserId);
-            var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductID == newReview.ProductId);
-            
-            Review review = _mapper.Map<Review>(newReview);
-
-            //review.User = user;
-            //review.Product = product;
-            if (product != null)
+            try
             {
-                review.ProductId = product.ProductID;
-                product.Reviews.Add(review);
-                //System.Diagnostics.Debug.WriteLine(product.Reviews.Last().Description);
+                var user = await _userManager.FindByIdAsync(newReview.UserId);
+                var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductID == newReview.ProductId);
+
+                Review review = _mapper.Map<Review>(newReview);
+
+                //review.User = user;
+                //review.Product = product;
+                if (product != null)
+                {
+                    review.ProductId = product.ProductID;
+                    product.Reviews.Add(review);
+                    //System.Diagnostics.Debug.WriteLine(product.Reviews.Last().Description);
+                }
+                else return NoContent();
+
+                _context.Reviews.Add(review);
+                await _context.SaveChangesAsync();
+                return Ok();
+            } catch(Exception ex)
+            {
+                return StatusCode(418);
             }
-            else return NoContent();
             
-            _context.Reviews.Add(review);
-            await _context.SaveChangesAsync();
-            return Ok();
         }
 
         // PUT api/<ReviewController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] ReviewDto newReview)
         {
-            var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == newReview.ReviewId);
-            if (reviewWaitingForUpdate == null) return NotFound();
+            try
+            {
+                var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == newReview.ReviewId);
+                if (reviewWaitingForUpdate == null) return NotFound();
 
-            if (newReview.Stars!=0) reviewWaitingForUpdate.Stars = newReview.Stars;
-            if (newReview.Description != null) reviewWaitingForUpdate.Description = newReview.Description;
+                if (newReview.Stars != 0) reviewWaitingForUpdate.Stars = newReview.Stars;
+                if (newReview.Description != null) reviewWaitingForUpdate.Description = newReview.Description;
 
-            await _context.SaveChangesAsync();
-            return Ok();
+                await _context.SaveChangesAsync();
+                return Ok();
+            } catch(Exception ex)
+            {
+                return StatusCode(418);
+            }
+            
         }
         // DELETE api/<ReviewController>/5
         [HttpDelete("{id}")]

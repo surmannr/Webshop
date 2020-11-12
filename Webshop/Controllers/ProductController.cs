@@ -75,30 +75,45 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] ProductDto newProduct)
         {
-            Product product = _mapper.Map<Product>(newProduct);
-            if (product.Product_Name == null || product.Price == 0 || product.Shipping_Price == 0) return null;
-         
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-            return Ok();
+            try
+            {
+                Product product = _mapper.Map<Product>(newProduct);
+                if (product.Product_Name == null || product.Price == 0 || product.Shipping_Price == 0) return null;
+
+                _context.Products.Add(product);
+                await _context.SaveChangesAsync();
+                return Ok();
+
+            } catch(Exception ex)
+            {
+                return StatusCode(418);
+            }
+            
         }
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] ProductDto newProduct)
         {
-            var productWaitingForUpdate = await _context.Products.FirstOrDefaultAsync(r => r.ProductID == newProduct.ProductID);
-            if (productWaitingForUpdate == null) return NotFound();
+            try
+            {
+                var productWaitingForUpdate = await _context.Products.FirstOrDefaultAsync(r => r.ProductID == newProduct.ProductID);
+                if (productWaitingForUpdate == null) return NotFound();
 
-            if (newProduct.Price != 0) productWaitingForUpdate.Price = newProduct.Price;
-            if (newProduct.Product_Description != null) productWaitingForUpdate.Product_Description = newProduct.Product_Description;
-            if (newProduct.Product_Name != null) productWaitingForUpdate.Product_Name = newProduct.Product_Name;
-            if (newProduct.CategoryId != 0) productWaitingForUpdate.CategoryId = newProduct.CategoryId;
-            if (newProduct.Shipping_Price != 0) productWaitingForUpdate.Shipping_Price = newProduct.Shipping_Price;
-            if (newProduct.SupplierId != 0) productWaitingForUpdate.SupplierId = newProduct.SupplierId;
-            if (newProduct.ImageName != null) productWaitingForUpdate.ImageName = newProduct.ImageName;
-            await _context.SaveChangesAsync();
-            return Ok();
+                if (newProduct.Price != 0) productWaitingForUpdate.Price = newProduct.Price;
+                if (newProduct.Product_Description != null) productWaitingForUpdate.Product_Description = newProduct.Product_Description;
+                if (newProduct.Product_Name != null) productWaitingForUpdate.Product_Name = newProduct.Product_Name;
+                if (newProduct.CategoryId != 0) productWaitingForUpdate.CategoryId = newProduct.CategoryId;
+                if (newProduct.Shipping_Price != 0) productWaitingForUpdate.Shipping_Price = newProduct.Shipping_Price;
+                if (newProduct.SupplierId != 0) productWaitingForUpdate.SupplierId = newProduct.SupplierId;
+                if (newProduct.ImageName != null) productWaitingForUpdate.ImageName = newProduct.ImageName;
+                await _context.SaveChangesAsync();
+                return Ok();
+            } catch(Exception ex)
+            {
+                return StatusCode(418);
+            }
+            
         }
 
         // DELETE api/<ProductController>/5

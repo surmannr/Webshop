@@ -47,22 +47,28 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(int id, [FromBody] ProductCartDto pcnew)
         {
-            ProductCart pc = _mapper.Map<ProductCart>(pcnew);
+            try
+            {
+                ProductCart pc = _mapper.Map<ProductCart>(pcnew);
 
-            var cartIdCheck = _context.Carts.Where(p => p.CartId == pcnew.cartIndex);
-            var productIdCheck = _context.Products.Where(p => p.ProductID == pcnew.productIndex);
-            if (cartIdCheck == null)
+                var cartIdCheck = _context.Carts.Where(p => p.CartId == pcnew.cartIndex);
+                var productIdCheck = _context.Products.Where(p => p.ProductID == pcnew.productIndex);
+                if (cartIdCheck == null)
+                {
+                    return NoContent();
+                }
+                if (productIdCheck == null)
+                {
+                    return NoContent();
+                }
+
+                _context.ProductCarts.Add(pc);
+                await _context.SaveChangesAsync();
+                return Ok();
+            } catch(Exception ex)
             {
-                return NoContent();
+                return StatusCode(418);
             }
-            if (productIdCheck == null)
-            {
-                return NoContent();
-            }
-            
-            _context.ProductCarts.Add(pc);
-            await _context.SaveChangesAsync();
-            return Ok();
         }
 
         // DELETE api/<ProductCartController>/5

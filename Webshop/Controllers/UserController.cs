@@ -35,7 +35,7 @@ namespace Webshop.Controllers
         //private readonly UserManager<User> _userManager;
 
         public UserController(ApplicationDbContext context, IMapper mapper, Microsoft.AspNetCore.Identity.UserManager<User> userManager
-            ,IOptions<ApplicationSettings> appSettings, SignInManager<User> signInManager)
+            , IOptions<ApplicationSettings> appSettings, SignInManager<User> signInManager)
         {
             _context = context;
             _mapper = mapper;
@@ -66,35 +66,41 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] UserDto newUser)
         {
-            User user = _mapper.Map<User>(newUser);
-
-            //Assigning the role to the user
-            user.Role = "Customer";
-
-            Cart newCart = new Cart()
-            {
-                UserId = user.Id,
-                User = user
-            };
-            //System.Diagnostics.Debug.WriteLine("newcart: " + newCart);
-            _context.Carts.Add(newCart);          
-
-            user.Cart = newCart;
-
-
-           
-
-            // _userManager segítségével megadjuk a felhasználó role-ját
             try
             {
-                var result = await _userManager.CreateAsync(user, newUser.Password);
-                await _userManager.AddToRoleAsync(user, user.Role);              
+                User user = _mapper.Map<User>(newUser);
+
+                //Assigning the role to the user
+                user.Role = "Customer";
+
+                Cart newCart = new Cart()
+                {
+                    UserId = user.Id,
+                    User = user
+                };
+                //System.Diagnostics.Debug.WriteLine("newcart: " + newCart);
+                _context.Carts.Add(newCart);
+
+                user.Cart = newCart;
+
+                // _userManager segítségével megadjuk a felhasználó role-ját
+                try
+                {
+                    var result = await _userManager.CreateAsync(user, newUser.Password);
+                    await _userManager.AddToRoleAsync(user, user.Role);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
+                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (Exception e) {
-                Debug.WriteLine(e);
+            catch (Exception ex)
+            {
+                return StatusCode(418);
             }
-            await _context.SaveChangesAsync();
-            return Ok();
+
         }
 
 
@@ -102,33 +108,41 @@ namespace Webshop.Controllers
         [Route("registerAdmin")]
         public async Task<ActionResult> Post_Admin([FromBody] UserDto newUser)
         {
-            User user = _mapper.Map<User>(newUser);
-
-            //Assigning the role to the user
-            user.Role = "Admin";
-
-            Cart newCart = new Cart()
-            {
-                UserId = user.Id,
-                User = user
-            };
-            //System.Diagnostics.Debug.WriteLine("newcart: " + newCart);
-            _context.Carts.Add(newCart);
-
-            user.Cart = newCart;
-            //System.Diagnostics.Debug.WriteLine("user.Cart: " + user.Cart);
-
             try
             {
-                var result = await _userManager.CreateAsync(user, newUser.Password);
-                await _userManager.AddToRoleAsync(user, user.Role);
+                User user = _mapper.Map<User>(newUser);
+
+                //Assigning the role to the user
+                user.Role = "Admin";
+
+                Cart newCart = new Cart()
+                {
+                    UserId = user.Id,
+                    User = user
+                };
+                //System.Diagnostics.Debug.WriteLine("newcart: " + newCart);
+                _context.Carts.Add(newCart);
+
+                user.Cart = newCart;
+                //System.Diagnostics.Debug.WriteLine("user.Cart: " + user.Cart);
+
+                try
+                {
+                    var result = await _userManager.CreateAsync(user, newUser.Password);
+                    await _userManager.AddToRoleAsync(user, user.Role);
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e);
+                }
+                await _context.SaveChangesAsync();
+                return Ok();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Debug.WriteLine(e);
+                return StatusCode(418);
             }
-            await _context.SaveChangesAsync();
-            return Ok();
+
         }
 
 
@@ -138,34 +152,44 @@ namespace Webshop.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(string id, [FromBody] UserDto newUser)
         {
+            try
+            {
+                var user = _mapper.Map<User>(newUser);
+                var userWaitingForUpdate = _context.Users.SingleOrDefault(p => p.Id == id);
 
-            var user = _mapper.Map<User>(newUser);
-            var userWaitingForUpdate = _context.Users.SingleOrDefault(p => p.Id == id);
+                if (userWaitingForUpdate == null)
+                    return NotFound();
 
-            if (userWaitingForUpdate == null)
-                return NotFound();
+                // modositasok elvegzese    
+                if (user.UserName != null)
+                {
+                    userWaitingForUpdate.UserName = user.UserName;
+                    userWaitingForUpdate.NormalizedUserName = user.UserName.ToUpper();
+                }
 
-            // modositasok elvegzese    
-            if (user.UserName != null) {
-                userWaitingForUpdate.UserName = user.UserName;
-                userWaitingForUpdate.NormalizedUserName = user.UserName.ToUpper();
+                if (user.Email != null)
+                {
+                    userWaitingForUpdate.Email = user.Email;
+                    userWaitingForUpdate.NormalizedEmail = user.Email.ToUpper();
+                }
+
+
+                if (newUser.Password != null)
+                {
+                    await _userManager.RemovePasswordAsync(userWaitingForUpdate);
+                    await _userManager.AddPasswordAsync(userWaitingForUpdate, newUser.Password);
+                }
+
+                // mentes az adatbazisban
+                await _context.SaveChangesAsync();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(418);
             }
 
-            if (user.Email != null) {
-                userWaitingForUpdate.Email = user.Email;
-                userWaitingForUpdate.NormalizedEmail = user.Email.ToUpper();
-            }
-            
-
-            if (newUser.Password != null) {
-                await _userManager.RemovePasswordAsync(userWaitingForUpdate);
-                await _userManager.AddPasswordAsync(userWaitingForUpdate, newUser.Password); 
-            }
-            
-            // mentes az adatbazisban
-            await _context.SaveChangesAsync();
-
-            return Ok();
         }
 
         // DELETE api/<UserController>/5
@@ -176,10 +200,10 @@ namespace Webshop.Controllers
 
             if (dbUser == null)
                 return NotFound();
-            
+
             var cart = _context.Carts.Where(c => c.UserId == dbUser.Id).FirstOrDefault();
             _context.Carts.Remove(cart);
-            
+
             _context.Users.Remove(dbUser);
             await _context.SaveChangesAsync();
 
@@ -189,34 +213,43 @@ namespace Webshop.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login(Webshop.Data.Models.LoginModel model) {
-
-            var user = await _userManager.FindByNameAsync(model.UserName);
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+        public async Task<IActionResult> Login(Webshop.Data.Models.LoginModel model)
+        {
+            try
             {
-                //Lekérjük a felhasználó role-ját mert szükség lesz rá authentication-nél
-                var role = await _userManager.GetRolesAsync(user);
-                IdentityOptions _options = new IdentityOptions();
+                var user = await _userManager.FindByNameAsync(model.UserName);
+                if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+                {
+                    //Lekérjük a felhasználó role-ját mert szükség lesz rá authentication-nél
+                    var role = await _userManager.GetRolesAsync(user);
+                    IdentityOptions _options = new IdentityOptions();
 
-                var tokenDescriptor = new SecurityTokenDescriptor
-                {      
-                    //User-rel kapcsolatos követelmények
-                    Subject = new ClaimsIdentity(new Claim[]
+                    var tokenDescriptor = new SecurityTokenDescriptor
                     {
+                        //User-rel kapcsolatos követelmények
+                        Subject = new ClaimsIdentity(new Claim[]
+                        {
                         new Claim("UserID", user.Id.ToString()),
                         new Claim(_options.ClaimsIdentity.RoleClaimType, role.FirstOrDefault())
-                    }),
-                    Expires = DateTime.UtcNow.AddMinutes(5),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
-                };
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-                var token = tokenHandler.WriteToken(securityToken);
-                return Ok(new { token });
+                        }),
+                        Expires = DateTime.UtcNow.AddMinutes(5),
+                        SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_appSettings.JWT_Secret)), SecurityAlgorithms.HmacSha256Signature)
+                    };
+                    var tokenHandler = new JwtSecurityTokenHandler();
+                    var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+                    var token = tokenHandler.WriteToken(securityToken);
+                    return Ok(new { token });
+                }
+                else
+                {
+                    return BadRequest(new { message = "Username or password is incorrect" });
+                }
             }
-            else {
-                return BadRequest(new { message = "Username or password is incorrect" });
+            catch (Exception ex)
+            {
+                return StatusCode(418);
             }
+
         }
     }
 }

@@ -56,26 +56,41 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] SupplierDto newSupplier)
         {
-            Supplier supplier = _mapper.Map<Supplier>(newSupplier);
-            if (supplier.Name == null || supplier.Address == null) return NoContent();
-            _context.Suppliers.Add(supplier);
-            await _context.SaveChangesAsync();
-            return Ok();
+            try
+            {
+                Supplier supplier = _mapper.Map<Supplier>(newSupplier);
+                if (supplier.Name == null || supplier.Address == null) return NoContent();
+                _context.Suppliers.Add(supplier);
+                await _context.SaveChangesAsync();
+                return Ok();
+            } catch(Exception ex)
+            {
+                return StatusCode(418);
+            }
+            
         }
 
         // PUT api/<SupplierController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] SupplierDto newSupplier)
         {
-            var supplierWaitingForUpdate = await _context.Suppliers.FirstOrDefaultAsync(r => r.SupplierId == newSupplier.SupplierId);
-            if (supplierWaitingForUpdate == null) return NotFound();
+            try
+            {
+                var supplierWaitingForUpdate = await _context.Suppliers.FirstOrDefaultAsync(r => r.SupplierId == newSupplier.SupplierId);
+                if (supplierWaitingForUpdate == null) return NotFound();
 
-            if (newSupplier.Name != null) supplierWaitingForUpdate.Name = newSupplier.Name;
-            if (newSupplier.Multiplier != 0) supplierWaitingForUpdate.Multiplier = newSupplier.Multiplier;
-            if (newSupplier.Address != null) supplierWaitingForUpdate.Address = newSupplier.Address;
-
-            await _context.SaveChangesAsync();
-            return Ok();
+                if (newSupplier.Name != null) supplierWaitingForUpdate.Name = newSupplier.Name;
+                if (newSupplier.Multiplier != 0) supplierWaitingForUpdate.Multiplier = newSupplier.Multiplier;
+                if (newSupplier.Address != null) supplierWaitingForUpdate.Address = newSupplier.Address;
+                
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(418);
+            }
+            
         }
 
         // DELETE api/<SupplierController>/5

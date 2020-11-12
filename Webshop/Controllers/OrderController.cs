@@ -74,46 +74,62 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] OrderDto newOrderDto)
         {
-            var newOrder = _mapper.Map<Order>(newOrderDto);
-            if (newOrder.UserId == null) return NoContent();
-            newOrder.StatusId = 1;
+            try
+            {
+                var newOrder = _mapper.Map<Order>(newOrderDto);
+                if (newOrder.UserId == null) return NoContent();
+                newOrder.StatusId = 1;
 
-            var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();
-            //System.Diagnostics.Debug.WriteLine(status.Name);
-            newOrder.Status = status;
+                var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();
+                //System.Diagnostics.Debug.WriteLine(status.Name);
+                newOrder.Status = status;
 
-            _context.Orders.Add(newOrder);
-            await _context.SaveChangesAsync();
-            return Ok();
+                _context.Orders.Add(newOrder);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(418);
+            }
+           
         }
 
         // PUT api/<OrderController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] OrderDto newOrderDto)
         {
-            var newOrder = _mapper.Map<Order>(newOrderDto);
-            var orderWaitingForUpdate = _context.Orders.SingleOrDefault(p => p.OrderId == id);
-
-            if (orderWaitingForUpdate != null)
+            try
             {
+                var newOrder = _mapper.Map<Order>(newOrderDto);
+                var orderWaitingForUpdate = _context.Orders.SingleOrDefault(p => p.OrderId == id);
 
-                var status = await _context.Status.Where(s => s.Name == newOrderDto.StatusName).FirstOrDefaultAsync();
+                if (orderWaitingForUpdate != null)
+                {
 
-                if (newOrder.PaymentMetod != null) orderWaitingForUpdate.PaymentMetod = newOrder.PaymentMetod;
+                    var status = await _context.Status.Where(s => s.Name == newOrderDto.StatusName).FirstOrDefaultAsync();
 
-                if (newOrder.ShippingMethod != null) orderWaitingForUpdate.ShippingMethod = newOrder.ShippingMethod;
+                    if (newOrder.PaymentMetod != null) orderWaitingForUpdate.PaymentMetod = newOrder.PaymentMetod;
 
-                if (newOrder.Status != null) orderWaitingForUpdate.Status = status;
+                    if (newOrder.ShippingMethod != null) orderWaitingForUpdate.ShippingMethod = newOrder.ShippingMethod;
 
-                if (newOrder.StatusId != 0) orderWaitingForUpdate.StatusId = status.StatusId;
+                    if (newOrder.Status != null) orderWaitingForUpdate.Status = status;
 
+                    if (newOrder.StatusId != 0) orderWaitingForUpdate.StatusId = status.StatusId;
+
+                }
+                else return NoContent();
+
+                // mentes az adatbazisban
+                await _context.SaveChangesAsync();
+
+                return Ok(); // 204 NoContent valasz
+
+            } catch(Exception ex)
+            {
+                return StatusCode(418);
             }
-            else return NoContent();
-
-            // mentes az adatbazisban
-            await _context.SaveChangesAsync();
-
-            return Ok(); // 204 NoContent valasz
+            
         }
 
         // DELETE api/<OrderController>/5

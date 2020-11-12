@@ -25,6 +25,9 @@ export class AuthInterceptor implements HttpInterceptor {
           //Ha nincs megfelelő jogosultsága akkor átnavigáljuk egy forbidden oldalra.
           else if (err.status == 403)
             this.router.navigateByUrl('/forbidden');
+          //Ha a kliens rosszul adja meg az adatokat, akkor popup hibaüzenetet dob -- teapot
+          else if (err.status == 418)
+            alert("Wrong parameter(s) please try again!");
         }
       ));
     }
