@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -72,7 +73,7 @@ namespace Webshop.Controllers
 
         // POST api/<OrderController>
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] OrderDto newOrderDto)
+        public async Task<ActionResult<int>> Post([FromBody] OrderDto newOrderDto)
         {
             var newOrder = _mapper.Map<Order>(newOrderDto);
             if (newOrder.UserId == null) return NoContent();
@@ -84,7 +85,9 @@ namespace Webshop.Controllers
 
             _context.Orders.Add(newOrder);
             await _context.SaveChangesAsync();
-            return Ok();
+
+           
+            return newOrder.OrderId;
         }
 
         // PUT api/<OrderController>/5

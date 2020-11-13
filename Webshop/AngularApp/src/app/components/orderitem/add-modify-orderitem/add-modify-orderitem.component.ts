@@ -74,7 +74,10 @@ export class AddModifyOrderitemComponent implements OnInit {
       amount: this.amount, price: this.price, productID: this.productID, orderId: this.item.orderId, statusId: JSON.parse(this.selectedOption_statusId),
       orderItemId: this.orderItem.orderItemId, productName: this.productName, statusName: this.statusName
     };
-    this.service.update(val.orderItemId, val).subscribe(res => { this.router.navigate(['order/orderitems']); });
+    this.service.update(val.orderItemId, val).subscribe(res => {
+      this.router.navigate(['order/orderitems']);
+    });
+
   }
   cancel() {
     this.router.navigate(['order/orderitems']);

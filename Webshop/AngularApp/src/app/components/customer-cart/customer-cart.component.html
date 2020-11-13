@@ -51,7 +51,7 @@
         </div>
       </div>
     </div>
-    <h1 *ngIf="productCartList.length ==0" style="height: 18vh">Your cart is empty</h1>
+    <h1 *ngIf="productCartList.length ==0" style="height: 18vh;margin-left:32%">Your cart is empty</h1>
     <table *ngIf="productCartList.length != 0">
       <tr>
         <th>Product</th>
@@ -84,8 +84,24 @@
         </tr>
       </table>
     </div>
-    <div class="row">
-      <button style="margin-top: 50px;font-weight:900; font-size:150%;background:#ff523b;color:white;border:none;padding:5px;outline:none">Order</button>
+    <div class="row" style="width:20%;margin-left:40%;margin-top:5%"  *ngIf="productCartList.length != 0">
+      <label>Payment method</label>
+      <select class="form-control" id="payment" name="payment" [(ngModel)]="selectedOption_payment">
+        <option *ngFor="let paymentMethod of paymentMethodList_html; let i = index" value="{{paymentMethod}}">{{paymentMethod}}</option>        
+      </select>
+    </div>
+    <div class="row" style="width:20%;margin-left:40%;margin-top:5%"  *ngIf="productCartList.length != 0">
+      <label>Shipping method</label>
+      <select class="form-control" id="payment" name="payment" [(ngModel)]="selectedOption_shipping">
+        <option *ngFor="let shippingMethod of shippingMethodList_html; let j = index" value="{{shippingMethod}}">{{shippingMethod}}</option>        
+      </select>
+    </div>
+
+    <div class="row"  *ngIf="productCartList.length != 0">
+      <button style="margin-top: 50px;font-weight:900; font-size:150%;background:#ff523b;color:white;border:none;padding:5px;outline:none"
+              (click)="orderClicked()">
+        Order
+      </button>
     </div>
   </div>
 

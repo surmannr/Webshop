@@ -9,6 +9,7 @@ import { ProductService } from '../../services/product.service';
 import { ReviewService } from '../../services/review.service';
 import { UserFavouriteProductsService } from '../../services/user-favourite-products.service';
 import { map } from 'rxjs/operators';
+import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-main-favourites',
   templateUrl: './main-favourites.component.html',
@@ -22,23 +23,27 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
   inputFieldName: string;
 
   constructor(private categoryService: CategoryService, private userFavouriteProducts: UserFavouriteProductsService, private productService: ProductService,
-    private reviewService: ReviewService, private router: Router, private userFavouriteProductService: UserFavouriteProductsService) { super(); }
+    private userService: UserService, private router: Router, private userFavouriteProductService: UserFavouriteProductsService) { super(); }
 
 
 
 
-
+  userDetails;
   ProductImageNameList: string[] = [];
   ProductNameList: string[] = [];
   ProductIdList: number[] = [];
   UserFavouriteProductIdList: number[] = [];
 
-  ngOnInit(): void {    
-    localStorage.removeItem('product');    
-    this.selectedOption_category = JSON.parse(JSON.stringify(-1));
-    this.refreshCategoryList();
-    this.refreshProductList();
-    this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
+  ngOnInit(): void {
+    this.userService.getUserProfile().subscribe(res => {
+      this.userDetails = res
+      localStorage.removeItem('product');
+      this.selectedOption_category = JSON.parse(JSON.stringify(-1));
+      this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
+      this.refreshCategoryList();
+      this.refreshProductList();
+    });
+  
   }
 
 
@@ -49,9 +54,13 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
   }
 
   refreshProductList() {
-
-    this.userFavouriteProducts.Get().subscribe(data => {      
-      for (let res of data) {        
+    this.ProductImageNameList = [];
+    this.ProductNameList = [];
+    this.ProductIdList = [];
+    this.UserFavouriteProductIdList = [];
+    console.log(this.userDetails);
+    this.userFavouriteProducts.Get(this.userDetails.id).subscribe(data => {
+      for (let res of data) {
         this.productService.get(res.productIndex).subscribe(productData => {
           this.ProductImageNameList.push(this.imageRoute + productData.imageName);
           this.ProductNameList.push(productData.product_Name);
@@ -59,9 +68,9 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
           this.UserFavouriteProductIdList.push(res.id);
         });
       }
-      
-    });    
-       
+
+    });
+
   }
 
 
@@ -70,7 +79,7 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
     this.productService.get(productId).subscribe(data => {
       localStorage.setItem('product', JSON.stringify(data));
       this.router.navigateByUrl('techonomy/products/' + productId);
-    });     
+    });
   }
 
 
@@ -83,15 +92,16 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
 
   //User kiléptetés && bejelenetkezés ellenőrzés
   checkLogin() {
-    super.checkLogin(this.isLoggedIn, this.router);
+    super.checkLogin(this.isLoggedIn, this.router);   
   }
   onLogout() {
     super.onLogout(this.router);
   }
 
-  removeFromFavourite(index: number) { 
+  removeFromFavourite(index: number) {
     this.userFavouriteProductService.Delete(index).subscribe(_ => {
-     this.ngOnInit;
+      console.log("removed");
+      this.refreshProductList();
     });
   }
 }

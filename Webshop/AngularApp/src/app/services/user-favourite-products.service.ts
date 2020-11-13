@@ -11,8 +11,8 @@ export class UserFavouriteProductsService {
 
   constructor(private http: HttpClient) { }
 
-  Get(): Observable<UsersFavouriteProducts[]> {
-    return this.http.get<UsersFavouriteProducts[]>(BASEURL.baseUrl + "UserFavouriteProducts");
+  Get(userId): Observable<UsersFavouriteProducts[]> {
+    return this.http.get<UsersFavouriteProducts[]>(BASEURL.baseUrl + "UserFavouriteProducts/" + userId);
   }
   Post(data): Observable<UsersFavouriteProducts> {
     return this.http.post<UsersFavouriteProducts>(BASEURL.baseUrl + 'UserFavouriteProducts',data);

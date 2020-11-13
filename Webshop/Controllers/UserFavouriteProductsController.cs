@@ -25,10 +25,10 @@ namespace Webshop.Controllers
         }
 
        
-        [HttpGet]
-        public async Task<IEnumerable<UsersFavouriteProductsDto>> Get()
+        [HttpGet("{userId}")]
+        public async Task<IEnumerable<UsersFavouriteProductsDto>> Get(string userId)
         {
-            var res = await _context.UsersFavouriteProducts.ToListAsync();
+            var res = await _context.UsersFavouriteProducts.Where(x => x.UserIndex == userId).ToListAsync();
             var mappelt = _mapper.Map<List<UsersFavouriteProductsDto>>(res);
             return mappelt;
         }
