@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { async } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { Local } from 'protractor/built/driverProviders';
-import { count } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 import { AppComponent } from '../../app.component';
 import { Order } from '../../classes/Order';
 import { OrderItem } from '../../classes/OrderItem';
@@ -28,7 +26,7 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
 
   constructor(private categoryService: CategoryService, private router: Router, public productService: ProductService, private productCartService: ProductcartService,
     private userService: UserService, private orderService: OrderService, private statusService: StatusService,
-    private orderItemService: OrderitemService) { super(); }
+    private orderItemService: OrderitemService, private toastr: ToastrService) { super(); }
 
   //Ebbe van a végős adat
   cartProductList: Product[] = [];
@@ -130,7 +128,7 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
   orderClicked() {
     let _orderId;
     if (this.paymentMethodList.includes(this.selectedOption_payment) && this.shippingMethodList.includes(this.selectedOption_shipping)) {
-      if (this.selectedOption_payment === "none" || this.selectedOption_shipping === "none") alert("Select a valid shipping and payment method");
+      if (this.selectedOption_payment === "none" || this.selectedOption_shipping === "none") this.toastr.error("Select a valid shipping and payment method", "Order failed");
       else {
         let val: Order;
         val = {
@@ -147,7 +145,7 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
             };
             this.orderItemService.create(val).subscribe(res => {});
           }
-          alert("Thank you for your purchase");
+          this.toastr.success("Thank you for your purchase","Purchase was succesful");
           this.router.navigateByUrl("");
 
           for (let productCart of this.productCartList) {
@@ -156,7 +154,7 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
         });
       }
     }
-    else alert("Select a valid shipping and payment method");
+    else this.toastr.error("Select a valid shipping and payment method", "Order failed");
   }
 
 }

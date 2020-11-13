@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { User } from '../classes/User';
 import { BASEURL } from './baseUrl';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { element } from 'protractor';
 import { Router } from '@angular/router';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -86,9 +87,11 @@ export class UserService {
   }
 
   update(id, data): Observable<User> {
-    return this.http.put<User>(BASEURL.baseUrl+ 'User/' + id, data);
+    return this.http.put<User>(BASEURL.baseUrl + 'User/' + id, data).pipe(catchError(this.handleError));
   }
-
+  handleError(error: HttpErrorResponse) {
+    return throwError(error);
+  }
   delete(id): Observable<User> {
     return this.http.delete<User>(BASEURL.baseUrl+ 'User/' + id);
   }

@@ -1,13 +1,14 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable } from 'rxjs';
 import { tap } from "rxjs/operators"
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private toastr: ToastrService) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (localStorage.getItem('token') != null) {
@@ -23,12 +24,14 @@ export class AuthInterceptor implements HttpInterceptor {
             this.router.navigateByUrl('/login');
           }
           //Ha nincs megfelelő jogosultsága akkor átnavigáljuk egy forbidden oldalra.
-          else if (err.status == 403)
+          else if (err.status == 403) {           
             this.router.navigateByUrl('/forbidden');
+            this.toastr.error(err.msg);
+          }
         }
       ));
     }
-    else {
+    else {    
       return next.handle(req.clone());
     }
   }

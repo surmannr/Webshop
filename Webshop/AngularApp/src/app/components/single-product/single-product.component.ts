@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ENGINE_METHOD_ALL } from 'constants';
+import { ToastrService } from 'ngx-toastr';
 import { async } from 'rxjs';
 import { AppComponent } from '../../app.component';
 import { Cart } from '../../classes/Cart';
@@ -43,7 +44,8 @@ export class SingleProductComponent extends AppComponent implements OnInit {
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
     private reviewService: ReviewService, private router: Router, private userService: UserService,
-    private productCartSerivce: ProductcartService, private usersFavouriteProducts: UserFavouriteProductsService) { super(); }
+    private productCartSerivce: ProductcartService, private usersFavouriteProducts: UserFavouriteProductsService,
+    private toastr: ToastrService) { super(); }
 
 
 
@@ -183,7 +185,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
             let val: ProductCart;
             val = { productCartId: 0, productIndex: product.productID, cartIndex: userDetails.cartId, price: product.price, product_Name: product.product_Name, quantity: productQuantity };
 
-            this.productCartSerivce.create(val).subscribe(res => { alert("Added the productcart"); });
+            this.productCartSerivce.create(val).subscribe(res => { this.toastr.success("You can continue your shopping", "Added the productcart"); });
           
           },
           err => {
@@ -223,7 +225,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   }
 
   AddToFavouriteClicked(product: Product) {
-    if (!this.isLoggedIn) alert("You must log in to do this");
+    if (!this.isLoggedIn) this.toastr.error("You must log in to do this","Task failed");
     else {
       let favouriteProduct: UsersFavouriteProducts;
       
@@ -233,7 +235,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
           productIndex: product.productID.toString(), userIndex: this.userDetails.id, id: 0
         };       
 
-        this.usersFavouriteProducts.Post(favouriteProduct).subscribe(_ => { alert("Added this product to your favourites"); });
+        this.usersFavouriteProducts.Post(favouriteProduct).subscribe(_ => { this.toastr.success("You can continue your shopping","Added to your favourites"); });
       });
       
     }

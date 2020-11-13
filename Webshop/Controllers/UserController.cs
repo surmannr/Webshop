@@ -91,7 +91,7 @@ namespace Webshop.Controllers
                 await _userManager.AddToRoleAsync(user, user.Role);              
             }
             catch (Exception e) {
-                Debug.WriteLine(e);
+               return  BadRequest("Error during the creation of the user");
             }
             await _context.SaveChangesAsync();
             return Ok();

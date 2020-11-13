@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { UserService } from '../../services/user.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private service: UserService, private router: Router) { }
+  constructor(private service: UserService, private router: Router, private toastr: ToastrService) { }
 
   avatarImageRoute: string = this.service.avatarImageRoute;
 
@@ -27,12 +28,16 @@ export class LoginComponent implements OnInit {
   }
   onSubmit(form: NgForm) {
     this.service.login(form.value).subscribe((res: any) => {
+      this.toastr.success('Have a nice day', 'Welcome to our webshop');
       localStorage.setItem('token', res.token);
       this.router.navigateByUrl('/');
     }, err => {
-      if (err.status == 400) {
-        console.log(err);
-      }
+        if (err.status == 400) {
+          this.toastr.error('Incorrect username or password', 'Authentication failed');         
+        }
+        else {
+          console.log(err);
+        }
     });
   }
 }

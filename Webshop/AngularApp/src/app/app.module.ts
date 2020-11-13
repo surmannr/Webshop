@@ -59,7 +59,8 @@ import { MainFavouritesComponent } from './components/main-favourites/main-favou
 import { MainProductsFilterCategoryComponent } from './components/main-products-filter-category/main-products-filter-category.component';
 import { MainProductsFilterProductNameComponent } from './components/main-products-filter-product-name/main-products-filter-product-name.component';
 import { MainProductsFilterProductNameCategoryComponent } from './components/main-products-filter-product-name-category/main-products-filter-product-name-category.component';
-
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
 @NgModule({
   declarations: [
     AppComponent,
@@ -105,7 +106,9 @@ import { MainProductsFilterProductNameCategoryComponent } from './components/mai
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot()
   ],
   providers: [    
     CategoryService,
