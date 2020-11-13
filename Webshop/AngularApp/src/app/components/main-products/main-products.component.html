@@ -71,34 +71,8 @@
         <img src="{{ProductImageNameList[j]}}" (click)="productPictureClicked(ProductList[j])">
         <h4>{{ProductList[j].product_Name}}</h4>
         <div class="rating">
-
-          <!-- Nem akarom elhinni, hogy ezt nem lehetne másként megcsinálni -->
-          <i class="fas fa-star" *ngIf="ProductList[j].stars >= 1"></i>
-          <i class="fas fa-star" *ngIf="ProductList[j].stars >= 2"></i>
-          <i class="fas fa-star" *ngIf="ProductList[j].stars >= 3"></i>
-          <i class="fas fa-star" *ngIf="ProductList[j].stars >= 4"></i>
-          <i class="fas fa-star" *ngIf="ProductList[j].stars >= 5"></i>
-
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 4"></i>
-
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 3"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 3"></i>
-
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 2"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 2"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 2"></i>
-
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 1"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 1"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 1"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 1"></i>
-
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 0"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 0"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 0"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 0"></i>
-          <i class="far fa-star" *ngIf="ProductList[j].stars === 0"></i>
-
+          <i class="fas fa-star" *ngFor="let test of ProductList[j].starsList"></i>
+          <i class="far fa-star" *ngFor="let test of ProductList[j].emptyStarsList"></i>
         </div>
 
         <p>{{ProductList[j].price}}</p>

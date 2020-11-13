@@ -30,13 +30,19 @@ export class AddModifyReviewComponent implements OnInit {
 
   addReview() {
     let val: Review;
-    val = { description: this.description, stars: this.stars, productId: this.productId, userId: this.userId, reviewId: this.reviewId, username: "" };
+    val = {
+      description: this.description, stars: this.stars, productId: this.productId, userId: this.userId,
+      reviewId: this.reviewId, username: "", starsList: [], emptyStarsList: []
+    };
     this.service.create(val).subscribe(res => { alert("Added the review"); });
   }
 
   updateReview() {
     let val: Review;
-    val = { description: this.description, stars: this.stars, productId: this.productId, userId: this.userId, reviewId: this.reviewId, username: "" };
+    val = {
+      description: this.description, stars: this.stars, productId: this.productId, userId: this.userId,
+      reviewId: this.reviewId, username: "", starsList: [], emptyStarsList: []
+    };
     this.service.update(this.reviewId,val).subscribe(res => { alert("Updated the review"); });
   }
 }

@@ -30,7 +30,6 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   singleProduct: Product;
   ReviewList: Review[];
   UsernameList: string[];
-  StarList: number[];
   RecommendedProductList: Product[];
   RecommendedProductImageRouteList: string[];
   AllProducts: Product[];
@@ -54,15 +53,12 @@ export class SingleProductComponent extends AppComponent implements OnInit {
     this.isLoggedIn = true;
     this.ReviewList = [];
     this.UsernameList = [];
-    this.StarList = [];
     this.RecommendedProductList = [];
     this.RecommendedProductImageRouteList = [];
     this.AllProducts = [];
     this.RecommendedProductStarList = [];    
     this.refreshCategoryList();
     this.productQuantity = 1;
-
-
     this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
     this.productCheck();
     this.refreshRecommendedProductList();
@@ -72,7 +68,6 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   refreshREcommendedProductStarList(product: Product) {
     let counter: number = 0;
     let sum: number = 0;
-    let tmp: any[] = [];
     this.reviewService.get(product.productID).subscribe(reviews => {
       if (reviews.length === 0) {
         product.stars = 0;      
@@ -158,7 +153,14 @@ export class SingleProductComponent extends AppComponent implements OnInit {
       this.ReviewList = data;
       for (let review of data) {
         this.UsernameList.push(review.username);
-        this.StarList.push(review.stars);
+        review.starsList = [];
+        review.emptyStarsList = [];
+        for (let i: number = 0; i < review.stars; i++) {
+          review.starsList.push(new Object());
+        }
+        for (let i: number = 0; i < 5 - review.stars; i++) {
+          review.emptyStarsList.push(new Object());
+        }       
       }
     });
   }

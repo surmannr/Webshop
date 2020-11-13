@@ -52,7 +52,12 @@ export class MainProductsFilterProductNameCategoryComponent extends AppComponent
     let sum: number = 0;
     this.reviewService.get(product.productID).subscribe(reviews => {
       if (reviews.length === 0) {
-        product.stars = 0
+        product.stars = 0;
+        product.starsList = [];
+        product.emptyStarsList = [];
+        for (let i: number = 0; i < 5; i++) {
+          product.emptyStarsList.push(new Object());
+        }
       }
       else {
         for (let review of reviews) {
@@ -61,6 +66,14 @@ export class MainProductsFilterProductNameCategoryComponent extends AppComponent
         };
         let avg = Math.ceil(sum / counter);
         product.stars = avg;
+        product.starsList = [];
+        product.emptyStarsList = [];
+        for (let i: number = 0; i < avg; i++) {
+          product.starsList.push(new Object());
+        }
+        for (let i: number = 0; i < 5 - avg; i++) {
+          product.emptyStarsList.push(new Object());
+        } 
       }
     });
   }

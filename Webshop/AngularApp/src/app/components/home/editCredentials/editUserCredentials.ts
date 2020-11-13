@@ -40,7 +40,7 @@ export class EditUserCredentials implements OnInit {
   updateUser() {
     let data: User;
     data = { id: this.userDetails.id, username: this.username, email: this.email, password: this.password };
-    this.service.update(this.userDetails.id, data).subscribe(res => { this.router.navigate(['/home']);});
+    this.service.update(this.userDetails.id, data).subscribe(res => { this.router.navigateByUrl(""); });
    
   }
 
@@ -56,6 +56,8 @@ export class EditUserCredentials implements OnInit {
       this.swap_enabled_email = !this.swap_enabled_email;
     }
   }
-
+  cancelClicked() {
+    this.router.navigateByUrl("");
+  }
 
 }

@@ -33,7 +33,9 @@ export class ReviewListComponent implements OnInit {
       reviewId: 0,
       productId: 0,
       userId: "",
-      username: ""
+      username: "",
+      emptyStarsList: [],
+      starsList: []
      
     }
     this.ModalTitle = "Add Review";

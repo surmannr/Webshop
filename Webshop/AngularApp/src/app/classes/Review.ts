@@ -6,4 +6,6 @@ export class Review {
   productId: number;
   userId: string;
   username: string;
+  starsList: object[];
+  emptyStarsList: object[];
 }

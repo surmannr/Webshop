@@ -9,8 +9,8 @@ export class Product {
   imageName: string;
 
   stars: number;
-  hidden: boolean;
-
+  starsList: object[];  
+  emptyStarsList: object[];
   category_Name: string;
   categoryId: number;
 

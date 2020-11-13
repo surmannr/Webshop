@@ -61,36 +61,9 @@
       <div class="col-n">
         <h3>{{UsernameList[i]}}</h3>
         <h3>
-          <div class="row" *ngFor="let reviewStars of ProductStarList; let j = index">
-            <i class="fas fa-star" *ngFor="let star of ProductStarList[j]"></i>
-          </div>
-          
           <!-- Nem akarom elhinni, hogy ezt nem lehetne másként megcsinálni -->
-          <i class="fas fa-star" *ngIf="StarList[i] >= 1"></i>
-          <i class="fas fa-star" *ngIf="StarList[i] >= 2"></i>
-          <i class="fas fa-star" *ngIf="StarList[i] >= 3"></i>
-          <i class="fas fa-star" *ngIf="StarList[i] >= 4"></i>
-          <i class="fas fa-star" *ngIf="StarList[i] >= 5"></i>
-
-          <i class="far fa-star" *ngIf="StarList[i] === 4"></i>
-
-          <i class="far fa-star" *ngIf="StarList[i] === 3"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 3"></i>
-
-          <i class="far fa-star" *ngIf="StarList[i] === 2"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 2"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 2"></i>
-
-          <i class="far fa-star" *ngIf="StarList[i] === 1"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 1"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 1"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 1"></i>
-
-          <i class="far fa-star" *ngIf="StarList[i] === 0"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 0"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 0"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 0"></i>
-          <i class="far fa-star" *ngIf="StarList[i] === 0"></i>
+          <i class="fas fa-star" *ngFor="let test of review.starsList"></i>
+          <i class="far fa-star" *ngFor="let test of review.emptyStarsList"></i>         
         </h3>
       </div>
       <div class="col-r">
