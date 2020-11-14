@@ -7,7 +7,7 @@ namespace Webshop.Data
 {
     public class Status
     {
-        private int v;
+      
 
         public Status(int i)
         {

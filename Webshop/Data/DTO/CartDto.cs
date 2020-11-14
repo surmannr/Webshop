@@ -6,7 +6,7 @@ namespace Webshop.Data
 {
     public class CartDto
     {
-        //Tárolt adatok
+        //Tárolt adatok a kosárról.
         public int CartId { get; set; }
         public string UserId { get; set; }
 
