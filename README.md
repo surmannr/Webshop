@@ -5,3 +5,5 @@ ASP.NET Core
 EntityFramework Core, IdentityUser, Auto-Mapper
 
 WebAPI + Swashbuckle
+
+Angular
