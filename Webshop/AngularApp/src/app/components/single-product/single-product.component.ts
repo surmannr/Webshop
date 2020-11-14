@@ -37,6 +37,10 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   ProductsInCart: Product[] = [];
   ProductsInCartQuantities: number[] = [];
   userDetails;
+  Review_description: string = "";
+  Review_stars: number = 0;
+  reviewFormIsVisible: boolean = false;
+  userIsAdmin: boolean = false;
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
     private reviewService: ReviewService, private router: Router, private userService: UserService,
@@ -46,7 +50,8 @@ export class SingleProductComponent extends AppComponent implements OnInit {
 
 
 
-   ngOnInit() {
+  ngOnInit() {
+    this.checkAdminRole();
     this.CategoryList = [];
     this.isLoggedIn = true;
     this.ReviewList = [];
@@ -54,12 +59,20 @@ export class SingleProductComponent extends AppComponent implements OnInit {
     this.RecommendedProductList = [];
     this.RecommendedProductImageRouteList = [];
     this.AllProducts = [];
-    this.RecommendedProductStarList = [];    
+    this.RecommendedProductStarList = [];
     this.refreshCategoryList();
     this.productQuantity = 1;
     this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
     this.productCheck();
     this.refreshRecommendedProductList();
+  }
+  checkAdminRole() {
+    let roleList = [];
+    roleList.push("Admin")
+    if (this.userService.roleMatch(roleList)) {
+      console.log("user is admin");
+      this.userIsAdmin = true;
+    }
   }
 
 
@@ -68,7 +81,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
     let sum: number = 0;
     this.reviewService.get(product.productID).subscribe(reviews => {
       if (reviews.length === 0) {
-        product.stars = 0;      
+        product.stars = 0;
       }
       else {
         for (let review of reviews) {
@@ -76,9 +89,9 @@ export class SingleProductComponent extends AppComponent implements OnInit {
           sum = sum + review.stars;
         };
         let avg = Math.ceil(sum / counter);
-        product.stars = avg;       
+        product.stars = avg;
       }
-      this.RecommendedProductStarList.push(product.stars);  
+      this.RecommendedProductStarList.push(product.stars);
     }, (error) => {
       this.toastr.error(error.error, "Error");
     });
@@ -90,29 +103,29 @@ export class SingleProductComponent extends AppComponent implements OnInit {
     let tmp: Product;
     let run: boolean = true;
     this.productService.getAll().subscribe(data => {
-    
+
       this.AllProducts = data;
       let counter = 0;
-    
+
       if (this.AllProducts.length > 5) {
         while (run) {
           random = this.getRandomInt(this.AllProducts.length);
-          
+
           if (!indexes.includes(random)) {
 
             tmp = this.AllProducts[random];
-           
+
             if (tmp.productID !== this.singleProduct.productID) {
               this.refreshREcommendedProductStarList(this.AllProducts[random]);
               indexes.push(random);
               counter = counter + 1;
               if (counter === 4) run = false;
-            }           
+            }
           }
         }
-        for (let i = 0; i < indexes.length; i++) {            
+        for (let i = 0; i < indexes.length; i++) {
           this.RecommendedProductList.push(this.AllProducts[indexes[i]]);
-          this.RecommendedProductImageRouteList.push(this.imageRoute + this.AllProducts[indexes[i]].imageName);          
+          this.RecommendedProductImageRouteList.push(this.imageRoute + this.AllProducts[indexes[i]].imageName);
         }
       }
       else {
@@ -124,7 +137,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
             this.RecommendedProductStarList.push(this.AllProducts[i].stars);
           }
         }
-      }     
+      }
     });
 
   }
@@ -135,7 +148,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   }
 
   productCheck() {
-    let json_product: string = localStorage.getItem('product');    
+    let json_product: string = localStorage.getItem('product');
     if (json_product == null) {
       this.router.navigateByUrl("");
     }
@@ -143,12 +156,12 @@ export class SingleProductComponent extends AppComponent implements OnInit {
       this.singleProduct = JSON.parse(json_product);
       this.singleProductImageName = this.imageRoute + this.singleProduct.imageName;
       this.refreshReviewList();
-    }   
+    }
   }
 
 
 
-  refreshReviewList() {   
+  refreshReviewList() {
     this.reviewService.get(this.singleProduct.productID).subscribe(data => {
       this.ReviewList = data;
       for (let review of data) {
@@ -160,14 +173,14 @@ export class SingleProductComponent extends AppComponent implements OnInit {
         }
         for (let i: number = 0; i < 5 - review.stars; i++) {
           review.emptyStarsList.push(new Object());
-        }       
+        }
       }
     }, (error) => {
       this.toastr.error(error.error, "Error");
     });
   }
 
-  productPictureClicked(product: Product) {    
+  productPictureClicked(product: Product) {
     localStorage.removeItem('product');
     localStorage.setItem('product', JSON.stringify(product));
     this.router.navigateByUrl('techonomy/products/' + product.productID);
@@ -178,28 +191,28 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   addedToCartClicked(productQuantity: number, product: Product) {
     if (localStorage.getItem('token') != null) {
       let userDetails;
-     
-        this.userService.getUserProfile().subscribe(
-          res => {
-            userDetails = res;
-            let val: ProductCart;
-            val = { productCartId: 0, productIndex: product.productID, cartIndex: userDetails.cartId, price: product.price, product_Name: product.product_Name, quantity: productQuantity };
 
-            this.productCartSerivce.create(val).subscribe(res => { this.toastr.success("You can continue your shopping", "Added the productcart"); },
-              (error) => {
-                this.toastr.error(error.error, "Error");
-              });
-          
-          },
-          err => {
-            this.toastr.error(err, "Error");            
-          });
-      
+      this.userService.getUserProfile().subscribe(
+        res => {
+          userDetails = res;
+          let val: ProductCart;
+          val = { productCartId: 0, productIndex: product.productID, cartIndex: userDetails.cartId, price: product.price, product_Name: product.product_Name, quantity: productQuantity };
+
+          this.productCartSerivce.create(val).subscribe(res => { this.toastr.success("You can continue your shopping", "Added the productcart"); },
+            (error) => {
+              this.toastr.error(error.error, "Error");
+            });
+
+        },
+        err => {
+          this.toastr.error(err, "Error");
+        });
+
     }
     else {
       this.router.navigateByUrl('/login');
     }
-   }
+  }
 
   checkQuantityInputValue() {
     if (this.productQuantity < 0)
@@ -228,21 +241,66 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   }
 
   AddToFavouriteClicked(product: Product) {
-    if (!this.isLoggedIn) this.toastr.error("You must log in to do this","Task failed");
+    if (!this.isLoggedIn) this.toastr.error("You must log in to do this", "Task failed");
     else {
       let favouriteProduct: UsersFavouriteProducts;
-      
+
       this.userService.getUserProfile().subscribe(data => {
         this.userDetails = data;
         favouriteProduct = {
           productIndex: product.productID.toString(), userIndex: this.userDetails.id, id: 0
-        };       
+        };
 
-        this.usersFavouriteProducts.Post(favouriteProduct).subscribe(_ => { this.toastr.success("You can continue your shopping","Added to your favourites"); });
+        this.usersFavouriteProducts.Post(favouriteProduct).subscribe(_ => { this.toastr.success("You can continue your shopping", "Added to your favourites"); });
       }, (error) => {
         this.toastr.error(error.error, "Error");
       });
-      
+
     }
   }
+
+
+
+  OpenReviewForm() {
+    this.userService.getUserProfile().subscribe(data => {
+      this.userDetails = data;
+      this.reviewFormIsVisible = true;
+    },
+      (error) => {
+        this.toastr.error(error.error, "You must log in to do this");
+      });
+
+
+  }
+
+
+
+  CloseReviewForm() {
+    this.reviewFormIsVisible = false;
+  }
+
+
+  AddReview() {
+    let review: Review;
+    review = {
+      description: this.Review_description, stars: this.Review_stars, productId: this.singleProduct.productID,
+      userId: this.userDetails.id, reviewId: 0, username: this.userDetails.userName, starsList: [], emptyStarsList: []
+    }
+    this.reviewService.create(review).subscribe(_ => {
+      this.toastr.success("Review was successfully added to product");
+      this.reviewFormIsVisible = false;
+      this.ngOnInit();
+    }, (error) => {
+      this.toastr.error(error.error, "Error");
+    });
+  }
+
+  removeReview(index: number) {
+    this.reviewService.delete(this.ReviewList[index].reviewId).subscribe(_ => {
+      this.toastr.success("Removed the review");
+      this.ngOnInit();
+    });
+  }
+
+
 }

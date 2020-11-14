@@ -26,7 +26,7 @@ export class AuthInterceptor implements HttpInterceptor {
           //Ha nincs megfelelő jogosultsága akkor átnavigáljuk egy forbidden oldalra.
           else if (err.status == 403) {           
             this.router.navigateByUrl('/forbidden');
-            this.toastr.error(err.msg);
+            this.toastr.error("You dont have permittion to do that","Access denied");
           }
         }
       ));

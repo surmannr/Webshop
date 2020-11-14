@@ -47,8 +47,8 @@ export class UserService {
     return this.http.post(BASEURL.baseUrl + "User/Login", formData).pipe(catchError(this.handleError));
   }
 
-  getUserProfile() {    
-    return this.http.get(BASEURL.baseUrl + "UserProfile");
+  getUserProfile() {
+    return this.http.get(BASEURL.baseUrl + "UserProfile").pipe(catchError(this.handleError));
   }
   //Ellenőrizzük, hogy a role-ja megfelel-e 
   roleMatch(allowedRoles): boolean {

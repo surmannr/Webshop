@@ -26,17 +26,26 @@ namespace Webshop.Controllers
         [HttpGet]
         [Authorize]
         public async Task<Object> GetUserProfile() {
-            string userId = User.Claims.First(c => c.Type == "UserID").Value;
-            // Debug.WriteLine(userId);
-            var user = await _userManager.FindByIdAsync(userId);
-            var cart = await _context.Carts.FirstOrDefaultAsync(x => x.UserId == userId);
-            return new
+            try
             {
-                user.UserName,
-                user.Email,
-                user.Id,
-                cart.CartId
-            };
+                string userId = User.Claims.First(c => c.Type == "UserID").Value;
+
+                if(userId == "" || userId == null) return BadRequest("You must log in to use this service");
+
+                // Debug.WriteLine(userId);
+                var user = await _userManager.FindByIdAsync(userId);
+                var cart = await _context.Carts.FirstOrDefaultAsync(x => x.UserId == userId);
+                return new
+                {
+                    user.UserName,
+                    user.Email,
+                    user.Id,
+                    cart.CartId
+                };
+            }
+            catch (Exception e) {
+                return BadRequest("You must log in to use this service");
+            }
         }
 
 

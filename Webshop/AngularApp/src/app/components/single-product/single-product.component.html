@@ -51,24 +51,47 @@
         <h1>{{singleProduct.product_Name}}</h1>
         <h4>{{singleProduct.price}} Ft</h4>
         <input type="number" value="{{productQuantity}}" [(ngModel)]="productQuantity" (click)="checkQuantityInputValue()" (change)="checkQuantityInputValue()" min="0">
+
         <a class="btn" (click)="addedToCartClicked(productQuantity,singleProduct)">Add to Cart</a>
         <h3>Product Details <i class="fas fa-indent"></i></h3>
         <p>{{singleProduct.product_Description}}</p>
-        <a class="btn" style="margin-right: 20px" (click)="AddToFavouriteClicked(singleProduct)">Add to favorite</a><a href="" class="btn">Add a review</a>
+        <a class="btn" style="margin-right: 20px" (click)="AddToFavouriteClicked(singleProduct)">Add to favorite</a><a class="btn" (click)="OpenReviewForm()">Add a review</a>
       </div>
     </div>
+
+    <div class="form" *ngIf="reviewFormIsVisible">
+      <label class="col-sm-4 col-form-label">
+        Review description
+      </label>
+      <div class="col-sm-10">
+        <textarea style="width: 100%; height:100px" [(ngModel)]="Review_description " placeholder="Enter description"></textarea>
+      </div>
+      <label class="col-sm-4 col-form-label">
+        Review stars
+      </label>
+      <div class="col-sm-6">
+        <input type="number" class="form-control" [(ngModel)]="Review_stars " placeholder="0" min="0" max="5" />
+      </div>
+      <button class=" btn btn-primary" (click)="AddReview()">Add</button>
+      <button class=" btn btn-primary" style="margin-left:50px" (click)="CloseReviewForm()">Cancel</button>
+    </div>
+
+
+
+
     <div class="row review" *ngFor="let review of ReviewList; let i = index">
       <div class="col-n">
         <h3>{{UsernameList[i]}}</h3>
         <h3>
           <!-- Nem akarom elhinni, hogy ezt nem lehetne másként megcsinálni -->
           <i class="fas fa-star" *ngFor="let test of review.starsList"></i>
-          <i class="far fa-star" *ngFor="let test of review.emptyStarsList"></i>         
+          <i class="far fa-star" *ngFor="let test of review.emptyStarsList"></i>
         </h3>
+        <i class="fas fa-minus-circle" style="color:red;font-size:20px;margin-top:10px" *ngIf="userIsAdmin" (click)="removeReview(i)"></i>
       </div>
       <div class="col-r">
         <p>{{review.description}}</p>
-      </div>
+      </div>   
     </div>
 
 
@@ -80,7 +103,7 @@
       <div class="col-4" *ngFor="let imageRoute of RecommendedProductImageRouteList; let i = index">
         <img src="{{imageRoute}}" (click)="productPictureClicked(RecommendedProductList[i])">
         <h4>{{RecommendedProductList[i].product_Name}}</h4>
-       
+
         <p>{{RecommendedProductList[i].price}} Ft</p>
       </div>
     </div>
@@ -109,7 +132,7 @@
         <div class="col-md-3 col-sm-6 col-xs-12 segment-three">
           <h6>Our Newsletter</h6>
           <p class="footer-p">Please subscribe our newsletter to get the latest news!</p>
-          <form action="">
+          <form action="" name="">
             <input type="email" name="email" id="email">
             <input type="submit" value="Subscribe">
           </form>

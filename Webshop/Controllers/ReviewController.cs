@@ -72,7 +72,9 @@ namespace Webshop.Controllers
                 product.Reviews.Add(review);
                 //System.Diagnostics.Debug.WriteLine(product.Reviews.Last().Description);
             }
-            else return NoContent();
+            else return BadRequest("Couldnt find the product");
+
+                if (review.Stars > 5 || review.Stars < 0) return BadRequest("Invalid star amount");
             
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
@@ -93,8 +95,8 @@ namespace Webshop.Controllers
                 var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == newReview.ReviewId);
             if (reviewWaitingForUpdate == null) return NotFound();
 
-            if (newReview.Stars!=0) reviewWaitingForUpdate.Stars = newReview.Stars;
-            if (newReview.Description != null) reviewWaitingForUpdate.Description = newReview.Description;
+            if (newReview.Stars >= 0 && newReview.Stars <= 5) reviewWaitingForUpdate.Stars = newReview.Stars;
+            if (newReview.Description != null &&newReview.Description != "") reviewWaitingForUpdate.Description = newReview.Description;
 
             await _context.SaveChangesAsync();
             return Ok();
