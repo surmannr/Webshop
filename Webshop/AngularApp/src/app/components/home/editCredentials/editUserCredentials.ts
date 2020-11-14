@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { User } from '../../../classes/User';
 import { UserService } from '../../../services/user.service';
 
@@ -10,7 +11,7 @@ import { UserService } from '../../../services/user.service';
 })
 export class EditUserCredentials implements OnInit {
 
-  constructor(private service: UserService, private router: Router) { }
+  constructor(private service: UserService, private router: Router, private toastr: ToastrService) { }
 
 
   avatarImageRoute: string = this.service.avatarImageRoute;
@@ -31,7 +32,7 @@ export class EditUserCredentials implements OnInit {
         this.userDetails = res;       
       },
       err => {
-        console.log(err);
+        this.toastr.error(err, "Error");       
       });
     this.swap_enabled_username = true;
     this.swap_enabled_email = true;
@@ -40,7 +41,9 @@ export class EditUserCredentials implements OnInit {
   updateUser() {
     let data: User;
     data = { id: this.userDetails.id, username: this.username, email: this.email, password: this.password };
-    this.service.update(this.userDetails.id, data).subscribe(res => { this.router.navigateByUrl(""); });
+    this.service.update(this.userDetails.id, data).subscribe(res => { this.router.navigateByUrl(""); }, (error) => {
+      this.toastr.error(error.error, "Error");
+    });
    
   }
 

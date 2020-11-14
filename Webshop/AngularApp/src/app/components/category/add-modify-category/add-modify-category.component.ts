@@ -1,6 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from '../../../classes/Category';
 
@@ -11,7 +12,7 @@ import { Category } from '../../../classes/Category';
 })
 export class AddModifyCategoryComponent implements OnInit {
 
-  constructor(private service: CategoryService, private router: Router) { }
+  constructor(private service: CategoryService, private router: Router, private toastr: ToastrService) { }
 
   item: Category;
 
@@ -39,7 +40,7 @@ export class AddModifyCategoryComponent implements OnInit {
 
 
     if (!fileToUpload.type.includes("image"))
-      alert("This is not an image");
+      this.toastr.error("This is not an image","Error");
     else {
       this.service.uploadFile(formData).subscribe(event => {
         if (event.type === HttpEventType.UploadProgress) {
@@ -49,7 +50,9 @@ export class AddModifyCategoryComponent implements OnInit {
           this.message = 'Upload success';
           this.onUpLoadFinished.emit(event.body);
         }
-      });;
+      }, (error) => {
+        this.toastr.error(error.error, "Error")
+      });
     }
   }
 
@@ -72,13 +75,19 @@ export class AddModifyCategoryComponent implements OnInit {
   addCategory() {
     let val: Category;
     val = { category_Name: this.category_Name, categoryId: this.categoryId, imageName: this.category_image_name };
-    this.service.create(val).subscribe(res => { this.router.navigate(['/category']); });
+    this.service.create(val).subscribe(res => { this.router.navigate(['/category']); },
+      (error) => {
+      this.toastr.error(error.error, "Error")
+    });
   }
 
   updateCategory() {
     let data: Category;
     data = { category_Name: this.category_Name, categoryId: this.item.categoryId, imageName: this.category_image_name };   
-    this.service.update(data.categoryId, data).subscribe(res => { this.router.navigate(['/category']); });
+    this.service.update(data.categoryId, data).subscribe(res => { this.router.navigate(['/category']); },
+      (error) => {
+        this.toastr.error(error.error, "Error")
+      });
   }
   cancel() {
     this.router.navigate(['/category']);

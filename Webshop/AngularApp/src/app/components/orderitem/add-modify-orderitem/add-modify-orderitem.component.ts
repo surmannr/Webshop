@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Order } from '../../../classes/Order';
 import { OrderItem } from '../../../classes/OrderItem';
 import { Status } from '../../../classes/Status';
@@ -15,7 +16,8 @@ import { StatusService } from '../../../services/status.service';
 export class AddModifyOrderitemComponent implements OnInit {
   
 
-  constructor(private service: OrderitemService, private router: Router, private statusService: StatusService) { }
+  constructor(private service: OrderitemService, private router: Router, private statusService: StatusService,
+    private toastr: ToastrService) { }
 
   item: Order;
   orderItem: OrderItem;
@@ -64,19 +66,29 @@ export class AddModifyOrderitemComponent implements OnInit {
       amount: this.amount, price: this.price, productID: this.productID, orderId: this.item.orderId, statusId: this.statusId,
       orderItemId: this.orderItemId, productName: this.productName, statusName: this.statusName
     };
-    this.service.create(val).subscribe(res => { this.router.navigate(['order/orderitems']); });
+    this.service.create(val).subscribe(res => { this.router.navigate(['order/orderitems']); }, (error) => {
+      this.toastr.error(error.error, "Error");
+    });
   }
 
   updateOrderItem() {
-    
+ 
     let val: OrderItem;
-    val = {
-      amount: this.amount, price: this.price, productID: this.productID, orderId: this.item.orderId, statusId: JSON.parse(this.selectedOption_statusId),
-      orderItemId: this.orderItem.orderItemId, productName: this.productName, statusName: this.statusName
-    };
-    this.service.update(val.orderItemId, val).subscribe(res => {
-      this.router.navigate(['order/orderitems']);
-    });
+    try {
+      val = {
+        amount: this.amount, price: this.price, productID: this.productID, orderId: this.item.orderId, statusId: JSON.parse(this.selectedOption_statusId),
+        orderItemId: this.orderItem.orderItemId, productName: this.productName, statusName: this.statusName
+      };
+ 
+      this.service.update(val.orderItemId, val).subscribe(res => {
+        this.router.navigate(['order/orderitems']);
+      },
+        (error) => {
+          this.toastr.error(error.error, "Error");
+        });
+    } catch (error) {
+      this.toastr.error("Select a status");
+    }
 
   }
   cancel() {

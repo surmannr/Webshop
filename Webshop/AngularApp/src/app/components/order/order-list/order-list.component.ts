@@ -43,9 +43,7 @@ export class OrderListComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  addOrder() {
-    this.router.navigate(['/order/add']);
-  }
+
 
 
   ProductsClick(item: Order) {

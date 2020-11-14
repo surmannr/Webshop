@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { Cart } from '../classes/Cart';
 import { BASEURL } from './baseUrl';
+import { catchError } from 'rxjs/operators';
 
 
 
@@ -18,12 +19,17 @@ export class CartService {
 
   constructor(private http: HttpClient) { }
 
+  handleError(error: HttpErrorResponse) {
+    return throwError(error);
+  }
+
+
   getAll(): Observable<Cart[]> {
     return this.http.get<Cart[]>(BASEURL.baseUrl + 'Cart');
   }
 
   get(id): Observable<Cart> {
-    return this.http.get<Cart>(BASEURL.baseUrl + 'Cart/' + id);
+    return this.http.get<Cart>(BASEURL.baseUrl + 'Cart/' + id).pipe(catchError(this.handleError));;
   }
 
   create(data): Observable<Cart> {

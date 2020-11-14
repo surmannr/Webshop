@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AppComponent } from '../../app.component';
 import { Product } from '../../classes/Product';
 import { CategoryService } from '../../services/category.service';
@@ -18,7 +19,7 @@ export class MainProductsFilterProductNameComponent extends AppComponent impleme
   inputFieldName: string;
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
-    private reviewService: ReviewService, private router: Router) { super(); }
+    private reviewService: ReviewService, private router: Router, private toastr: ToastrService) { super(); }
 
 
 
@@ -33,6 +34,7 @@ export class MainProductsFilterProductNameComponent extends AppComponent impleme
     var productName_json = localStorage.getItem('productName');
 
     this.refreshProductList(JSON.parse(productName_json));
+    this.inputFieldName = JSON.parse(productName_json);
     this.refreshCategoryList();
     this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
   }
@@ -72,6 +74,8 @@ export class MainProductsFilterProductNameComponent extends AppComponent impleme
           product.emptyStarsList.push(new Object());
         }  
       }
+    }, (error) => {
+      this.toastr.error(error.error, "Error");
     });
   }
 
@@ -205,7 +209,7 @@ export class MainProductsFilterProductNameComponent extends AppComponent impleme
   categorySelector(categoryId: number) {
     localStorage.setItem('categoryId', JSON.stringify(categoryId));
     this.router.navigateByUrl('techonomy/products/category/categoryFilter/' + categoryId);
-    this.ProductImageNameList = [];
+    this.ProductImageNameList = [];   
     this.ngOnInit();
   }
 

@@ -1,23 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
 import { Product } from '../classes/Product';
 import { BASEURL } from './baseUrl';
+import { catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  readonly baseUrl = 'https://localhost:44308/api/Product';
+  
 
   constructor(private http: HttpClient) {
   }
-
+  handleError(error: HttpErrorResponse) {
+    return throwError(error);
+  }
 
 
   uploadFile(formData): Observable<any> {
-    return this.http.post<any>(BASEURL.baseUrl + 'Upload', formData, { reportProgress: true, observe: 'events' });     
+    return this.http.post<any>(BASEURL.baseUrl + 'Upload', formData, { reportProgress: true, observe: 'events' }).pipe(catchError(this.handleError));     
   }
 
   getAll(): Observable<Product[]> {
@@ -25,7 +28,7 @@ export class ProductService {
   }
 
   get(id): Observable<Product> {
-    return this.http.get<Product>(BASEURL.baseUrl+ 'Product/' + id);
+    return this.http.get<Product>(BASEURL.baseUrl + 'Product/' + id).pipe(catchError(this.handleError));
   }
 
   GetProductsByProductName(ProductNameForFiltering: string): Observable<Product[]> {
@@ -42,14 +45,14 @@ export class ProductService {
   }
 
   create(data): Observable<Product> {
-    return this.http.post<Product>(BASEURL.baseUrl + 'Product', data);
+    return this.http.post<Product>(BASEURL.baseUrl + 'Product', data).pipe(catchError(this.handleError));
   }
 
   update(id, data): Observable<Product> {
-    return this.http.put<Product>(BASEURL.baseUrl+ 'Product/' + id, data);
+    return this.http.put<Product>(BASEURL.baseUrl + 'Product/' + id, data).pipe(catchError(this.handleError));
   }
 
   delete(id): Observable<Product> {
-    return this.http.delete<Product>(BASEURL.baseUrl+ 'Product/' + id);
+    return this.http.delete<Product>(BASEURL.baseUrl + 'Product/' + id).pipe(catchError(this.handleError));
   } 
 }

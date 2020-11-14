@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../../services/user.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { UserService } from '../../../services/user.service';
 })
 export class UserLoginComponent implements OnInit {
 
-  constructor(private service: UserService, private router: Router) { }
+  constructor(private service: UserService, private router: Router, private toastr: ToastrService) { }
 
   formModel = {
     Username: '',
@@ -28,7 +29,7 @@ export class UserLoginComponent implements OnInit {
       this.router.navigateByUrl('/home');
     }, err => {
         if (err.status == 400) {
-          console.log(err);
+          this.toastr.error(err, "Error");         
         }
     });
   }

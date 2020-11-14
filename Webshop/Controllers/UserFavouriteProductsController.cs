@@ -52,7 +52,7 @@ namespace Webshop.Controllers
             var dbUsersFavouriteProducts = _context.UsersFavouriteProducts.SingleOrDefault(p => p.Id == id);
 
             if (dbUsersFavouriteProducts == null)
-                return NotFound();
+                return NotFound("Couldnt find the item");
 
             _context.UsersFavouriteProducts.Remove(dbUsersFavouriteProducts);
             await _context.SaveChangesAsync();

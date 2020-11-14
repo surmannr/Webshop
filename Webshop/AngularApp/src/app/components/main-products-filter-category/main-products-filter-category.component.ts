@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AppComponent } from '../../app.component';
 import { Product } from '../../classes/Product';
 import { CategoryService } from '../../services/category.service';
@@ -18,7 +19,7 @@ export class MainProductsFilterCategoryComponent extends AppComponent implements
   inputFieldName: string;
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
-    private reviewService: ReviewService, private router: Router) { super(); }
+    private reviewService: ReviewService, private router: Router, private toastr: ToastrService) { super(); }
 
 
  
@@ -32,10 +33,16 @@ export class MainProductsFilterCategoryComponent extends AppComponent implements
 
     var categoryId_json = localStorage.getItem('categoryId');
 
-    if (categoryId_json == null) this.selectedOption_category = JSON.parse(JSON.stringify(-1));
-    else {
+    if (categoryId_json == null) {
+      this.selectedOption_category = JSON.parse(JSON.stringify(-1));
+     
+    }
+    else {     
+      
       this.selectedOption_category = JSON.parse(categoryId_json);
-      this.refreshProductList(JSON.parse(categoryId_json));      
+     
+      this.refreshProductList(JSON.parse(categoryId_json));
+      this.selectedOption_category = JSON.parse(categoryId_json);
     }
     this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
   }
@@ -75,18 +82,20 @@ export class MainProductsFilterCategoryComponent extends AppComponent implements
           product.emptyStarsList.push(new Object());
         }   
       }
+    }, (error) => {
+      this.toastr.error(error.error, "Error");
     });
   }
 
   refreshProductList(categoryId: number) {
     this.productService.GetProductsByCategoryId(categoryId).subscribe(data => {
+      this.selectedOption_category = categoryId.toString();
       this.ProductList = data;
       for (let product of this.ProductList) {       
         this.ProductImageNameList.push(this.imageRoute + product.imageName);
         this.refreshReviewList(product);
-      };
-      
-    });
+      };      
+    });   
   }
 
 
@@ -129,7 +138,7 @@ export class MainProductsFilterCategoryComponent extends AppComponent implements
   }
 
   filterClicked() {
-    console.log("filterClicked");
+  
     //Remove the previous filter form the products
     this.removeFilterFromProducts();
 
@@ -176,6 +185,7 @@ export class MainProductsFilterCategoryComponent extends AppComponent implements
       //There is no valid category selected for filtering
       else this.removeFilterFromProducts();
     }
+    
   }
 
   filterByName(productName: string) {
@@ -209,7 +219,7 @@ export class MainProductsFilterCategoryComponent extends AppComponent implements
     localStorage.setItem('categoryId', JSON.stringify(categoryId));
     this.router.navigateByUrl('techonomy/products/category/categoryFilter/' + categoryId);
     this.ProductImageNameList = [];
-    this.ngOnInit();
+    this.ngOnInit();    
   }
 
 

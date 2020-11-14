@@ -1,14 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { flatMap } from 'rxjs/operators';
+import { ToastrService } from 'ngx-toastr';
 import { AppComponent } from '../../app.component';
-import { Product } from '../../classes/Product';
-import { UsersFavouriteProducts } from '../../classes/UsersFavouriteProducts';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
-import { ReviewService } from '../../services/review.service';
 import { UserFavouriteProductsService } from '../../services/user-favourite-products.service';
-import { map } from 'rxjs/operators';
 import { UserService } from '../../services/user.service';
 @Component({
   selector: 'app-main-favourites',
@@ -23,7 +19,8 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
   inputFieldName: string;
 
   constructor(private categoryService: CategoryService, private userFavouriteProducts: UserFavouriteProductsService, private productService: ProductService,
-    private userService: UserService, private router: Router, private userFavouriteProductService: UserFavouriteProductsService) { super(); }
+    private userService: UserService, private router: Router, private userFavouriteProductService: UserFavouriteProductsService,
+    private toastr: ToastrService) { super(); }
 
 
 
@@ -42,6 +39,8 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
       this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
       this.refreshCategoryList();
       this.refreshProductList();
+    }, (error) => {
+      this.toastr.error(error.error, "Error");
     });
   
   }
@@ -66,6 +65,8 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
           this.ProductNameList.push(productData.product_Name);
           this.ProductIdList.push(productData.productID);
           this.UserFavouriteProductIdList.push(res.id);
+        }, (error) => {
+          this.toastr.error(error.error, "Error");
         });
       }
 
@@ -79,6 +80,8 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
     this.productService.get(productId).subscribe(data => {
       localStorage.setItem('product', JSON.stringify(data));
       this.router.navigateByUrl('techonomy/products/' + productId);
+    }, (error) => {
+      this.toastr.error(error.error, "Error");
     });
   }
 
@@ -102,6 +105,8 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
     this.userFavouriteProductService.Delete(index).subscribe(_ => {
       console.log("removed");
       this.refreshProductList();
+    }, (error) => {
+      this.toastr.error(error.error, "Error");
     });
   }
 }

@@ -48,7 +48,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<ReviewDto[]>> Get(int id)
         {
             var res = await _context.Reviews.Where(c => c.ProductId == id).ToListAsync();
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("Couldnt find the item");
             var mapppelt = _mapper.Map<ReviewDto[]>(res);
             return mapppelt;
         }
@@ -57,7 +57,9 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] ReviewDto newReview)
         {
-            var user = await _userManager.FindByIdAsync(newReview.UserId);
+            try
+            {
+                var user = await _userManager.FindByIdAsync(newReview.UserId);
             var product = await _context.Products.FirstOrDefaultAsync(c => c.ProductID == newReview.ProductId);
             
             Review review = _mapper.Map<Review>(newReview);
@@ -75,13 +77,20 @@ namespace Webshop.Controllers
             _context.Reviews.Add(review);
             await _context.SaveChangesAsync();
             return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(418,ex.Message);
+            }
         }
 
         // PUT api/<ReviewController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] ReviewDto newReview)
         {
-            var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == newReview.ReviewId);
+            try
+            {
+                var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == newReview.ReviewId);
             if (reviewWaitingForUpdate == null) return NotFound();
 
             if (newReview.Stars!=0) reviewWaitingForUpdate.Stars = newReview.Stars;
@@ -89,6 +98,11 @@ namespace Webshop.Controllers
 
             await _context.SaveChangesAsync();
             return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(418,ex.Message);
+            }
         }
         // DELETE api/<ReviewController>/5
         [HttpDelete("{id}")]
@@ -97,7 +111,7 @@ namespace Webshop.Controllers
             var dbReview = _context.Reviews.SingleOrDefault(p => p.ReviewId == id);
 
             if (dbReview == null)
-                return NotFound();
+                return NotFound("Couldnt find the item");
 
             _context.Reviews.Remove(dbReview);
             await _context.SaveChangesAsync();

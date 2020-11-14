@@ -54,7 +54,7 @@
       <div class="filter">
         <label for="category">Category filter:</label>
         <select class="form-control" id="category" name="category" [(ngModel)]="selectedOption_category">
-          <option selected="selected" value="-1">none</option>
+          <option  value="-1">none</option>
           <option *ngFor="let categoryItem of CategoryList" value="{{categoryItem.categoryId}}">{{categoryItem.category_Name}}</option>
 
         </select>

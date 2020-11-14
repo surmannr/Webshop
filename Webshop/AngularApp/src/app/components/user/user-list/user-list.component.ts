@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { User } from '../../../classes/User';
 import { UserService } from '../../../services/user.service';
 
@@ -13,7 +14,7 @@ export class UserListComponent implements OnInit {
   
   UserList: User[] = [];
 
-  constructor(readonly service: UserService, private router: Router) { }
+  constructor(readonly service: UserService, private router: Router, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.refreshUserList();
@@ -33,6 +34,8 @@ export class UserListComponent implements OnInit {
     if (confirm("Do you want to delete this item?")) {
       this.service.delete(item.id).subscribe(_ => {
         this.refreshUserList();
+      }, (error) => {
+        this.toastr.error(error.error, "Error");
       });
     }
   }

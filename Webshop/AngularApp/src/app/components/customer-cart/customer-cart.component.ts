@@ -9,9 +9,8 @@ import { ProductCart } from '../../classes/ProductCart';
 import { CategoryService } from '../../services/category.service';
 import { OrderService } from '../../services/order.service';
 import { OrderitemService } from '../../services/orderitem.service';
-import { ProductService } from '../../services/product.service';
 import { ProductcartService } from '../../services/productcart.service';
-import { StatusService } from '../../services/status.service';
+
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -24,9 +23,8 @@ import { UserService } from '../../services/user.service';
 export class CustomerCartComponent extends AppComponent implements OnInit {
 
 
-  constructor(private categoryService: CategoryService, private router: Router, public productService: ProductService, private productCartService: ProductcartService,
-    private userService: UserService, private orderService: OrderService, private statusService: StatusService,
-    private orderItemService: OrderitemService, private toastr: ToastrService) { super(); }
+  constructor(private categoryService: CategoryService, private router: Router,private productCartService: ProductcartService,
+    private userService: UserService, private orderService: OrderService,  private orderItemService: OrderitemService, private toastr: ToastrService) { super(); }
 
   //Ebbe van a végős adat
   cartProductList: Product[] = [];
@@ -56,26 +54,15 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
     this.Tax = 0;
     this.refreshCategoryList();
     this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
-    this.refreshCartProductList();
-    this.getUserProfile();
+    this.refreshCartProductList();   
   }
-  getUserProfile() {
-    this.userService.getUserProfile().subscribe(
-      res => {
-        this.userDetails = res;
-      },
-      err => {
-        console.log(err);
-      });
-  }
-  refreshCartProductList() {
-    let userDetails;
-    this.userService.getUserProfile().subscribe(_ => {
+
+  refreshCartProductList() {   
       this.userService.getUserProfile().subscribe(
         res => {
-          userDetails = res;
+          this.userDetails = res;
 
-          this.productCartService.get(userDetails.cartId).subscribe(data => {
+          this.productCartService.get(this.userDetails.cartId).subscribe(data => {
             this.productCartList = data;
             this.refreshSubTotal();
           });
@@ -83,8 +70,6 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
         err => {
           console.log(err);
         });
-    });
-
   }
 
 
@@ -143,7 +128,9 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
               amount: product.quantity, price: product.price, productID: product.productIndex, orderId: _orderId, statusId: 1,
               orderItemId: 0, productName: product.product_Name, statusName: "New"
             };
-            this.orderItemService.create(val).subscribe(res => {});
+            this.orderItemService.create(val).subscribe(res => { }, (error) => {
+              this.toastr.error(error.error, "Error");
+            });
           }
           this.toastr.success("Thank you for your purchase","Purchase was succesful");
           this.router.navigateByUrl("");
@@ -151,6 +138,8 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
           for (let productCart of this.productCartList) {
             this.productCartService.delete((productCart.productCartId)).subscribe(_ => {});
           }
+        }, (error) => {
+          this.toastr.error(error.error, "Error");
         });
       }
     }

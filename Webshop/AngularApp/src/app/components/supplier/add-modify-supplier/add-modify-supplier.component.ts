@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Supplier } from '../../../classes/Supplier';
 import { SupplierService } from '../../../services/supplier.service';
 
@@ -11,7 +12,7 @@ import { SupplierService } from '../../../services/supplier.service';
 export class AddModifySupplierComponent implements OnInit {
 
 
-  constructor(private service: SupplierService, private router: Router) { }
+  constructor(private service: SupplierService, private router: Router, private toastr: ToastrService) { }
 
   item: Supplier;
 
@@ -41,14 +42,18 @@ export class AddModifySupplierComponent implements OnInit {
   addSupplier() {
     let val: Supplier;
     val = { supplierId: this.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };   
-    this.service.create(val).subscribe(res => { this.router.navigate(['/supplier']); });   
+    this.service.create(val).subscribe(res => { this.router.navigate(['/supplier']); }, (error) => {
+      this.toastr.error(error.error, "Error");
+    });   
   }
 
   updateSupplier() {
     let val: Supplier;
     val = { supplierId: this.item.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };
    
-    this.service.update(val.supplierId, val).subscribe(res => { this.router.navigate(['/supplier']); });
+    this.service.update(val.supplierId, val).subscribe(res => { this.router.navigate(['/supplier']); }, (error) => {
+      this.toastr.error(error.error, "Error");
+    });
   }
   cancel() {
     this.router.navigate(['/supplier']);

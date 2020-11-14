@@ -1,15 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ENGINE_METHOD_ALL } from 'constants';
 import { ToastrService } from 'ngx-toastr';
-import { async } from 'rxjs';
 import { AppComponent } from '../../app.component';
-import { Cart } from '../../classes/Cart';
 import { Category } from '../../classes/Category';
 import { Product } from '../../classes/Product';
 import { ProductCart } from '../../classes/ProductCart';
 import { Review } from '../../classes/Review';
-import { User } from '../../classes/User';
 import { UsersFavouriteProducts } from '../../classes/UsersFavouriteProducts';
 import { CategoryService } from '../../services/category.service';
 import { ProductService } from '../../services/product.service';
@@ -83,6 +79,8 @@ export class SingleProductComponent extends AppComponent implements OnInit {
         product.stars = avg;       
       }
       this.RecommendedProductStarList.push(product.stars);  
+    }, (error) => {
+      this.toastr.error(error.error, "Error");
     });
   }
 
@@ -164,6 +162,8 @@ export class SingleProductComponent extends AppComponent implements OnInit {
           review.emptyStarsList.push(new Object());
         }       
       }
+    }, (error) => {
+      this.toastr.error(error.error, "Error");
     });
   }
 
@@ -178,20 +178,23 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   addedToCartClicked(productQuantity: number, product: Product) {
     if (localStorage.getItem('token') != null) {
       let userDetails;
-      this.userService.getUserProfile().subscribe(data => {
+     
         this.userService.getUserProfile().subscribe(
           res => {
             userDetails = res;
             let val: ProductCart;
             val = { productCartId: 0, productIndex: product.productID, cartIndex: userDetails.cartId, price: product.price, product_Name: product.product_Name, quantity: productQuantity };
 
-            this.productCartSerivce.create(val).subscribe(res => { this.toastr.success("You can continue your shopping", "Added the productcart"); });
+            this.productCartSerivce.create(val).subscribe(res => { this.toastr.success("You can continue your shopping", "Added the productcart"); },
+              (error) => {
+                this.toastr.error(error.error, "Error");
+              });
           
           },
           err => {
-            console.log(err);
+            this.toastr.error(err, "Error");            
           });
-      });
+      
     }
     else {
       this.router.navigateByUrl('/login');
@@ -236,6 +239,8 @@ export class SingleProductComponent extends AppComponent implements OnInit {
         };       
 
         this.usersFavouriteProducts.Post(favouriteProduct).subscribe(_ => { this.toastr.success("You can continue your shopping","Added to your favourites"); });
+      }, (error) => {
+        this.toastr.error(error.error, "Error");
       });
       
     }

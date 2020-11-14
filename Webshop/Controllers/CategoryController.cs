@@ -37,7 +37,7 @@ namespace Webshop.Controllers
             var res =  await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
 
             // Hibakezelés
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("Couldnt find the item");
 
             var mappelt = _mapper.Map<CategoryDto>(res);
 
@@ -49,33 +49,46 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post([FromBody] CategoryDto newCategoryDto)
         {
-            if (newCategoryDto.Category_Name == null) return NoContent();
-            var newCategory = _mapper.Map<Category>(newCategoryDto);            
-            _context.Categories.Add(newCategory);
-            await _context.SaveChangesAsync();
-            return Ok();
+            try
+            {
+                if (newCategoryDto.Category_Name == null) return BadRequest("Category name can't be empty");
+                var newCategory = _mapper.Map<Category>(newCategoryDto);
+                _context.Categories.Add(newCategory);
+                await _context.SaveChangesAsync();
+                return Ok();
+            }
+            catch (Exception ex) {
+                return StatusCode(418, ex.Message);
+            }
         }
 
         // PUT api/<CategoryController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] CategoryDto newCategoryDto)
         {
-            var newCategory = _mapper.Map<Category>(newCategoryDto);
-            if (newCategory == null) return NoContent();
+            try
+            {
+                var newCategory = _mapper.Map<Category>(newCategoryDto);
+            if (newCategory == null) return BadRequest("Category can't be empty");
 
             var categoryWaitingForUpdate = _context.Categories.SingleOrDefault(p => p.CategoryId == id);
 
             if (categoryWaitingForUpdate == null)
-                return NotFound();
+                return NotFound("Item waiting for delete doesnt exist");
 
             // modositasok elvegzese
-            
+
             if (newCategory.Category_Name != null) categoryWaitingForUpdate.Category_Name = newCategory.Category_Name;
             if (newCategory.ImageName != null) categoryWaitingForUpdate.ImageName = newCategory.ImageName;
             // mentes az adatbazisban
             await _context.SaveChangesAsync();
 
             return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(418, ex.Message);
+            }
         }
 
         // DELETE api/<CategoryController>/5
@@ -85,7 +98,7 @@ namespace Webshop.Controllers
             var dbCategory = _context.Categories.SingleOrDefault(p => p.CategoryId == id);
 
             if (dbCategory == null)
-                return NotFound();
+                return NotFound("Item waiting for delete doesnt exist");
 
             _context.Categories.Remove(dbCategory);
             await _context.SaveChangesAsync();

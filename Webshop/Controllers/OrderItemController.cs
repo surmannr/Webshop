@@ -39,7 +39,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<OrderItemDto>> Get(int id)
         {
             var res = await _context.OrderItems.Where(c => c.OrderItemId == id).FirstOrDefaultAsync();
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("Couldnt find the item");
             var mappelt = _mapper.Map<OrderItemDto>(res);
             return mappelt;
         }
@@ -49,7 +49,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<List<OrderItemDto>>> GetByOrderId(int orderId)
         {
             var res = await _context.OrderItems.Where(c => c.OrderId == orderId).ToListAsync();
-            if (res == null) return null;
+            if (res == null) return NotFound("Couldnt find the item");
             var mappelt = _mapper.Map<List<OrderItemDto>>(res);
             return mappelt;
         }
@@ -62,7 +62,9 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult> Post(int id, [FromBody] OrderItemDto oinew)
         {
-            OrderItem oi = _mapper.Map<OrderItem>(oinew);
+            try
+            {
+                OrderItem oi = _mapper.Map<OrderItem>(oinew);
 
             var orderIdCheck = _context.Orders.Where(p => p.OrderId == oinew.OrderId);
             var productIdCheck = _context.Products.Where(p => p.ProductID == oinew.ProductID);
@@ -81,14 +83,20 @@ namespace Webshop.Controllers
             _context.OrderItems.Add(oi);
             await _context.SaveChangesAsync();
             return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(418,ex.Message);
+            }
         }
 
         // PUT api/<ProductCartController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] OrderItemDto oinew)
         {
-
-            var oiWaitingForUpdate = _context.OrderItems.SingleOrDefault(p => p.OrderItemId == id);
+            try
+            {
+                var oiWaitingForUpdate = _context.OrderItems.SingleOrDefault(p => p.OrderItemId == id);
 
             if (oiWaitingForUpdate == null)
                 return NotFound();
@@ -106,6 +114,11 @@ namespace Webshop.Controllers
             await _context.SaveChangesAsync();
 
             return Ok();
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(418,ex.Message);
+            }
         }
 
         // DELETE api/<ProductCartController>/5
@@ -115,7 +128,7 @@ namespace Webshop.Controllers
             var dbOrderItem = _context.OrderItems.SingleOrDefault(p => p.OrderItemId == id);
 
             if (dbOrderItem == null)
-                return NotFound();
+                return NotFound("Couldnt find the item");
 
             _context.OrderItems.Remove(dbOrderItem);
             await _context.SaveChangesAsync();

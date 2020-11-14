@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { User } from '../../../classes/User';
 import { UserService } from '../../../services/user.service';
 
@@ -10,7 +11,7 @@ import { UserService } from '../../../services/user.service';
 })
 export class AddModifyUserComponent implements OnInit {
 
-  constructor(public service: UserService, private router: Router) { }
+  constructor(public service: UserService, private router: Router, private toastr: ToastrService) { }
   avatarImageRoute: string = this.service.avatarImageRoute;
   item: User;
 
@@ -40,13 +41,17 @@ export class AddModifyUserComponent implements OnInit {
   addUser() {
     let val: User;
     val = { id: this.id, username: this.username, email: this.email, password: this.password };
-    this.service.create(val).subscribe(res => { this.router.navigate(['/user']); });
+    this.service.create(val).subscribe(res => { this.router.navigate(['/user']); }, (error) => {
+      this.toastr.error(error.error, "Error");
+    });
   }
 
   updateUser() {
     let data: User;
     data = { id: this.item.id, username: this.username, email: this.email, password: this.password };
-    this.service.update(data.id, data).subscribe(res => { this.router.navigate(['/user']); });
+    this.service.update(data.id, data).subscribe(res => { this.router.navigate(['/user']); }, (error) => {
+      this.toastr.error(error.error, "Error");
+    });
   }
 
   makeid(length) {

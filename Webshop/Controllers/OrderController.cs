@@ -40,9 +40,7 @@ namespace Webshop.Controllers
                 foreach (OrderItem rev in orderitems)
                 {
                     if (o.OrderId == rev.OrderId) seged.orderItemsID.Add(rev.OrderItemId);
-                }
-              /*  var kiVette = await _context.Users.Where(c => c.Id == o.UserId).FirstOrDefaultAsync();
-                seged.kiVette = kiVette.UserName;*/
+                }           
                 retDto.Add(seged);
             }
 
@@ -56,7 +54,7 @@ namespace Webshop.Controllers
             var res = await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
             var orderitems = await _context.OrderItems.Where(o => o.OrderId != 0).ToListAsync();
 
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("Couldnt find the item");
 
             res.Status = await _context.Status.Where(s => s.StatusId == res.StatusId).FirstOrDefaultAsync();
 
@@ -64,10 +62,7 @@ namespace Webshop.Controllers
             foreach (OrderItem rev in orderitems)
             {
                 if (res.OrderId == rev.OrderId) retDto.orderItemsID.Add(rev.OrderItemId);
-            }
-        /*    var kiVette = await _context.Users.Where(c => c.Id == res.UserId).FirstOrDefaultAsync();
-            retDto.kiVette = kiVette.UserName;
-        */
+            }   
             return retDto;
         }
 
@@ -75,48 +70,85 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] OrderDto newOrderDto)
         {
-            var newOrder = _mapper.Map<Order>(newOrderDto);
-            if (newOrder.UserId == null) return NoContent();
-            newOrder.StatusId = 1;
+            string[] paymentMethodArray = new string[] { "none", "transfer in advance", "online credit card", "cash on delivery" };
+            List<string> paymentMethodList = paymentMethodArray.ToList();
 
-            var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();
-            //System.Diagnostics.Debug.WriteLine(status.Name);
-            newOrder.Status = status;
+            string[] shippingMethodArray = new string[] { "none", "delivery courier", "delivery by post", "amazon drone" };
+            List<string> shippingMethodList = shippingMethodArray.ToList();
 
-            _context.Orders.Add(newOrder);
-            await _context.SaveChangesAsync();
 
-           
-            return newOrder.OrderId;
+
+            try
+            {
+                var newOrder = _mapper.Map<Order>(newOrderDto);
+                if (newOrder.UserId == null || newOrder.UserId == "") return BadRequest("Select a user!");
+                if (!paymentMethodList.Contains(newOrder.PaymentMetod)) return BadRequest("Paymentmethod is not valid");
+                if (!shippingMethodList.Contains(newOrder.ShippingMethod)) return BadRequest("Shippingmenthod is not valid");
+                newOrder.StatusId = 1;
+
+                var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();
+                //System.Diagnostics.Debug.WriteLine(status.Name);
+                newOrder.Status = status;
+
+                _context.Orders.Add(newOrder);
+                await _context.SaveChangesAsync();
+
+
+                return newOrder.OrderId;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Database error during saving");
+            }
         }
 
         // PUT api/<OrderController>/5
         [HttpPut("{id}")]
         public async Task<ActionResult> Put(int id, [FromBody] OrderDto newOrderDto)
         {
-            var newOrder = _mapper.Map<Order>(newOrderDto);
-            var orderWaitingForUpdate = _context.Orders.SingleOrDefault(p => p.OrderId == id);
-
-            if (orderWaitingForUpdate != null)
+            try
             {
 
-                var status = await _context.Status.Where(s => s.Name == newOrderDto.StatusName).FirstOrDefaultAsync();
+                string[] paymentMethodArray = new string[] { "none", "transfer in advance", "online credit card", "cash on delivery" };
+                List<string> paymentMethodList = paymentMethodArray.ToList();
 
-                if (newOrder.PaymentMetod != null) orderWaitingForUpdate.PaymentMetod = newOrder.PaymentMetod;
+                string[] shippingMethodArray = new string[] { "none", "delivery courier", "delivery by post", "amazon drone" };
+                List<string> shippingMethodList = shippingMethodArray.ToList();
 
-                if (newOrder.ShippingMethod != null) orderWaitingForUpdate.ShippingMethod = newOrder.ShippingMethod;
 
-                if (newOrder.Status != null) orderWaitingForUpdate.Status = status;
+                var newOrder = _mapper.Map<Order>(newOrderDto);
+                var orderWaitingForUpdate = _context.Orders.SingleOrDefault(p => p.OrderId == id);
 
-                if (newOrder.StatusId != 0) orderWaitingForUpdate.StatusId = status.StatusId;
+                if (orderWaitingForUpdate != null)
+                {
 
+                    var status = await _context.Status.Where(s => s.Name == newOrderDto.StatusName).FirstOrDefaultAsync();
+
+                    if (newOrder.PaymentMetod != null) {
+                        if (!paymentMethodList.Contains(newOrder.PaymentMetod)) return BadRequest("Paymentmethod is not valid");
+                        else orderWaitingForUpdate.PaymentMetod = newOrder.PaymentMetod;
+                    } 
+
+                    if (newOrder.ShippingMethod != null) {
+                        if (!shippingMethodList.Contains(newOrder.ShippingMethod)) return BadRequest("Shippingmenthod is not valid");
+                        else orderWaitingForUpdate.ShippingMethod = newOrder.ShippingMethod;
+                    } 
+
+                    if (newOrder.Status != null) orderWaitingForUpdate.Status = status;
+
+                    if (newOrder.StatusId != 0) orderWaitingForUpdate.StatusId = status.StatusId;
+
+                }
+                else return NoContent();
+
+                // mentes az adatbazisban
+                await _context.SaveChangesAsync();
+
+                return Ok(); // 204 NoContent valasz
             }
-            else return NoContent();
-
-            // mentes az adatbazisban
-            await _context.SaveChangesAsync();
-
-            return Ok(); // 204 NoContent valasz
+            catch (Exception e) {
+                return BadRequest("Database error during saving");
+            }
         }
 
         // DELETE api/<OrderController>/5
@@ -126,7 +158,7 @@ namespace Webshop.Controllers
             var dbOrder = _context.Orders.SingleOrDefault(p => p.OrderId == id);
 
             if (dbOrder == null)
-                return NotFound();
+                return NotFound("Couldnt find the item");
 
             _context.Orders.Remove(dbOrder);
             await _context.SaveChangesAsync();

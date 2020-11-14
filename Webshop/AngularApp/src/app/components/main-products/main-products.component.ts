@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AppComponent } from '../../app.component';
 import { Product } from '../../classes/Product';
 import { CategoryService } from '../../services/category.service';
@@ -18,7 +19,7 @@ export class MainProductsComponent extends AppComponent implements OnInit {
   inputFieldName: string;
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
-    private reviewService: ReviewService, private router: Router) { super(); }
+    private reviewService: ReviewService, private router: Router, private toastr: ToastrService) { super(); }
 
 
    
@@ -70,7 +71,10 @@ export class MainProductsComponent extends AppComponent implements OnInit {
           product.emptyStarsList.push(new Object());
         }
       }
-    });
+    },
+      (error) => {
+        this.toastr.error(error.error, "Error");
+      });
   }
 
   refreshProductList() {

@@ -37,11 +37,11 @@ namespace Webshop.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest("Error during the file upload");
                 }
             }
             catch (Exception ex) {
-                return StatusCode(500, $"A fájlfeltöltéssel hiba volt:  {ex}");
+                return StatusCode(500, $"Error during the file upload:  {ex}");
             }
         }
 

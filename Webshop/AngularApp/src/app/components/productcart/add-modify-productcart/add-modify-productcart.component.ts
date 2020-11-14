@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { ProductCart } from '../../../classes/ProductCart';
 import { ProductcartService } from '../../../services/productcart.service';
 
@@ -9,7 +10,7 @@ import { ProductcartService } from '../../../services/productcart.service';
 })
 export class AddModifyProductcartComponent implements OnInit {
 
-  constructor(private service: ProductcartService) { }
+  constructor(private service: ProductcartService, private toastr: ToastrService) { }
 
   @Input() pcart: ProductCart;
   productCartId: number;
@@ -24,12 +25,9 @@ export class AddModifyProductcartComponent implements OnInit {
   addProductCart() {
     let val: ProductCart;
     val = { productCartId: this.productCartId, productIndex: this.productId, cartIndex: this.cartId, price: 0, product_Name: "", quantity: 0 };
-    this.service.create(val).subscribe(res => { alert("Added the productcart"); });
+    this.service.create(val).subscribe(res => { alert("Added the productcart"); }, (error) => {
+      this.toastr.error(error.error, "Error");
+    });
   }
 
-  updateProductCart() {
-    let val: ProductCart;
-    val = { productCartId: this.productCartId, productIndex: this.productId, cartIndex: this.cartId, price: 0, product_Name: "", quantity: 0 };
-    this.service.update(this.productCartId, val).subscribe(res => { alert("Updated the productcart"); });
-  }
 }

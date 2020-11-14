@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AppComponent } from '../../../app.component';
 import { Category } from '../../../classes/Category';
 import { Product } from '../../../classes/Product';
@@ -17,7 +18,7 @@ import { ReviewService } from '../../../services/review.service';
 export class MainPage extends AppComponent implements OnInit {
 
   constructor(private categoryService: CategoryService, private productService: ProductService,
-    private reviewService: ReviewService, private router: Router) { super(); }
+    private reviewService: ReviewService, private router: Router, private toastr: ToastrService) { super(); }
 
  
   CategoryImageNameList: string[] = [];
@@ -59,6 +60,8 @@ export class MainPage extends AppComponent implements OnInit {
           product.emptyStarsList.push(new Object());
         }       
       }
+    }, (error) => {
+      this.toastr.error(error.error, "Error");
     });
   }
 

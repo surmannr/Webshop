@@ -57,7 +57,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<UserDto>> Get(string id)
         {
             var res = await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("Couldnt find the item");
             var mappelt = _mapper.Map<UserDto>(res);
             return mappelt;
         }
@@ -67,6 +67,9 @@ namespace Webshop.Controllers
         public async Task<ActionResult> Post([FromBody] UserDto newUser)
         {
             User user = _mapper.Map<User>(newUser);
+
+            if (user.UserName == "") return BadRequest("Username is required");
+            if (user.Email == "") return BadRequest("Email address is required");
 
             //Assigning the role to the user
             user.Role = "Customer";
@@ -104,6 +107,9 @@ namespace Webshop.Controllers
         {
             User user = _mapper.Map<User>(newUser);
 
+            if (user.UserName == "") return BadRequest("Username is required");
+            if (user.Email == "") return BadRequest("Email address is required");
+
             //Assigning the role to the user
             user.Role = "Admin";
 
@@ -125,7 +131,7 @@ namespace Webshop.Controllers
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                return BadRequest("Error during the creation of the admin");
             }
             await _context.SaveChangesAsync();
             return Ok();
@@ -143,21 +149,21 @@ namespace Webshop.Controllers
             var userWaitingForUpdate = _context.Users.SingleOrDefault(p => p.Id == id);
 
             if (userWaitingForUpdate == null)
-                return NotFound();
+                return NotFound("Couldnt find the item");
 
             // modositasok elvegzese    
-            if (user.UserName != null) {
+            if (user.UserName != null && user.UserName != "") {
                 userWaitingForUpdate.UserName = user.UserName;
                 userWaitingForUpdate.NormalizedUserName = user.UserName.ToUpper();
             }
 
-            if (user.Email != null) {
+            if (user.Email != null && user.Email != "") {
                 userWaitingForUpdate.Email = user.Email;
                 userWaitingForUpdate.NormalizedEmail = user.Email.ToUpper();
             }
             
 
-            if (newUser.Password != null) {
+            if (newUser.Password != null && newUser.Password != "") {
                 await _userManager.RemovePasswordAsync(userWaitingForUpdate);
                 await _userManager.AddPasswordAsync(userWaitingForUpdate, newUser.Password); 
             }
@@ -175,7 +181,7 @@ namespace Webshop.Controllers
             var dbUser = _context.Users.SingleOrDefault(p => p.Id == id);
 
             if (dbUser == null)
-                return NotFound();
+                return NotFound("Couldnt find the item");
             
             var cart = _context.Carts.Where(c => c.UserId == dbUser.Id).FirstOrDefault();
             _context.Carts.Remove(cart);

@@ -1,6 +1,7 @@
 import { HttpClient, HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { log } from 'util';
 import { Category } from '../../../classes/Category';
 import { Product } from '../../../classes/Product';
@@ -17,7 +18,8 @@ import { SupplierService } from '../../../services/supplier.service';
 export class AddModifyProductComponent implements OnInit {
 
   constructor(private http: HttpClient,
-    private service: ProductService, private router: Router, private categoryService: CategoryService, private supplierService: SupplierService) { } 
+    private service: ProductService, private router: Router, private categoryService: CategoryService, private supplierService: SupplierService,
+    private toastr: ToastrService) { } 
 
   item: Product;
   CategoryList: Category[] = [];
@@ -63,7 +65,7 @@ export class AddModifyProductComponent implements OnInit {
     this.product_image_name = fileToUpload.name;
     //console.log(fileToUpload.type);
     if (!fileToUpload.type.includes("image"))
-      alert("This is not an image");
+      this.toastr.error("This is not an image","Error");
     else {
       this.service.uploadFile(formData).subscribe(event => {
         if (event.type === HttpEventType.UploadProgress) {
@@ -73,7 +75,9 @@ export class AddModifyProductComponent implements OnInit {
           this.message = 'Upload success';
           this.onUpLoadFinished.emit(event.body);
         }
-      });;
+      }, (error) => {
+        this.toastr.error(error.error, "Error");
+      });
     }
   }
 
@@ -108,18 +112,24 @@ export class AddModifyProductComponent implements OnInit {
 
   addProduct() {   
     let data: Product;
-    data = {
-      product_Name: this.product_Name, price: this.price,
-      productID: this.productID, product_Description: this.product_Description,
-      shipping_Price: this.shipping_Price, categoryId: JSON.parse(this.selectedOption_category),
-      supplierId: JSON.parse(this.selectedOption_supplier), reviewsID: this.reviewsID,
-      category_Name: this.category_Name, name: this.name,
-      imageName: this.product_image_name, stars: 0,
-      starsList: [],
-      emptyStarsList: []
-    };
-    console.log(data);
-    this.service.create(data).subscribe(res => { this.router.navigate(['/product']); });
+    try {
+      data = {
+        product_Name: this.product_Name, price: this.price,
+        productID: this.productID, product_Description: this.product_Description,
+        shipping_Price: this.shipping_Price, categoryId: JSON.parse(this.selectedOption_category),
+        supplierId: JSON.parse(this.selectedOption_supplier), reviewsID: this.reviewsID,
+        category_Name: this.category_Name, name: this.name,
+        imageName: this.product_image_name, stars: 0,
+        starsList: [],
+        emptyStarsList: []
+      };
+      this.service.create(data).subscribe(res => { this.router.navigate(['/product']); }, (error) => {
+        this.toastr.error(error.error, "Error");
+      });
+    } catch (error) {
+      this.toastr.error("Invalid field value", "Invalid input");
+    }  
+  
   }
 
   updateProduct() {
@@ -134,7 +144,9 @@ export class AddModifyProductComponent implements OnInit {
     data.shipping_Price = this.shipping_Price;
     data.imageName = this.product_image_name;
     data.stars = 0;   
-    this.service.update(data.productID, data).subscribe(res => { this.router.navigate(['/product']); });
+    this.service.update(data.productID, data).subscribe(res => { this.router.navigate(['/product']); }, (error) => {
+      this.toastr.error(error.error, "Error");
+    });
     
   }
   cancel() {

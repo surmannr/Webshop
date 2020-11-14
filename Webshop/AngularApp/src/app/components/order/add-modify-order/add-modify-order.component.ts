@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Order } from '../../../classes/Order';
 import { Status } from '../../../classes/Status';
 import { User } from '../../../classes/User';
@@ -19,7 +20,8 @@ export class AddModifyOrderComponent implements OnInit {
   UserList: User[] = [];
   StatusList: Status[] = [];
 
-  constructor(private service: OrderService, private router: Router, private userService: UserService, private statusService: StatusService) { }
+  constructor(private service: OrderService, private router: Router, private userService: UserService, private statusService: StatusService,
+    private toastr: ToastrService) { }
 
   @Input() order: Order;
   userName: string;
@@ -68,7 +70,10 @@ export class AddModifyOrderComponent implements OnInit {
       userId: this.selectedOption, paymentMetod: this.paymentMetod, shippingMethod: this.shippingMethod, orderTime: this.orderTime, statusName: this.statusName,
       kiVette: this.kiVette, orderId: this.orderId, orderItemsID: this.orderItemsID
     };
-    this.service.create(val).subscribe(res => { this.router.navigate(['/order']); });
+    this.service.create(val).subscribe(res => { this.router.navigate(['/order']); },
+      (error) => {
+        this.toastr.error(error.error, "Error");
+      });
   }
 
   updateOrder() {
@@ -78,7 +83,10 @@ export class AddModifyOrderComponent implements OnInit {
       userId: this.userName, paymentMetod: this.paymentMetod, shippingMethod: this.shippingMethod, orderTime: this.orderTime, statusName: this.selectedOption_status,
       kiVette: this.item.kiVette, orderId: this.item.orderId, orderItemsID: this.orderItemsID
     };   
-    this.service.update(val.orderId, val).subscribe(res => { this.router.navigate(['/order']); });
+    this.service.update(val.orderId, val).subscribe(res => { this.router.navigate(['/order']); },
+      (error) => {
+        this.toastr.error(error.error, "Error");
+      });
   }
   cancel() {
     this.router.navigate(['/order']);

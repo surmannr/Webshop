@@ -4,7 +4,6 @@ import { Observable, throwError } from 'rxjs';
 import { User } from '../classes/User';
 import { BASEURL } from './baseUrl';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { element } from 'protractor';
 import { Router } from '@angular/router';
 import { catchError } from 'rxjs/operators';
 
@@ -45,7 +44,7 @@ export class UserService {
   }
 
   login(formData) {
-    return this.http.post(BASEURL.baseUrl + "User/Login", formData);
+    return this.http.post(BASEURL.baseUrl + "User/Login", formData).pipe(catchError(this.handleError));
   }
 
   getUserProfile() {    
@@ -72,31 +71,31 @@ export class UserService {
     });
     return isMatch;
   }
-
+  handleError(error: HttpErrorResponse) {
+    return throwError(error);
+  }
 
   getAll(): Observable<User[]> {
     return this.http.get<User[]>(BASEURL.baseUrl + 'User');
   }
 
   get(id): Observable<User> {
-    return this.http.get<User>(BASEURL.baseUrl + 'User/' + id);
+    return this.http.get<User>(BASEURL.baseUrl + 'User/' + id).pipe(catchError(this.handleError));
   }
 
   create(data): Observable<User> {
-    return this.http.post<User>(BASEURL.baseUrl + 'User', data);
+    return this.http.post<User>(BASEURL.baseUrl + 'User', data).pipe(catchError(this.handleError));
   }
 
   update(id, data): Observable<User> {
     return this.http.put<User>(BASEURL.baseUrl + 'User/' + id, data).pipe(catchError(this.handleError));
   }
-  handleError(error: HttpErrorResponse) {
-    return throwError(error);
-  }
+
   delete(id): Observable<User> {
-    return this.http.delete<User>(BASEURL.baseUrl+ 'User/' + id);
+    return this.http.delete<User>(BASEURL.baseUrl + 'User/' + id).pipe(catchError(this.handleError));
   }
 
   createAdmin(data): Observable<User> {
-    return this.http.post<User>(BASEURL.baseUrl + 'User/registerAdmin', data);
+    return this.http.post<User>(BASEURL.baseUrl + 'User/registerAdmin', data).pipe(catchError(this.handleError));
   }
 }

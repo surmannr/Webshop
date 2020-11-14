@@ -78,10 +78,7 @@ export class OrderitemListComponent implements OnInit {
     localStorage.removeItem('token');
     this.router.navigate(['/login']);
   }
-  addOrderItem() {
-    localStorage.setItem('addForm', JSON.stringify(true));
-    this.router.navigate(['/order/orderitems/add']);
-  }
+
   goBack() {
     localStorage.removeItem('item');
     this.router.navigate(['/order']);

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
 
 @Component({
@@ -12,7 +13,7 @@ export class HomeComponent implements OnInit {
 
   userDetails;
 
-  constructor(private router: Router, private service: UserService) { }
+  constructor(private router: Router, private service: UserService, private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.service.getUserProfile().subscribe(
@@ -20,7 +21,7 @@ export class HomeComponent implements OnInit {
         this.userDetails = res;
       },
       err => {
-        console.log(err);
+        this.toastr.error(err, "Error");        
       });
   }
 
