@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- main
+- master
 
 pool:
   vmImage: 'windows-latest'
@@ -16,6 +16,11 @@ variables:
 
 steps:
 - task: NuGetToolInstaller@1
+
+- task: VSBuild@1
+  inputs:
+    solution: '**\*.sln' 
+    vsVersion: 'latest' # Optional. Options: latest, 16.0, 15.0, 14.0, 12.0, 11.0
 
 - task: NuGetCommand@2
   inputs:
