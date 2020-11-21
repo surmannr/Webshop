@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AppComponent } from '../../../app.component';
-import { Category } from '../../../classes/Category';
+import { Global_Functions } from '../../../classes/file';
 import { Product } from '../../../classes/Product';
-import { Review } from '../../../classes/Review';
 import { CategoryService } from '../../../services/category.service';
 import { ProductService } from '../../../services/product.service';
 import { ReviewService } from '../../../services/review.service';
@@ -20,7 +19,7 @@ export class MainPage extends AppComponent implements OnInit {
   constructor(private categoryService: CategoryService, private productService: ProductService,
     private reviewService: ReviewService, private router: Router, private toastr: ToastrService) { super(); }
 
- 
+
   CategoryImageNameList: string[] = [];
   ProductImageNameList: string[] = [];
   FeaturedCategoryImageNameList: string[] = [];
@@ -28,41 +27,13 @@ export class MainPage extends AppComponent implements OnInit {
   ngOnInit(): void {
     this.refreshCategoryList();
     this.refreshProductList();
-    this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
+    this.isLoggedIn = super.tokenCheck();
   }
 
-  
+
   refreshReviewList(product: Product) {
-    let counter: number = 0;
-    let sum: number = 0;
-    this.reviewService.get(product.productID).subscribe(reviews => {
-      if (reviews.length === 0) {
-        product.stars = 0
-        product.starsList = [];
-        product.emptyStarsList = [];
-        for (let i: number = 0; i < 5 ; i++) {
-          product.emptyStarsList.push(new Object());
-        }
-      }
-      else {
-        for (let review of reviews) {
-          counter = counter + 1;
-          sum = sum + review.stars;
-        };
-        let avg = Math.ceil(sum / counter);
-        product.stars = avg;
-        product.starsList = [];
-        product.emptyStarsList = [];
-        for (let i: number = 0; i < avg; i++) {
-          product.starsList.push(new Object());
-        }
-        for (let i: number = 0; i < 5 - avg; i++) {
-          product.emptyStarsList.push(new Object());
-        }       
-      }
-    }, (error) => {
-      this.toastr.error(error.error, "Error");
-    });
+    let test = new Global_Functions();
+    test.refreshReviewList(product, this.reviewService, this.toastr); 
   }
 
   refreshProductList() {
@@ -112,6 +83,10 @@ export class MainPage extends AppComponent implements OnInit {
     this.router.navigateByUrl('techonomy/products/category/categoryFilter/' + categoryId);
   }
 
+
+  ExploreClicked() {
+    this.router.navigateByUrl("techonomy/products/category/nofilter");
+  }
 
 
   //User kiléptetés && bejelenetkezés ellenőrzés

@@ -30,7 +30,6 @@ export class SingleProductComponent extends AppComponent implements OnInit {
   RecommendedProductList: Product[];
   RecommendedProductImageRouteList: string[];
   AllProducts: Product[];
-  RecommendedProductStarList: number[];
   productQuantity: number;
   cartProductIdList: number[] = [];
   cartProductQuantityList: number[] = [];
@@ -58,11 +57,10 @@ export class SingleProductComponent extends AppComponent implements OnInit {
     this.UsernameList = [];
     this.RecommendedProductList = [];
     this.RecommendedProductImageRouteList = [];
-    this.AllProducts = [];
-    this.RecommendedProductStarList = [];
+    this.AllProducts = []; 
     this.refreshCategoryList();
     this.productQuantity = 1;
-    this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
+    this.isLoggedIn = super.tokenCheck();
     this.productCheck();
     this.refreshRecommendedProductList();
   }
@@ -87,11 +85,10 @@ export class SingleProductComponent extends AppComponent implements OnInit {
         for (let review of reviews) {
           counter = counter + 1;
           sum = sum + review.stars;
-        };
-        let avg = Math.ceil(sum / counter);
-        product.stars = avg;
+        };      
+        product.stars = sum;
       }
-      this.RecommendedProductStarList.push(product.stars);
+    
     }, (error) => {
       this.toastr.error(error.error, "Error");
     });
@@ -134,7 +131,7 @@ export class SingleProductComponent extends AppComponent implements OnInit {
             this.refreshREcommendedProductStarList(this.AllProducts[i])
             this.RecommendedProductList.push(this.AllProducts[i]);
             this.RecommendedProductImageRouteList.push(this.imageRoute + this.AllProducts[i].imageName);
-            this.RecommendedProductStarList.push(this.AllProducts[i].stars);
+        
           }
         }
       }
@@ -269,8 +266,6 @@ export class SingleProductComponent extends AppComponent implements OnInit {
       (error) => {
         this.toastr.error(error.error, "You must log in to do this");
       });
-
-
   }
 
 

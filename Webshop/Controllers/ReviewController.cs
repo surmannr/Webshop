@@ -64,13 +64,12 @@ namespace Webshop.Controllers
             
             Review review = _mapper.Map<Review>(newReview);
 
-            //review.User = user;
-            //review.Product = product;
+        
             if (product != null)
             {
                 review.ProductId = product.ProductID;
                 product.Reviews.Add(review);
-                //System.Diagnostics.Debug.WriteLine(product.Reviews.Last().Description);
+              
             }
             else return BadRequest("Couldnt find the product");
 
@@ -92,7 +91,7 @@ namespace Webshop.Controllers
         {
             try
             {
-                var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == newReview.ReviewId);
+                var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == id);
             if (reviewWaitingForUpdate == null) return NotFound();
 
             if (newReview.Stars >= 0 && newReview.Stars <= 5) reviewWaitingForUpdate.Stars = newReview.Stars;

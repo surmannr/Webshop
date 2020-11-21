@@ -36,7 +36,7 @@ export class MainFavouritesComponent extends AppComponent implements OnInit {
       this.userDetails = res
       localStorage.removeItem('product');
       this.selectedOption_category = JSON.parse(JSON.stringify(-1));
-      this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
+      this.isLoggedIn = super.tokenCheck();
       this.refreshCategoryList();
       this.refreshProductList();
     }, (error) => {

@@ -34,8 +34,7 @@ namespace Webshop.Controllers
         {
             var res = await _context.Carts.ToListAsync();
             var products = await _context.ProductCarts.Where(c => c.cartIndex!=0).ToListAsync();
-            List<CartDto> cartList = new List<CartDto>();
-            //public SortedSet<int> ProductsID { get; set; }
+            List<CartDto> cartList = new List<CartDto>();            
             foreach (Cart c in res)
             {
 

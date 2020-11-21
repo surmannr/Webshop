@@ -41,14 +41,14 @@ export class AddModifyOrderitemComponent implements OnInit {
     try {
       var _item_json = localStorage.getItem('item');
       this.item = JSON.parse(_item_json);
-    //  console.log(this.item);
+   
       _item_json = localStorage.getItem('orderItem');
       localStorage.removeItem('orderItem');
       this.orderItem = JSON.parse(_item_json);
       _item_json = localStorage.getItem('addForm');
       this.addForm = JSON.parse(_item_json);
       localStorage.removeItem('addForm');
-    //  console.log(this.orderItem);
+   
     } catch (err) {
       this.item = null;
     }
@@ -66,7 +66,7 @@ export class AddModifyOrderitemComponent implements OnInit {
       amount: this.amount, price: this.price, productID: this.productID, orderId: this.item.orderId, statusId: this.statusId,
       orderItemId: this.orderItemId, productName: this.productName, statusName: this.statusName
     };
-    this.service.create(val).subscribe(res => { this.router.navigate(['order/orderitems']); }, (error) => {
+    this.service.create(val).subscribe( () => { this.router.navigate(['order/orderitems']); }, (error) => {
       this.toastr.error(error.error, "Error");
     });
   }
@@ -80,7 +80,7 @@ export class AddModifyOrderitemComponent implements OnInit {
         orderItemId: this.orderItem.orderItemId, productName: this.productName, statusName: this.statusName
       };
  
-      this.service.update(val.orderItemId, val).subscribe(res => {
+      this.service.update(val.orderItemId, val).subscribe( () => {
         this.router.navigate(['order/orderitems']);
       },
         (error) => {

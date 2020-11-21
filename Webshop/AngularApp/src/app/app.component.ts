@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category } from './classes/Category';
 import { Product } from './classes/Product';
-import { CategoryService } from './services/category.service';
 
 
 @Component({
@@ -29,7 +27,7 @@ export class AppComponent {
     this.ProductList = [];
   }
 
-  tokenCheck(isLoggedIn: boolean): boolean {
+  tokenCheck(): boolean {
     let json_token = localStorage.getItem('token');
     if (json_token == null) {
       return false;

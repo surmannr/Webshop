@@ -53,7 +53,7 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
     this.TotalPriceWithoutTax = 0;
     this.Tax = 0;
     this.refreshCategoryList();
-    this.isLoggedIn = super.tokenCheck(this.isLoggedIn);
+    this.isLoggedIn = super.tokenCheck();
     this.refreshCartProductList();   
   }
 
@@ -68,7 +68,7 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
           });
         },
         err => {
-          console.log(err);
+          this.toastr.error(err,"Error")        
         });
   }
 
@@ -128,7 +128,7 @@ export class CustomerCartComponent extends AppComponent implements OnInit {
               amount: product.quantity, price: product.price, productID: product.productIndex, orderId: _orderId, statusId: 1,
               orderItemId: 0, productName: product.product_Name, statusName: "New"
             };
-            this.orderItemService.create(val).subscribe(res => { }, (error) => {
+            this.orderItemService.create(val).subscribe( () => { }, (error) => {
               this.toastr.error(error.error, "Error");
             });
           }

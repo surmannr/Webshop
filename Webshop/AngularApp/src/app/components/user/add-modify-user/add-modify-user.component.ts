@@ -28,8 +28,7 @@ export class AddModifyUserComponent implements OnInit {
     console.log("image route: " + this.avatarImageRoute);
     try {
       var _item_json = localStorage.getItem('item');
-      this.item = JSON.parse(_item_json);
-      // console.log(this.item.product_Name);
+      this.item = JSON.parse(_item_json);     
       localStorage.removeItem('item');
     } catch (err) {
       this.item = null;

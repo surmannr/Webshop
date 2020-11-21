@@ -8,9 +8,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.V3.Pages.Account.Internal;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -29,19 +27,19 @@ namespace Webshop.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserManager<User> _userManager;
+      
         private readonly ApplicationSettings _appSettings;
-        //private readonly UserManager<User> _userManager;
+      
 
-        public UserController(ApplicationDbContext context, IMapper mapper, Microsoft.AspNetCore.Identity.UserManager<User> userManager
-            ,IOptions<ApplicationSettings> appSettings, SignInManager<User> signInManager)
+        public UserController(ApplicationDbContext context, IMapper mapper, UserManager<User> userManager
+            ,IOptions<ApplicationSettings> appSettings)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userManager;
             _appSettings = appSettings.Value;
-            _signInManager = signInManager;
+         
         }
         // GET: api/<UserController>
         [HttpGet]
@@ -79,7 +77,7 @@ namespace Webshop.Controllers
                 UserId = user.Id,
                 User = user
             };
-            //System.Diagnostics.Debug.WriteLine("newcart: " + newCart);
+            
             _context.Carts.Add(newCart);          
 
             user.Cart = newCart;
@@ -93,7 +91,8 @@ namespace Webshop.Controllers
                 var result = await _userManager.CreateAsync(user, newUser.Password);
                 await _userManager.AddToRoleAsync(user, user.Role);              
             }
-            catch (Exception e) {
+            catch (Exception)
+            {
                return  BadRequest("Error during the creation of the user");
             }
             await _context.SaveChangesAsync();
@@ -118,18 +117,18 @@ namespace Webshop.Controllers
                 UserId = user.Id,
                 User = user
             };
-            //System.Diagnostics.Debug.WriteLine("newcart: " + newCart);
+           
             _context.Carts.Add(newCart);
 
             user.Cart = newCart;
-            //System.Diagnostics.Debug.WriteLine("user.Cart: " + user.Cart);
+           
 
             try
             {
                 var result = await _userManager.CreateAsync(user, newUser.Password);
                 await _userManager.AddToRoleAsync(user, user.Role);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return BadRequest("Error during the creation of the admin");
             }
@@ -195,7 +194,7 @@ namespace Webshop.Controllers
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login(Webshop.Data.Models.LoginModel model) {
+        public async Task<IActionResult> Login(LoginModel model) {
 
             var user = await _userManager.FindByNameAsync(model.UserName);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))

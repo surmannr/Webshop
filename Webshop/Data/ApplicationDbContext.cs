@@ -21,7 +21,7 @@ namespace Webshop.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            //modelBuilder.Entity<User>().HasKey(e => e.UserId);
+         
 
             modelBuilder.Entity<User>()
                 .HasOne(b => b.Cart)

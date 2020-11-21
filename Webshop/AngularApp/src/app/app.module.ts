@@ -61,6 +61,9 @@ import { MainProductsFilterProductNameComponent } from './components/main-produc
 import { MainProductsFilterProductNameCategoryComponent } from './components/main-products-filter-product-name-category/main-products-filter-product-name-category.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { ReviewStarsComponent } from './components/review-stars/review-stars.component';
+import { FooterComponent } from './components/footer/footer.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -99,7 +102,7 @@ import { ToastrModule } from 'ngx-toastr';
     RegisterCustomerComponent,
     RegisterAdminComponent,
     EditUserCredentials,   
-    MainPage, MainProductsComponent, SingleProductComponent, CustomerCartComponent, MainFavouritesComponent, MainProductsFilterCategoryComponent, MainProductsFilterProductNameComponent, MainProductsFilterProductNameCategoryComponent
+    MainPage, MainProductsComponent, SingleProductComponent, CustomerCartComponent, MainFavouritesComponent, MainProductsFilterCategoryComponent, MainProductsFilterProductNameComponent, MainProductsFilterProductNameCategoryComponent, NavbarComponent, ReviewStarsComponent, FooterComponent
   ],
   imports: [
     BrowserModule,

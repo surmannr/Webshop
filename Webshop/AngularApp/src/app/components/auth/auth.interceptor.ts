@@ -21,6 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
           //Ha nincs bejelentkezve akkor átnavigáljuk a login felületre
           if (err.status == 401) {
             localStorage.removeItem('token');
+            this.toastr.error("Your session has ended", "Please log in again");
             this.router.navigateByUrl('/login');
           }
           //Ha nincs megfelelő jogosultsága akkor átnavigáljuk egy forbidden oldalra.

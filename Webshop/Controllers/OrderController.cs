@@ -86,8 +86,7 @@ namespace Webshop.Controllers
                 if (!shippingMethodList.Contains(newOrder.ShippingMethod)) return BadRequest("Shippingmenthod is not valid");
                 newOrder.StatusId = 1;
 
-                var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();
-                //System.Diagnostics.Debug.WriteLine(status.Name);
+                var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();              
                 newOrder.Status = status;
 
                 _context.Orders.Add(newOrder);
@@ -96,7 +95,7 @@ namespace Webshop.Controllers
 
                 return newOrder.OrderId;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return BadRequest("Database error during saving");
             }
@@ -146,7 +145,8 @@ namespace Webshop.Controllers
 
                 return Ok(); // 204 NoContent valasz
             }
-            catch (Exception e) {
+            catch (Exception)
+            {
                 return BadRequest("Database error during saving");
             }
         }

@@ -31,13 +31,6 @@ export class ProductService {
     return this.http.get<Product>(BASEURL.baseUrl + 'Product/' + id).pipe(catchError(this.handleError));
   }
 
-  GetProductsByProductName(ProductNameForFiltering: string): Observable<Product[]> {
-    return this.http.get<Product[]>(BASEURL.baseUrl + 'Product/FilterByProductName/' + ProductNameForFiltering);
-  }
-
-  GetProductsByCategoryId(categoryIdForFiltering: number): Observable<Product[]> {
-    return this.http.get<Product[]>(BASEURL.baseUrl + 'Product/FilterByCategoryId/' + categoryIdForFiltering.toString());
-  }
 
   GetByCategoryIdAndProductName(categoryIdForFiltering: number, ProductNameForFiltering: string): Observable<Product[]> {
     return this.http.get<Product[]>(BASEURL.baseUrl + 'Product/FilterByCategoryIdAndProductName/1%2Ckarora?categoryIdForFiltering='

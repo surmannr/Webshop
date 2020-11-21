@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
@@ -16,18 +14,15 @@ namespace Webshop.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly IHostingEnvironment _hostingEnv;
+      
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
+       
 
-        public ProductController(ApplicationDbContext context, IMapper mapper,
-            Microsoft.AspNetCore.Identity.UserManager<User> userManager, IHostingEnvironment hostingEnv)
+        public ProductController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
-            _mapper = mapper;
-            _userManager = userManager;
-            _hostingEnv = hostingEnv;
+            _mapper = mapper;  
         }
 
         // GET: api/<ProductController>
@@ -47,8 +42,7 @@ namespace Webshop.Controllers
                 {
                     if (r.ProductID == rev.ProductId) mapppelt.ReviewsID.Add(rev.ReviewId);
                 }
-                productList.Add(mapppelt);
-                //   System.Diagnostics.Debug.WriteLine(r.Reviews.Last().Description);
+                productList.Add(mapppelt);               
             }
 
             return productList;
@@ -72,57 +66,20 @@ namespace Webshop.Controllers
         }
 
 
-
-        // GET api/<ProductController>/5
-        [HttpGet("FilterByProductName/{ProductNameForFiltering}")]
-        public async Task<IEnumerable<ProductDto>> GetProductsByProductName(string ProductNameForFiltering)
-        {
-            var res = await _context.Products.Where(p => p.Product_Name.Contains(ProductNameForFiltering)).ToListAsync();
-            List<ProductDto> productList = new List<ProductDto>();
-            var reviews = await _context.Reviews.ToListAsync();
-
-            foreach (Product r in res)
-            {
-                var mapppelt = _mapper.Map<ProductDto>(r);
-                foreach (Review rev in reviews)
-                {
-                    if (r.ProductID == rev.ProductId) mapppelt.ReviewsID.Add(rev.ReviewId);
-                }
-                productList.Add(mapppelt);
-            }
-
-            return productList;
-        }
-
-
-        // GET api/<ProductController>/5
-        [HttpGet("FilterByCategoryId/{categoryIdForFiltering}")]
-        public async Task<IEnumerable<ProductDto>> GetProductsByCategoryId(int categoryIdForFiltering)
-        {
-            var res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering).ToListAsync();
-            List<ProductDto> productList = new List<ProductDto>();
-            var reviews = await _context.Reviews.ToListAsync();
-
-            foreach (Product r in res)
-            {
-                var mapppelt = _mapper.Map<ProductDto>(r);
-                foreach (Review rev in reviews)
-                {
-                    if (r.ProductID == rev.ProductId) mapppelt.ReviewsID.Add(rev.ReviewId);
-                }
-                productList.Add(mapppelt);
-            }
-
-            return productList;
-        }
-
-
-
         // GET api/<ProductController>/5
         [HttpGet("FilterByCategoryIdAndProductName/{categoryIdForFiltering,ProductNameForFiltering}")]
         public async Task<IEnumerable<ProductDto>> GetByCategoryIdAndProductName(int categoryIdForFiltering, string ProductNameForFiltering)
         {
-            var res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering && p.Product_Name.Contains(ProductNameForFiltering)).ToListAsync();
+            List<Product> res;
+            if(categoryIdForFiltering == -1)
+                 res = await _context.Products.Where(p => p.Product_Name.Contains(ProductNameForFiltering)).ToListAsync();
+            else if(ProductNameForFiltering == null)
+                res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering).ToListAsync();
+            else if(ProductNameForFiltering.Length == 0)
+                res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering).ToListAsync();
+            else
+                res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering && p.Product_Name.Contains(ProductNameForFiltering)).ToListAsync();
+           
             List<ProductDto> productList = new List<ProductDto>();
             var reviews = await _context.Reviews.ToListAsync();
 
@@ -169,7 +126,7 @@ namespace Webshop.Controllers
         {
             try
             {
-                var productWaitingForUpdate = await _context.Products.FirstOrDefaultAsync(r => r.ProductID == newProduct.ProductID);
+                var productWaitingForUpdate = await _context.Products.FirstOrDefaultAsync(r => r.ProductID == id);               
                 if (productWaitingForUpdate == null) return NotFound();
 
                 if (newProduct.Price > 0) productWaitingForUpdate.Price = newProduct.Price;

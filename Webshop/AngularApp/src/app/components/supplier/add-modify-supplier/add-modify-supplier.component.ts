@@ -29,8 +29,7 @@ export class AddModifySupplierComponent implements OnInit {
   ngOnInit(): void {
     try {
       var _item_json = localStorage.getItem('item');
-      this.item = JSON.parse(_item_json);
-      // console.log(this.item.product_Name);
+      this.item = JSON.parse(_item_json);     
       localStorage.removeItem('item');
     } catch (err) {
       this.item = null;
@@ -42,7 +41,7 @@ export class AddModifySupplierComponent implements OnInit {
   addSupplier() {
     let val: Supplier;
     val = { supplierId: this.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };   
-    this.service.create(val).subscribe(res => { this.router.navigate(['/supplier']); }, (error) => {
+    this.service.create(val).subscribe( () => { this.router.navigate(['/supplier']); }, (error) => {
       this.toastr.error(error.error, "Error");
     });   
   }
@@ -51,7 +50,7 @@ export class AddModifySupplierComponent implements OnInit {
     let val: Supplier;
     val = { supplierId: this.item.supplierId, name: this.name, address: this.address, multiplier: this.multiplier };
    
-    this.service.update(val.supplierId, val).subscribe(res => { this.router.navigate(['/supplier']); }, (error) => {
+    this.service.update(val.supplierId, val).subscribe( () => { this.router.navigate(['/supplier']); }, (error) => {
       this.toastr.error(error.error, "Error");
     });
   }

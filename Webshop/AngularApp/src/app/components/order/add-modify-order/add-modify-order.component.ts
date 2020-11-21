@@ -47,7 +47,7 @@ export class AddModifyOrderComponent implements OnInit {
     try {
       var _item_json = localStorage.getItem('item');
       this.item = JSON.parse(_item_json);
-       //console.log(this.item);
+       
       localStorage.removeItem('item');
     } catch (err) {
       this.item = null;
@@ -70,7 +70,7 @@ export class AddModifyOrderComponent implements OnInit {
       userId: this.selectedOption, paymentMetod: this.paymentMetod, shippingMethod: this.shippingMethod, orderTime: this.orderTime, statusName: this.statusName,
       kiVette: this.kiVette, orderId: this.orderId, orderItemsID: this.orderItemsID
     };
-    this.service.create(val).subscribe(res => { this.router.navigate(['/order']); },
+    this.service.create(val).subscribe( () => { this.router.navigate(['/order']); },
       (error) => {
         this.toastr.error(error.error, "Error");
       });
@@ -83,7 +83,7 @@ export class AddModifyOrderComponent implements OnInit {
       userId: this.userName, paymentMetod: this.paymentMetod, shippingMethod: this.shippingMethod, orderTime: this.orderTime, statusName: this.selectedOption_status,
       kiVette: this.item.kiVette, orderId: this.item.orderId, orderItemsID: this.orderItemsID
     };   
-    this.service.update(val.orderId, val).subscribe(res => { this.router.navigate(['/order']); },
+    this.service.update(val.orderId, val).subscribe( () => { this.router.navigate(['/order']); },
       (error) => {
         this.toastr.error(error.error, "Error");
       });

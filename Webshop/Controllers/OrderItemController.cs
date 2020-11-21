@@ -17,13 +17,12 @@ namespace Webshop.Controllers
     public class OrderItemController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
-        public OrderItemController(ApplicationDbContext context, IMapper mapper, Microsoft.AspNetCore.Identity.UserManager<User> userManager)
+        private readonly IMapper _mapper;        
+        public OrderItemController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _userManager = userManager;
+          
         }
         // GET: api/<ProductCartController>
         [HttpGet]
@@ -60,14 +59,14 @@ namespace Webshop.Controllers
 
         // POST api/<ProductCartController>
         [HttpPost]
-        public async Task<ActionResult> Post(int id, [FromBody] OrderItemDto oinew)
+        public async Task<ActionResult> Post([FromBody] OrderItemDto oinew)
         {
             try
             {
                 OrderItem oi = _mapper.Map<OrderItem>(oinew);
 
-            var orderIdCheck = _context.Orders.Where(p => p.OrderId == oinew.OrderId);
-            var productIdCheck = _context.Products.Where(p => p.ProductID == oinew.ProductID);
+                var orderIdCheck = _context.Orders.Where(p => p.OrderId == oinew.OrderId);
+                var productIdCheck = _context.Products.Where(p => p.ProductID == oinew.ProductID);
 
             if (orderIdCheck == null)
             {

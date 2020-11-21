@@ -143,12 +143,7 @@ namespace Webshop
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            app.UseCors(builder => builder
-               .WithOrigins(Configuration["ApplicationSettings:Client_Url"].ToString(), Configuration["ApplicationSettings:Client_Url_Https"].ToString(),
-               Configuration["ApplicationSettings:Home_Url"],Configuration["ApplicationSettings:Home_Url_Https"])
-               .AllowAnyMethod()
-               .AllowCredentials()
-               .WithHeaders("Accept", "Content-Type", "Origin", "X-My-Header"));
+            app.UseCors("MyCorsPolicy");
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger(c =>
             {

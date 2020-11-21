@@ -32,7 +32,7 @@ namespace Webshop.Controllers
 
                 if(userId == "" || userId == null) return BadRequest("You must log in to use this service");
 
-                // Debug.WriteLine(userId);
+               
                 var user = await _userManager.FindByIdAsync(userId);
                 var cart = await _context.Carts.FirstOrDefaultAsync(x => x.UserId == userId);
                 return new
@@ -43,34 +43,13 @@ namespace Webshop.Controllers
                     cart.CartId
                 };
             }
-            catch (Exception e) {
+            catch (Exception)
+            {
                 return BadRequest("You must log in to use this service");
             }
         }
 
 
-
-        [HttpGet]
-        [Authorize(Roles = "Admin")]
-        [Route("ForAdmin")]
-        public string GetForAdmin() {
-            return "Web method for admin";
-        }
-        [HttpGet]
-        [Authorize(Roles = "Customer")]
-        [Route("ForCustomer")]
-        public string GetForCustomer()
-        {
-            return "Web method for customer";
-        }
-
-        [HttpGet]
-        [Authorize(Roles = "Customer,Admin")]
-        [Route("ForAdminOrCustomer")]
-        public string GetForAdminOrCustomer()
-        {
-            return "Web method for admin or customer";
-        }
 
     }
 }

@@ -16,13 +16,13 @@ namespace Webshop.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
+     
 
-        public SupplierController(ApplicationDbContext context, IMapper mapper, Microsoft.AspNetCore.Identity.UserManager<User> userManager)
+        public SupplierController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
-            _userManager = userManager;
+         
         }
 
         // GET: api/<SupplierController>
@@ -78,7 +78,7 @@ namespace Webshop.Controllers
         {
             try
             {
-                var supplierWaitingForUpdate = await _context.Suppliers.FirstOrDefaultAsync(r => r.SupplierId == newSupplier.SupplierId);
+                var supplierWaitingForUpdate = await _context.Suppliers.FirstOrDefaultAsync(r => r.SupplierId == id);
                 if (supplierWaitingForUpdate == null) return NotFound("Couldnt find the item");
 
                 if (newSupplier.Name != null) supplierWaitingForUpdate.Name = newSupplier.Name;

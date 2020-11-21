@@ -17,7 +17,7 @@ import { SupplierService } from '../../../services/supplier.service';
 })
 export class AddModifyProductComponent implements OnInit {
 
-  constructor(private http: HttpClient,
+  constructor(
     private service: ProductService, private router: Router, private categoryService: CategoryService, private supplierService: SupplierService,
     private toastr: ToastrService) { } 
 
@@ -47,7 +47,7 @@ export class AddModifyProductComponent implements OnInit {
   swap_enabled_shippingPrice: boolean;
   swap_enabled_description: boolean;
 
-/*----------------------------------------*/
+
 
   product_image_name: string; 
 
@@ -62,8 +62,7 @@ export class AddModifyProductComponent implements OnInit {
     let fileToUpload = <File>files[0];
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
-    this.product_image_name = fileToUpload.name;
-    //console.log(fileToUpload.type);
+    this.product_image_name = fileToUpload.name;   
     if (!fileToUpload.type.includes("image"))
       this.toastr.error("This is not an image","Error");
     else {
@@ -81,15 +80,14 @@ export class AddModifyProductComponent implements OnInit {
     }
   }
 
-/*----------------------------------------*/
+
 
   ngOnInit(): void {
     try {
       this.refreshCategoryList();
       this.refreshSupplierList();
       var _item_json = localStorage.getItem('item');
-      this.item = JSON.parse(_item_json);
-     // console.log(this.item.product_Name);
+      this.item = JSON.parse(_item_json);    
       localStorage.removeItem('item');
     } catch (err) {
       this.item = null;

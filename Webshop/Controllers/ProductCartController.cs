@@ -16,13 +16,11 @@ namespace Webshop.Controllers
     public class ProductCartController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
-        public ProductCartController(ApplicationDbContext context, IMapper mapper, Microsoft.AspNetCore.Identity.UserManager<User> userManager)
+        private readonly IMapper _mapper;       
+        public ProductCartController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
-            _mapper = mapper;
-            _userManager = userManager;
+            _mapper = mapper;          
         }
         // GET: api/<ProductCartController>
         [HttpGet]
@@ -45,7 +43,7 @@ namespace Webshop.Controllers
 
         // POST api/<ProductCartController>
         [HttpPost]
-        public async Task<ActionResult> Post(int id, [FromBody] ProductCartDto pcnew)
+        public async Task<ActionResult> Post([FromBody] ProductCartDto pcnew)
         {
             try
             {

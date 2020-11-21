@@ -26,8 +26,7 @@ export class OrderitemListComponent implements OnInit {
 
     try {
       var _item_json = localStorage.getItem('item');
-      this.item = JSON.parse(_item_json);
-    //  console.log(this.userDetails);
+      this.item = JSON.parse(_item_json);    
     } catch (err) { console.log(err); }
     this.refreshOrderItemList();
   }
@@ -49,8 +48,7 @@ export class OrderitemListComponent implements OnInit {
 
 
 
-  refreshOrderItemList() {
- //   console.log(this.item.orderId);
+  refreshOrderItemList() { 
     this.service.getByOrderId(this.item.orderId).subscribe(data => {
       this.OrderItemList = data;
       for (let orderItem of this.OrderItemList) {

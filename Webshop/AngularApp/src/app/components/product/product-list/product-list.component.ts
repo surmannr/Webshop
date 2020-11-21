@@ -1,9 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Category } from '../../../classes/Category';
 import { Product } from '../../../classes/Product';
-import { Supplier } from '../../../classes/Supplier';
-import { BASEURL } from '../../../services/baseUrl';
 import { CategoryService } from '../../../services/category.service';
 import { ProductService } from '../../../services/product.service';
 import { SupplierService } from '../../../services/supplier.service';

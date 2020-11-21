@@ -21,7 +21,7 @@ export class AddModifyCategoryComponent implements OnInit {
   categoryId: number;
   swap_enabled: boolean;
 
-/*--------------------------------------------*/
+
   category_image_name: string;
   public message: string;
   public progress: number;
@@ -36,7 +36,7 @@ export class AddModifyCategoryComponent implements OnInit {
     const formData = new FormData();
     formData.append('file', fileToUpload, fileToUpload.name);
     this.category_image_name = fileToUpload.name;
-    // console.log(fileToUpload.name);
+    
 
 
     if (!fileToUpload.type.includes("image"))
@@ -57,14 +57,13 @@ export class AddModifyCategoryComponent implements OnInit {
   }
 
 
-/*--------------------------------------------*/
+
 
 
   ngOnInit(): void {
     try {
       var _item_json = localStorage.getItem('item');
-      this.item = JSON.parse(_item_json);
-      // console.log(this.item.product_Name);
+      this.item = JSON.parse(_item_json);    
       localStorage.removeItem('item');
     } catch (err) {
       this.item = null;

@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { Global_Functions } from '../../classes/file';
 import { User } from '../../classes/User';
 import { UserService } from '../../services/user.service';
 
@@ -20,10 +21,10 @@ export class RegisterAdminComponent implements OnInit {
   email: string;
   password: string;
   avatarImageRoute: string = this.service.avatarImageRoute;
-
+  global_functions: Global_Functions
   ngOnInit(): void {
-    
-    this.id = this.makeid(10);
+    this.global_functions = new Global_Functions();
+    this.id = this.global_functions.makeid(10);   
     this.username = "";
     this.email = "";
     this.password = "";
@@ -38,15 +39,6 @@ export class RegisterAdminComponent implements OnInit {
   }
  
 
-  makeid(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-      result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-  }
   cancel() {
     this.router.navigate(['/user']);
   }
