@@ -1,11 +1,6 @@
 # ASP.NET Core
-- task: Npm@1
-  inputs:
-    command: 'install'
-    workingDir: 'Webshop/Webshop/AngularApp/'
-
 trigger:
-  main
+  - main
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -22,3 +17,8 @@ steps:
     version: 5.0.x
     performMultiLevelLookup: true
     includePreviewVersions: true # Required for preview versions
+
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: 'Webshop/Webshop/AngularApp/'
