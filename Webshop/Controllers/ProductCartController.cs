@@ -35,10 +35,10 @@ namespace Webshop.Controllers
         
         // GET api/<ProductCartController>/5
         [HttpGet("{id}")]
-        public async Task<List<ProductCartDto>> Get(int id)
+        public async Task<ActionResult<List<ProductCartDto>>> Get(int id)
         {
             var res = await _context.ProductCarts.Where(c => c.cartIndex == id).ToListAsync();
-            if (res == null) return new List<ProductCartDto>();
+            if (res == null) return NotFound("The productcart you want to get is not exist.");
             var mappelt = _mapper.Map<List<ProductCartDto>>(res);
             return mappelt;
         }
@@ -55,11 +55,11 @@ namespace Webshop.Controllers
                 var productIdCheck = _context.Products.Where(p => p.ProductID == pcnew.productIndex);
                 if (cartIdCheck == null)
                 {
-                    return NoContent();
+                    return NotFound("Problem with productcart: order is required.");
                 }
                 if (productIdCheck == null)
                 {
-                    return NoContent();
+                    return NotFound("Problem with productcart: product is required.");
                 }
 
                 _context.ProductCarts.Add(pc);
@@ -67,7 +67,7 @@ namespace Webshop.Controllers
                 return Ok();
             } catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the creation, please try again.");
             }
         }
 
@@ -78,7 +78,7 @@ namespace Webshop.Controllers
             var dbProductCart = _context.ProductCarts.SingleOrDefault(p => p.ProductCartId == id);
 
             if (dbProductCart == null)
-                return NotFound();
+                return NotFound("The productcart you want to delete is not exist.");
 
             _context.ProductCarts.Remove(dbProductCart);
             await _context.SaveChangesAsync();

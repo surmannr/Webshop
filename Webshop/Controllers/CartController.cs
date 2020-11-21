@@ -59,7 +59,7 @@ namespace Webshop.Controllers
             var res = await _context.Carts.Where(c => c.CartId == id).FirstOrDefaultAsync();
 
             // Hibakezelés
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("That cart you want to get is not exist");
 
             var products = await _context.ProductCarts.Where(p=>p.cartIndex == id).ToListAsync();
             var user = await _userManager.FindByIdAsync(res.UserId);

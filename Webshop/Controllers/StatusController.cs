@@ -35,10 +35,10 @@ namespace Webshop.Controllers
 
 
         [HttpGet("{id}")]
-        public async Task<StatusDto> Get(int id)
+        public async Task<ActionResult<StatusDto>> Get(int id)
         {
             var res = await _context.Status.FirstOrDefaultAsync(s => s.StatusId == id);
-            if (res == null) return null;
+            if (res == null) return NotFound("The status you want to get is not exist.");
             var mapppelt = _mapper.Map<StatusDto>(res);
             return mapppelt;
         }

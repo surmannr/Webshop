@@ -57,7 +57,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<UserDto>> Get(string id)
         {
             var res = await _context.Users.Where(c => c.Id == id).FirstOrDefaultAsync();
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("The user you want to get is not exist.");
             var mappelt = _mapper.Map<UserDto>(res);
             return mappelt;
         }
@@ -98,7 +98,7 @@ namespace Webshop.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the usercreation, please try again.");
             }
 
         }
@@ -140,7 +140,7 @@ namespace Webshop.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the admincreation, please try again.");
             }
 
         }
@@ -158,7 +158,7 @@ namespace Webshop.Controllers
                 var userWaitingForUpdate = _context.Users.SingleOrDefault(p => p.Id == id);
 
                 if (userWaitingForUpdate == null)
-                    return NotFound();
+                    return NotFound("The user you want to modify is not exist.");
 
                 // modositasok elvegzese    
                 if (user.UserName != null)
@@ -187,7 +187,7 @@ namespace Webshop.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the modification, please try again.");
             }
 
         }
@@ -199,7 +199,7 @@ namespace Webshop.Controllers
             var dbUser = _context.Users.SingleOrDefault(p => p.Id == id);
 
             if (dbUser == null)
-                return NotFound();
+                return NotFound("The user you want to delete is not exist.");
 
             var cart = _context.Carts.Where(c => c.UserId == dbUser.Id).FirstOrDefault();
             _context.Carts.Remove(cart);
@@ -247,7 +247,7 @@ namespace Webshop.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the creation, please try again.");
             }
 
         }

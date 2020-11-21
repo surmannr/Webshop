@@ -39,7 +39,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<OrderItemDto>> Get(int id)
         {
             var res = await _context.OrderItems.Where(c => c.OrderItemId == id).FirstOrDefaultAsync();
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("The orderitem you want to get is not exist.");
             var mappelt = _mapper.Map<OrderItemDto>(res);
             return mappelt;
         }
@@ -49,7 +49,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<List<OrderItemDto>>> GetByOrderId(int orderId)
         {
             var res = await _context.OrderItems.Where(c => c.OrderId == orderId).ToListAsync();
-            if (res == null) return null;
+            if (res == null) return NotFound("The orderitem you want to get is not exist.");
             var mappelt = _mapper.Map<List<OrderItemDto>>(res);
             return mappelt;
         }
@@ -71,11 +71,11 @@ namespace Webshop.Controllers
 
                 if (orderIdCheck == null)
                 {
-                    return NotFound();
+                    return NotFound("Problem with orderitems: order is required.");
                 }
                 if (productIdCheck == null)
                 {
-                    return NotFound();
+                    return NotFound("Problem with orderitems: product is required.");
                 }
                 // Mivel új dolog, ezért instant 1 lesz.
                 oi.StatusId = 1;
@@ -86,7 +86,7 @@ namespace Webshop.Controllers
 
             } catch (Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the creation, please try again.");
             }
             
         }
@@ -100,7 +100,7 @@ namespace Webshop.Controllers
                 var oiWaitingForUpdate = _context.OrderItems.SingleOrDefault(p => p.OrderItemId == id);
 
                 if (oiWaitingForUpdate == null)
-                    return NotFound();
+                    return NotFound("The orderitem you want to modify is not exist.");
 
                 // modositasok elvegzese
                 if (oinew.Amount != 0)
@@ -118,7 +118,7 @@ namespace Webshop.Controllers
 
             } catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the modification, please try again.");
             }
             
         }
@@ -130,7 +130,7 @@ namespace Webshop.Controllers
             var dbOrderItem = _context.OrderItems.SingleOrDefault(p => p.OrderItemId == id);
 
             if (dbOrderItem == null)
-                return NotFound();
+                return NotFound("The orderitem you want to delete is not exist.");
 
             _context.OrderItems.Remove(dbOrderItem);
             await _context.SaveChangesAsync();

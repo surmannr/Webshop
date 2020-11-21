@@ -59,7 +59,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<ProductDto>> Get(int id)
         {
             var res = await _context.Products.FirstOrDefaultAsync(p => p.ProductID == id);
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("The product you want to get is not exist.");
 
             var reviews = await _context.Reviews.Where(r => r.ProductId == res.ProductID).ToListAsync();
 
@@ -78,7 +78,7 @@ namespace Webshop.Controllers
             try
             {
                 Product product = _mapper.Map<Product>(newProduct);
-                if (product.Product_Name == null || product.Price == 0 || product.Shipping_Price == 0) return null;
+                if (product.Product_Name == null || product.Price == 0 || product.Shipping_Price == 0) return NotFound("There was a problem with creation: productname, price and shipping price are required.");
 
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
@@ -86,7 +86,7 @@ namespace Webshop.Controllers
 
             } catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the creation, please try again.");
             }
             
         }
@@ -98,7 +98,7 @@ namespace Webshop.Controllers
             try
             {
                 var productWaitingForUpdate = await _context.Products.FirstOrDefaultAsync(r => r.ProductID == newProduct.ProductID);
-                if (productWaitingForUpdate == null) return NotFound();
+                if (productWaitingForUpdate == null) return NotFound("The product you want to modify is not exist.");
 
                 if (newProduct.Price != 0) productWaitingForUpdate.Price = newProduct.Price;
                 if (newProduct.Product_Description != null) productWaitingForUpdate.Product_Description = newProduct.Product_Description;
@@ -111,7 +111,7 @@ namespace Webshop.Controllers
                 return Ok();
             } catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the modification, please try again.");
             }
             
         }
@@ -123,7 +123,7 @@ namespace Webshop.Controllers
             var dbProduct = _context.Products.SingleOrDefault(p => p.ProductID == id);
 
             if (dbProduct == null)
-                return NotFound();
+                return NotFound("The product you want to delete is not exist.");
 
             _context.Products.Remove(dbProduct);
             await _context.SaveChangesAsync();

@@ -37,7 +37,7 @@ namespace Webshop.Controllers
             var res =  await _context.Categories.Where(c => c.CategoryId == id).FirstOrDefaultAsync();
 
             // Hibakezelés
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("That category you want to get is not exist");
 
             var mappelt = _mapper.Map<CategoryDto>(res);
 
@@ -51,7 +51,7 @@ namespace Webshop.Controllers
         {
             try
             {
-                if (newCategoryDto.Category_Name == null) return NoContent();
+                if (newCategoryDto.Category_Name == null) return NotFound("You should name the new category");
                 var newCategory = _mapper.Map<Category>(newCategoryDto);
                 _context.Categories.Add(newCategory);
                 await _context.SaveChangesAsync();
@@ -59,7 +59,7 @@ namespace Webshop.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the creation, please try again");
             }
         }
 
@@ -70,12 +70,12 @@ namespace Webshop.Controllers
             try
             {
                 var newCategory = _mapper.Map<Category>(newCategoryDto);
-                if (newCategory == null) return NoContent();
+                if (newCategory == null) return NotFound("No changes added.");
 
                 var categoryWaitingForUpdate = _context.Categories.SingleOrDefault(p => p.CategoryId == id);
 
                 if (categoryWaitingForUpdate == null)
-                    return NotFound();
+                    return NotFound("The category you want to modify is not exist.");
 
                 // modositasok elvegzese
 
@@ -88,7 +88,7 @@ namespace Webshop.Controllers
             }
             catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the modification, please try again.");
             }
         }
 
@@ -99,7 +99,7 @@ namespace Webshop.Controllers
             var dbCategory = _context.Categories.SingleOrDefault(p => p.CategoryId == id);
 
             if (dbCategory == null)
-                return NotFound();
+                return NotFound("The category you want to delete is not exist.");
 
             _context.Categories.Remove(dbCategory);
             await _context.SaveChangesAsync();

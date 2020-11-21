@@ -47,7 +47,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<SupplierDto>> Get(int id)
         {
             var res = await _context.Suppliers.Where(c => c.SupplierId == id).FirstOrDefaultAsync();
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("The supplier you want to get is not exist.");
             var mapppelt = _mapper.Map<SupplierDto>(res);
             return mapppelt;
         }
@@ -59,13 +59,13 @@ namespace Webshop.Controllers
             try
             {
                 Supplier supplier = _mapper.Map<Supplier>(newSupplier);
-                if (supplier.Name == null || supplier.Address == null) return NoContent();
+                if (supplier.Name == null || supplier.Address == null) return NotFound("There was a problem with the creation: supplier name and supplier address are required.");
                 _context.Suppliers.Add(supplier);
                 await _context.SaveChangesAsync();
                 return Ok();
             } catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the creation, please try again.");
             }
             
         }
@@ -77,7 +77,7 @@ namespace Webshop.Controllers
             try
             {
                 var supplierWaitingForUpdate = await _context.Suppliers.FirstOrDefaultAsync(r => r.SupplierId == newSupplier.SupplierId);
-                if (supplierWaitingForUpdate == null) return NotFound();
+                if (supplierWaitingForUpdate == null) return NotFound("The supplier you want to modify is not exist.");
 
                 if (newSupplier.Name != null) supplierWaitingForUpdate.Name = newSupplier.Name;
                 if (newSupplier.Multiplier != 0) supplierWaitingForUpdate.Multiplier = newSupplier.Multiplier;
@@ -88,7 +88,7 @@ namespace Webshop.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the modifictaion, please try again.");
             }
             
         }
@@ -100,7 +100,7 @@ namespace Webshop.Controllers
             var dbSupplier = _context.Suppliers.SingleOrDefault(p => p.SupplierId == id);
 
             if (dbSupplier == null)
-                return NotFound();
+                return NotFound("The supplier you want to delete is not exist.");
 
             _context.Suppliers.Remove(dbSupplier);
             await _context.SaveChangesAsync();

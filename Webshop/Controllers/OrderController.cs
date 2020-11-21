@@ -55,7 +55,7 @@ namespace Webshop.Controllers
             var res = await _context.Orders.Where(c => c.OrderId == id).FirstOrDefaultAsync();
             var orderitems = await _context.OrderItems.Where(o => o.OrderId != 0).ToListAsync();
 
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("The order you want to get is not exist.");
 
             res.Status = await _context.Status.Where(s => s.StatusId == res.StatusId).FirstOrDefaultAsync();
 
@@ -77,7 +77,7 @@ namespace Webshop.Controllers
             try
             {
                 var newOrder = _mapper.Map<Order>(newOrderDto);
-                if (newOrder.UserId == null) return NoContent();
+                if (newOrder.UserId == null) return NotFound("Creation failed: user is required.");
                 newOrder.StatusId = 1;
 
                 var status = await _context.Status.Where(s => s.StatusId == newOrder.StatusId).FirstOrDefaultAsync();
@@ -90,7 +90,7 @@ namespace Webshop.Controllers
             }
             catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the creation, please try again.");
             }
            
         }
@@ -118,7 +118,7 @@ namespace Webshop.Controllers
                     if (newOrder.StatusId != 0) orderWaitingForUpdate.StatusId = status.StatusId;
 
                 }
-                else return NoContent();
+                else return NotFound("The order you want to modify is not exist.");
 
                 // mentes az adatbazisban
                 await _context.SaveChangesAsync();
@@ -127,7 +127,7 @@ namespace Webshop.Controllers
 
             } catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the modification, please try again.");
             }
             
         }
@@ -139,7 +139,7 @@ namespace Webshop.Controllers
             var dbOrder = _context.Orders.SingleOrDefault(p => p.OrderId == id);
 
             if (dbOrder == null)
-                return NotFound();
+                return NotFound("The order you want to delete is not exist.");
 
             _context.Orders.Remove(dbOrder);
             await _context.SaveChangesAsync();

@@ -48,7 +48,7 @@ namespace Webshop.Controllers
         public async Task<ActionResult<ReviewDto[]>> Get(int id)
         {
             var res = await _context.Reviews.Where(c => c.ProductId == id).ToListAsync();
-            if (res == null) return NotFound();
+            if (res == null) return NotFound("The review you want to get is not exist.");
             var mapppelt = _mapper.Map<ReviewDto[]>(res);
             return mapppelt;
         }
@@ -72,14 +72,14 @@ namespace Webshop.Controllers
                     product.Reviews.Add(review);
                     //System.Diagnostics.Debug.WriteLine(product.Reviews.Last().Description);
                 }
-                else return NoContent();
-
+                else return NotFound("There was a problem with creation: product is required.");
+                
                 _context.Reviews.Add(review);
                 await _context.SaveChangesAsync();
                 return Ok();
             } catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the creation, please try again.");
             }
             
         }
@@ -91,7 +91,7 @@ namespace Webshop.Controllers
             try
             {
                 var reviewWaitingForUpdate = await _context.Reviews.FirstOrDefaultAsync(r => r.ReviewId == newReview.ReviewId);
-                if (reviewWaitingForUpdate == null) return NotFound();
+                if (reviewWaitingForUpdate == null) return NotFound("The review you want to modify is not exist.");
 
                 if (newReview.Stars != 0) reviewWaitingForUpdate.Stars = newReview.Stars;
                 if (newReview.Description != null) reviewWaitingForUpdate.Description = newReview.Description;
@@ -100,7 +100,7 @@ namespace Webshop.Controllers
                 return Ok();
             } catch(Exception ex)
             {
-                return StatusCode(418);
+                return StatusCode(418, "There was a problem with the modifictaion, please try again.");
             }
             
         }
@@ -111,7 +111,7 @@ namespace Webshop.Controllers
             var dbReview = _context.Reviews.SingleOrDefault(p => p.ReviewId == id);
 
             if (dbReview == null)
-                return NotFound();
+                return NotFound("The review you want to delete is not exist.");
 
             _context.Reviews.Remove(dbReview);
             await _context.SaveChangesAsync();

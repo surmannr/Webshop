@@ -32,7 +32,7 @@ namespace Webshop.Controllers
                 }
                 else
                 {
-                    return BadRequest();
+                    return BadRequest("File is not exist.");
                 }
             }
             catch (Exception ex) {
