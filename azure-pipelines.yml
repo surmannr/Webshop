@@ -1,6 +1,6 @@
 # ASP.NET Core
 trigger:
-  - main
+  - master
 
 pool:
   vmImage: 'ubuntu-latest'
