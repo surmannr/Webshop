@@ -22,3 +22,8 @@ steps:
   inputs:
     command: 'install'
     workingDir: 'Webshop/Webshop/AngularApp/'
+
+- task: NodeTool@0
+  inputs:
+    versionSpec: '6.x'
+    checkLatest: true
