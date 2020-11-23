@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Review } from '../classes/Review';
-import { BASEURL } from './baseUrl';
+import { BASEURL } from '../services/BaseUrl';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
