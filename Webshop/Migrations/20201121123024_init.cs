@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Webshop.Migrations
 {
-    public partial class initname : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -87,6 +87,20 @@ namespace Webshop.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Suppliers", x => x.SupplierId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UsersFavouriteProducts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserIndex = table.Column<string>(nullable: true),
+                    ProductIndex = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersFavouriteProducts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -300,7 +314,10 @@ namespace Webshop.Migrations
                     productIndex = table.Column<int>(nullable: false),
                     ProductID = table.Column<int>(nullable: true),
                     cartIndex = table.Column<int>(nullable: false),
-                    CartId = table.Column<int>(nullable: true)
+                    CartId = table.Column<int>(nullable: true),
+                    price = table.Column<int>(nullable: false),
+                    quantity = table.Column<int>(nullable: false),
+                    product_Name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -460,6 +477,9 @@ namespace Webshop.Migrations
 
             migrationBuilder.DropTable(
                 name: "Reviews");
+
+            migrationBuilder.DropTable(
+                name: "UsersFavouriteProducts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
