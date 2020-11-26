@@ -15,9 +15,19 @@ export class StatusService {
     return throwError(error);
   }
 
+  /**
+   * @description - Az adatbázisban tárolt státuszok közül id alapján kérdez le
+   * @param id - Az azonosítója a státusznak amit a backend-nek meg kell keresnie
+   * @returns Observable<Status> - A backend által visszaadott státusz 
+   */
   get(id: number): Observable<Status> {
     return this.http.get<Status>(BASEURL.baseUrl + 'Status/' + id).pipe(catchError(this.handleError));
   }
+
+  /**
+   * @description - Az adatbázisban tárolt összes státuszt lekéri
+   * @returns Observable<Status[]> - Az adatbázisban tárolt státuszok tömbje
+   * */
   getAll(): Observable<Status[]> {
     return this.http.get<Status[]>(BASEURL.baseUrl + 'Status/');
   }

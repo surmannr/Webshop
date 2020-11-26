@@ -171,7 +171,7 @@ namespace Webshop
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseStaticFiles();
-           // app.UseMvcWithDefaultRoute();
+         
             app.UseDefaultFiles();
             app.Use(async (context, next) =>
             {
