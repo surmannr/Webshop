@@ -23,21 +23,31 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Webshop.Data.Models;
 using Microsoft.AspNetCore.Http.Features;
+using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 
 namespace Webshop
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             Configuration = configuration;
+            _env = env;
         }
 
         public IConfiguration Configuration { get; }
 
+        private IHostingEnvironment _env;
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+            var webRoot = _env.WebRootPath;
+
+            services.AddSingleton<IFileProvider>(
+              new PhysicalFileProvider(
+                Path.Combine(webRoot, "Resources")));
 
             // inject appsettings
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
