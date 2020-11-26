@@ -73,10 +73,13 @@ namespace Webshop.Controllers
             List<Product> res;
             if(categoryIdForFiltering == -1)
                  res = await _context.Products.Where(p => p.Product_Name.Contains(ProductNameForFiltering)).ToListAsync();
+
             else if(ProductNameForFiltering == null)
                 res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering).ToListAsync();
+
             else if(ProductNameForFiltering.Length == 0)
                 res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering).ToListAsync();
+
             else
                 res = await _context.Products.Where(p => p.CategoryId == categoryIdForFiltering && p.Product_Name.Contains(ProductNameForFiltering)).ToListAsync();
            

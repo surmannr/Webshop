@@ -103,7 +103,7 @@ namespace Webshop.Controllers
             _context.Categories.Remove(dbCategory);
             await _context.SaveChangesAsync();
 
-            return Ok(); // a sikeres torlest 204 No
+            return Ok(); 
         }
     }
 }

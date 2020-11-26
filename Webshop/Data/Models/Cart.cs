@@ -5,17 +5,27 @@ namespace Webshop.Data
 {
     public class Cart
     {
-        //Tárolt adatok
+        /// <summary>
+        /// Az egyéni azonosítója a felhasználó kosarának
+        /// </summary>
         public int CartId { get; set; }
 
-        // A kosár egy adott felhasználóhoz tartozik
-       // public int UserId { get; set; }
+
        
 
-        //Egy kosárba több termék is tartozik
+        /// <summary>
+        /// A felhasználó kosarában lévő termékek
+        /// </summary>
         public List<ProductCart> ProductCart { get; set; }
 
+        /// <summary>
+        /// A kosárhoz tartozó felhasználó azonosítója
+        /// </summary>
         public string UserId { get; set; }
+
+        /// <summary>
+        /// A felhasználó objektum
+        /// </summary>
         public User User { get; set; }
     }
 }

@@ -1,27 +1,50 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 
 namespace Webshop.Data
 {
     public class Order
     {
-        //Tárolt adatok
+        /// <summary>
+        /// A rendelést létrehozó felhasználó azonosítója
+        /// </summary>
         public string UserId { get; set; }
 
+        /// <summary>
+        /// A rendeléshez tartozó fizetési mód neve
+        /// </summary>
         public string PaymentMetod { get; set; }
 
+        /// <summary>
+        /// A rendeléshez tartozó kiszállítási opció neve
+        /// </summary>
         public string ShippingMethod { get; set; }
 
+
+        /// <summary>
+        /// A rendelés létrehozásának időpontja
+        /// </summary>
         public DateTime orderTime { get; set; }
 
+        /// <summary>
+        /// A rendelés státuszának egyéni azonosítója
+        /// </summary>
         public int StatusId { get; set; }
+
+        /// <summary>
+        /// A rendelés státuszának objektuma
+        /// </summary>
         public Status Status { get; set; }
 
+        /// <summary>
+        /// A megrendelés egyéni azonosítója
+        /// </summary>
         public int OrderId { get; set; }
 
-        //Egy rendelés több termékből áll.
+        /// <summary>
+        /// A rendelés több terméket is tartalmazhat
+        /// </summary>
         public List<OrderItem> orderItems { get; set; }
 
         

@@ -18,6 +18,9 @@ export class ReviewService {
     return throwError(error);
   }
 
+  /**
+   * @description - Az adatbázisban tárolt összes felhasználói visszajelzést kérdezi le.
+   * */
   getAll(): Observable<Review[]> {
     return this.http.get<Review[]>(BASEURL.baseUrl + 'Review');
   }

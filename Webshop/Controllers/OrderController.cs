@@ -19,10 +19,16 @@ namespace Webshop.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
+     
+        private List<string> paymentMethodList = new List<string> { "none", "transfer in advance", "online credit card", "cash on delivery" };
+        private List<string> shippingMethodList = new List<string> { "none", "delivery courier", "delivery by post", "amazon drone" };
+
+
         public OrderController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
-            _mapper = mapper;
+            _mapper = mapper;       
+           
         }
 
 
@@ -70,14 +76,7 @@ namespace Webshop.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Post([FromBody] OrderDto newOrderDto)
         {
-            string[] paymentMethodArray = new string[] { "none", "transfer in advance", "online credit card", "cash on delivery" };
-            List<string> paymentMethodList = paymentMethodArray.ToList();
-
-            string[] shippingMethodArray = new string[] { "none", "delivery courier", "delivery by post", "amazon drone" };
-            List<string> shippingMethodList = shippingMethodArray.ToList();
-
-
-
+          
             try
             {
                 var newOrder = _mapper.Map<Order>(newOrderDto);
@@ -108,13 +107,6 @@ namespace Webshop.Controllers
             try
             {
 
-                string[] paymentMethodArray = new string[] { "none", "transfer in advance", "online credit card", "cash on delivery" };
-                List<string> paymentMethodList = paymentMethodArray.ToList();
-
-                string[] shippingMethodArray = new string[] { "none", "delivery courier", "delivery by post", "amazon drone" };
-                List<string> shippingMethodList = shippingMethodArray.ToList();
-
-
                 var newOrder = _mapper.Map<Order>(newOrderDto);
                 var orderWaitingForUpdate = _context.Orders.SingleOrDefault(p => p.OrderId == id);
 
@@ -143,7 +135,7 @@ namespace Webshop.Controllers
                 // mentes az adatbazisban
                 await _context.SaveChangesAsync();
 
-                return Ok(); // 204 NoContent valasz
+                return Ok(); 
             }
             catch (Exception)
             {
@@ -163,7 +155,7 @@ namespace Webshop.Controllers
             _context.Orders.Remove(dbOrder);
             await _context.SaveChangesAsync();
 
-            return Ok(); // a sikeres torlest 204 No
+            return Ok(); 
         }
     }
 }

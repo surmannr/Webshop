@@ -27,6 +27,6 @@ export class AddModifyCartComponent implements OnInit {
   addCart() {    
     let val: Cart;
     val = { cartId: this.cartId, userId: this.userId, user: this.user, productsID: this.productsID };
-    this.service.create(val).subscribe(res => { alert("Added the cart"); });
+    this.service.create(val).subscribe(_ => { alert("Added the cart"); });    
   }
 }

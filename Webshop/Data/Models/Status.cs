@@ -45,8 +45,16 @@ namespace Webshop.Data
            
         }
         public Status() {; }
-        //Tárolt adatok
+       
+
+        /// <summary>
+        /// A sztátusz egyéni azonosítója
+        /// </summary>
         public int StatusId { get; set; }
+
+        /// <summary>
+        /// A sztátusz neve
+        /// </summary>
         public string Name { get; set; }
     }
 }
