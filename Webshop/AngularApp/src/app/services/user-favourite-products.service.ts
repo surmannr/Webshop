@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UsersFavouriteProducts } from '../classes/UsersFavouriteProducts';
-import { BASEURL } from './baseUrl';
+import { BASEURL } from '../services/BaseUrl';
 
 @Injectable({
   providedIn: 'root'

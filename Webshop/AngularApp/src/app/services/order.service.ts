@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Order } from '../classes/Order';
-import { BASEURL } from './baseUrl';
+import { BASEURL } from '../services/BaseUrl';
 import { catchError } from 'rxjs/operators';
 
 @Injectable({
