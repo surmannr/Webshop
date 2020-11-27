@@ -5,13 +5,37 @@
 		<TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
 		<TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
 		<IsPackable>false</IsPackable>
-		<SpaRoot>AngularApp\</SpaRoot>
-		<DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
 		
-		<!-- Set this to true if you enable server-side prerendering -->
-		<BuildServerSideRenderer>false</BuildServerSideRenderer>
-		<UserSecretsId>xx</UserSecretsId>
+	
+	
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <Content Remove="wwwroot\Resources\Images\421183ad16ad430a9c6ee3e91b72974e.jpg" />
+	  <Content Remove="wwwroot\Resources\Images\avatar.png" />
+	  <Content Remove="wwwroot\Resources\Images\category-1.jpg" />
+	  <Content Remove="wwwroot\Resources\Images\category-2.jpg" />
+	  <Content Remove="wwwroot\Resources\Images\category-3.jpg" />
+	  <Content Remove="wwwroot\Resources\Images\gyümölcs.jpg" />
+	  <Content Remove="wwwroot\Resources\Images\H033c18abbeba45149cefe84ef6a0e68fH.png" />
+	  <Content Remove="wwwroot\Resources\Images\H5b444a891cb14129b29b878960042954B.png" />
+	  <Content Remove="wwwroot\Resources\Images\H904b67125033401791a579bba1fbc80fB.png" />
+	  <Content Remove="wwwroot\Resources\Images\H90966ffeb99647aca852e6c0b3bc9145x.png" />
+	  <Content Remove="wwwroot\Resources\Images\Ha5a8023715c049f1a4a087d7611b65aad.png" />
+	  <Content Remove="wwwroot\Resources\Images\Hc3675de020224fb88e5b11d649c68b6ey.png" />
+	  <Content Remove="wwwroot\Resources\Images\Hc43e22c02d6e48e08c82c1198b3ad69aF.png" />
+	  <Content Remove="wwwroot\Resources\Images\Heb8d505f55634095b45904ea9a18a2127.png" />
+	  <Content Remove="wwwroot\Resources\Images\ic_add_white_36dp.png" />
+	  <Content Remove="wwwroot\Resources\Images\ic_delete_grey600_48dp.png" />
+	  <Content Remove="wwwroot\Resources\Images\ic_pencil_grey600_48dp.png" />
+	  <Content Remove="wwwroot\Resources\Images\image1.png" />
+	  <Content Remove="wwwroot\Resources\Images\masikKep.jpg" />
+	  <Content Remove="wwwroot\Resources\Images\product-1.jpg" />
+	  <Content Remove="wwwroot\Resources\Images\product-2.jpg" />
+	  <Content Remove="wwwroot\Resources\Images\UTB8CFvYrXPJXKJkSahVq6xyzFXa3.png" />
+	  <Content Remove="wwwroot\Resources\Images\zöldség.jpg" />
+	  <Content Remove="wwwroot\Resources\Images\zöldség.png" />
+	</ItemGroup>
 
 	
 
@@ -24,40 +48,10 @@
 		<TypeScriptExperimentalDecorators>true</TypeScriptExperimentalDecorators>
 	</PropertyGroup>
 
-	<ItemGroup>
-		<!-- Don't publish the SPA source files, but do show them in the project files list -->
-		<Content Remove="$(SpaRoot)**" />
-		<None Remove="$(SpaRoot)**" />
-		<None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-	</ItemGroup>
 
-	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
-		<!-- Ensure Node.js is installed -->
-		<Exec Command="node --version" ContinueOnError="true">
-			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-		</Exec>
-		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
-		<Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-		<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-	</Target>
+	
 
-	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-		<!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-		<Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-		<Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --prod" />
-		<Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
 
-		<!-- Include the newly-built files in the publish output -->
-		<ItemGroup>
-			<DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
-			<DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
-			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-				<RelativePath>%(DistFiles.Identity)</RelativePath>
-				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-				<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			</ResolvedFileToPublish>
-		</ItemGroup>
-	</Target>
 
 	<ItemGroup>
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
@@ -80,6 +74,38 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+	</ItemGroup>
+
+
+	
+
+
+
+	<ItemGroup>
+	  <None Include="wwwroot\Resources\Images\421183ad16ad430a9c6ee3e91b72974e.jpg" />
+	  <None Include="wwwroot\Resources\Images\avatar.png" />
+	  <None Include="wwwroot\Resources\Images\category-1.jpg" />
+	  <None Include="wwwroot\Resources\Images\category-2.jpg" />
+	  <None Include="wwwroot\Resources\Images\category-3.jpg" />
+	  <None Include="wwwroot\Resources\Images\gyümölcs.jpg" />
+	  <None Include="wwwroot\Resources\Images\H033c18abbeba45149cefe84ef6a0e68fH.png" />
+	  <None Include="wwwroot\Resources\Images\H5b444a891cb14129b29b878960042954B.png" />
+	  <None Include="wwwroot\Resources\Images\H904b67125033401791a579bba1fbc80fB.png" />
+	  <None Include="wwwroot\Resources\Images\H90966ffeb99647aca852e6c0b3bc9145x.png" />
+	  <None Include="wwwroot\Resources\Images\Ha5a8023715c049f1a4a087d7611b65aad.png" />
+	  <None Include="wwwroot\Resources\Images\Hc3675de020224fb88e5b11d649c68b6ey.png" />
+	  <None Include="wwwroot\Resources\Images\Hc43e22c02d6e48e08c82c1198b3ad69aF.png" />
+	  <None Include="wwwroot\Resources\Images\Heb8d505f55634095b45904ea9a18a2127.png" />
+	  <None Include="wwwroot\Resources\Images\ic_add_white_36dp.png" />
+	  <None Include="wwwroot\Resources\Images\ic_delete_grey600_48dp.png" />
+	  <None Include="wwwroot\Resources\Images\ic_pencil_grey600_48dp.png" />
+	  <None Include="wwwroot\Resources\Images\image1.png" />
+	  <None Include="wwwroot\Resources\Images\masikKep.jpg" />
+	  <None Include="wwwroot\Resources\Images\product-1.jpg" />
+	  <None Include="wwwroot\Resources\Images\product-2.jpg" />
+	  <None Include="wwwroot\Resources\Images\UTB8CFvYrXPJXKJkSahVq6xyzFXa3.png" />
+	  <None Include="wwwroot\Resources\Images\zöldség.jpg" />
+	  <None Include="wwwroot\Resources\Images\zöldség.png" />
 	</ItemGroup>
 
 	<PropertyGroup>

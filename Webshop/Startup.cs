@@ -1,12 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Webshop.Data;
 using Microsoft.Extensions.Configuration;
@@ -23,31 +18,27 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Webshop.Data.Models;
 using Microsoft.AspNetCore.Http.Features;
-using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
+
 
 namespace Webshop
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            _env = env;
+          
         }
 
         public IConfiguration Configuration { get; }
 
-        private IHostingEnvironment _env;
+       
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
 
-            var webRoot = _env.WebRootPath;
-
-            services.AddSingleton<IFileProvider>(
-              new PhysicalFileProvider(
-                Path.Combine(webRoot, "Resources")));
+      
 
             // inject appsettings
             services.Configure<ApplicationSettings>(Configuration.GetSection("ApplicationSettings"));
@@ -76,7 +67,7 @@ namespace Webshop
                     Configuration.GetConnectionString("DefaultConnection")));
 
 
-            //Ahhoz, hogy a role hozzáadás mûködjön az ehhez szükséges service-t hozzá kell adni
+            //Ahhoz, hogy a role hozzï¿½adï¿½s mï¿½kï¿½djï¿½n az ehhez szï¿½ksï¿½ges service-t hozzï¿½ kell adni
             services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -111,7 +102,7 @@ namespace Webshop
                 c.IncludeXmlComments(xmlPath);
             });
 
-            //Titkosításhoz használt kulcs
+            //Titkosï¿½tï¿½shoz hasznï¿½lt kulcs
             var key = Encoding.UTF8.GetBytes(Configuration["ApplicationSettings:JWT_Secret"].ToString());
 
             //JWT Authentication
@@ -123,13 +114,13 @@ namespace Webshop
             }).AddJwtBearer(x => {
                 //JWT configuration
                 x.RequireHttpsMetadata = false;
-                //Szerveren nem tároljuk a token-t
+                //Szerveren nem tï¿½roljuk a token-t
                 x.SaveToken = false;
                 x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
-                    //Security key-t ellenõrzi amikor  token-t maj használja
+                    //Security key-t ellenï¿½rzi amikor  token-t maj hasznï¿½lja
                     ValidateIssuerSigningKey = true,
-                    //A kulcs amit a titkosításhoz használunk
+                    //A kulcs amit a titkosï¿½tï¿½shoz hasznï¿½lunk
                     IssuerSigningKey = new SymmetricSecurityKey(key),
                     ValidateIssuer = false,
                     ValidateAudience = false,
@@ -171,9 +162,9 @@ namespace Webshop
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseStaticFiles(new StaticFileOptions 
+            app.UseStaticFiles(new StaticFileOptions
             {
-                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(),@"Resources")),
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"Resources")),
                 RequestPath = new PathString("/Resources")
             });
             app.UseRouting();
