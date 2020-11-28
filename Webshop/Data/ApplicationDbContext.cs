@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System;
 using Webshop.Data.Models;
 
 namespace Webshop.Data
@@ -35,11 +36,12 @@ namespace Webshop.Data
            {
            }
 
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(
                 @"Data Source=DESKTOP-CJGL63H\SQLEXPRESS;Initial Catalog=WebShop;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
         }
+
+       
     }
 }

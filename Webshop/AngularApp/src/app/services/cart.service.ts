@@ -6,11 +6,6 @@ import { BASEURL } from '../services/BaseUrl';
 import { catchError } from 'rxjs/operators';
 
 
-
-
-
-
-
 @Injectable({
   providedIn: 'root'
 })
