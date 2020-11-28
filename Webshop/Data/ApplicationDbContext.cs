@@ -29,6 +29,7 @@ namespace Webshop.Data
                 .HasForeignKey<Cart>(b => b.UserId);
 
         }
+        public ApplicationDbContext() { }
          public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
                : base(options)
            {
