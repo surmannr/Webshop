@@ -27,5 +27,6 @@ namespace Webshop.Data
         /// A felhasználó objektum
         /// </summary>
         public User User { get; set; }
+
     }
 }

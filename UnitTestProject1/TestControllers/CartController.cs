@@ -1,28 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
-using AutoMapper;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Webshop.Data;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
-namespace Webshop.Controllers
+namespace UnitTestProject1.TestControllers
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CartController : ControllerBase
+    public class CartController
     {
-        private readonly ApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly Microsoft.AspNetCore.Identity.UserManager<User> _userManager;
-        public CartController(ApplicationDbContext context, IMapper mapper, Microsoft.AspNetCore.Identity.UserManager<User> userManager)
+        public CartController(List<Cart>)
         {
-            _context = context;
-            _mapper = mapper;
-            _userManager = userManager;
         }
 
         // GET: api/<CartController>
@@ -30,8 +17,8 @@ namespace Webshop.Controllers
         public async Task<IEnumerable<CartDto>> Get()
         {
             var res = await _context.Carts.ToListAsync();
-            var products = await _context.ProductCarts.Where(c => c.cartIndex!=0).ToListAsync();
-            List<CartDto> cartList = new List<CartDto>();            
+            var products = await _context.ProductCarts.Where(c => c.cartIndex != 0).ToListAsync();
+            List<CartDto> cartList = new List<CartDto>();
             foreach (Cart c in res)
             {
 
@@ -57,7 +44,7 @@ namespace Webshop.Controllers
             // Hibakezelés
             if (res == null) return NotFound("Couldnt find the item");
 
-            var products = await _context.ProductCarts.Where(p=>p.cartIndex == id).ToListAsync();
+            var products = await _context.ProductCarts.Where(p => p.cartIndex == id).ToListAsync();
             var user = await _userManager.FindByIdAsync(res.UserId);
             var mapppelt = _mapper.Map<CartDto>(res);
 
@@ -67,6 +54,6 @@ namespace Webshop.Controllers
             }
             return mapppelt;
         }
-        
+
     }
 }
