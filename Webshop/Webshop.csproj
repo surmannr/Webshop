@@ -74,7 +74,6 @@
 	  <None Remove="Resources\Images\ic_delete_grey600_48dp.png" />
 	  <None Remove="Resources\Images\ic_pencil_grey600_48dp.png" />
 	  <None Remove="Resources\Images\image1.png" />
-	  <None Remove="Resources\Images\Main.java" />
 	  <None Remove="Resources\Images\masikKep.jpg" />
 	  <None Remove="Resources\Images\product-1.jpg" />
 	  <None Remove="Resources\Images\product-2.jpg" />
@@ -136,9 +135,6 @@
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	  <Content Include="Resources\Images\image1.png">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </Content>
-	  <Content Include="Resources\Images\Main.java">
 	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </Content>
 	  <Content Include="Resources\Images\masikKep.jpg">

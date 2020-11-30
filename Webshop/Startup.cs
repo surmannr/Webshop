@@ -160,7 +160,7 @@ namespace Webshop
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WebShop");
-                c.RoutePrefix = string.Empty;
+                c.RoutePrefix = "swagger/teszt";
             });
 
             app.UseHttpsRedirection();
