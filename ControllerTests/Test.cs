@@ -1,28 +1,24 @@
 using AutoMapper;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 using Webshop.Data;
 using Xunit;
 
 namespace ControllerTests
 {
-    
-    public class CartTest 
+
+    public class Test 
     {
        
         private  IMapper _mapper;
         private  UserManager<User> _userManager;
-        private  Webshop.Controllers.CartController _cartController;
-
-
+        private  Webshop.Controllers.CartController _cartController;      
+        private Webshop.Controllers.SupplierController _supplierController;
         private  DbContextOptions<ApplicationDbContext> CreateNewContextOptions()
         {
             // Create a fresh service provider, and therefore a fresh 
@@ -55,14 +51,18 @@ namespace ControllerTests
         }
 
 
-        private void SetUp(ApplicationDbContext context) {
+        private async Task SetUp(ApplicationDbContext context) {
             _mapper = new Mock<IMapper>().Object;
             _userManager = MockUserManager(new List<User>()).Object;
 
             //Seeding with test data
-            context.Carts.Add(new Cart() { CartId = 1});
-            context.Carts.Add(new Cart() { CartId = 2});
-            context.SaveChanges();
+            await  context.Carts.AddAsync(new Cart() { CartId = 1});
+            await  context.Carts.AddAsync(new Cart() { CartId = 2});
+            await context.Categories.AddAsync(new Category() { CategoryId = 1, Category_Name = "testName1"});
+            await context.Categories.AddAsync(new Category() { CategoryId = 2, Category_Name = "testName2"});
+            await context.Suppliers.AddAsync(new Supplier() { SupplierId = 1, Address = "testAddress1", Multiplier = 1, Name = "testName1", Products = { } });
+            await context.Suppliers.AddAsync(new Supplier() { SupplierId = 2, Address = "testAddress2", Multiplier = 2, Name = "testName2", Products = { } });
+            await context.SaveChangesAsync();
         }
 
 
@@ -70,11 +70,11 @@ namespace ControllerTests
      
 
         [Fact]
-        public async void ShouldReturnTwoCarts() {
+        public async void Cart_Test_ShouldReturnTwoCarts() {
 
             using (var context = new ApplicationDbContext(CreateNewContextOptions()))
             {               
-                SetUp(context);
+                await SetUp(context);
                 
                 _cartController = new Mock<Webshop.Controllers.CartController>(context, _mapper, _userManager).Object;
 
@@ -85,10 +85,10 @@ namespace ControllerTests
         }
 
         [Fact]
-        public async void ShouldReturnCartWithIdOne() {
+        public async void Cart_Test_ShouldReturnCartWithIdOne() {
             using (var context = new ApplicationDbContext(CreateNewContextOptions()))
             {
-                SetUp(context);
+                await SetUp(context);
 
                 _cartController = new Mock<Webshop.Controllers.CartController>(context, _mapper, _userManager).Object;
 
@@ -99,11 +99,11 @@ namespace ControllerTests
         }
 
         [Fact]
-        public void ShouldThrowAnArgumentNullException()
+        public async void Cart_Test_ShouldThrowAnArgumentNullException()
         {
             using (var context = new ApplicationDbContext(CreateNewContextOptions()))
             {
-                SetUp(context);
+                await SetUp(context);
 
                 _cartController = new Mock<Webshop.Controllers.CartController>(context, _mapper, _userManager).Object;
 
@@ -111,5 +111,22 @@ namespace ControllerTests
                
             }
         }
+
+
+        [Fact]
+        public async void Supplier_Test_ShouldReturnTwoSuppliers() {
+            using (var context = new ApplicationDbContext(CreateNewContextOptions()))
+            {
+                await SetUp(context);
+
+                _supplierController = new Mock<Webshop.Controllers.SupplierController>(context, _mapper).Object;
+
+                List<SupplierDto> supplierDtos = (List<SupplierDto>)await _supplierController.Get();
+                Assert.Equal(2, supplierDtos.Count);
+            }
+        }
+
+       
+
     }
 }
